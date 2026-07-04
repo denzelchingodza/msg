@@ -1051,6 +1051,252 @@ h1, h2, .display {
 }
 .team-tile.picked small { color: rgba(255, 255, 255, 0.85); }
 
+/* ═══ v4: numbers wear the varsity font ═══════════════ */
+.stat b, .trio b, .qhead .led, .slide-counter, .ln-num, .zone::before, .shotclock b {
+  font-family: var(--graduate, var(--display));
+}
+
+/* ═══ v4: header alive ════════════════════════════════ */
+.nav {
+  border-bottom: none;
+  box-shadow: 0 2px 0 var(--orange), 0 4px 0 rgba(0, 107, 182, 0.55);
+}
+.garden-time {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  font-family: var(--graduate, var(--display));
+  font-size: 14px;
+  color: var(--blue-soft);
+  letter-spacing: 0.08em;
+}
+.garden-time i {
+  font-style: normal;
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 9px;
+  letter-spacing: 0.34em;
+  color: var(--silver);
+}
+
+/* ═══ v4: footer credit ═══════════════════════════════ */
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 24px 0 18px;
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(133, 183, 235, 0.45);
+}
+.made-by {
+  color: var(--orange);
+  border: 1px solid rgba(245, 132, 38, 0.5);
+  border-radius: 999px;
+  padding: 7px 18px;
+}
+
+/* ═══ v4: steady cards (no layout shift) ══════════════ */
+.card-fixed {
+  height: 300px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.tag-chip {
+  position: absolute;
+  top: 14px;
+  left: 18px;
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  color: var(--blue-soft);
+  border: 1px solid rgba(133, 183, 235, 0.4);
+  border-radius: 999px;
+  padding: 5px 14px;
+  text-transform: uppercase;
+}
+
+/* ═══ v4: gauntlet jumbotron + shot clock ═════════════ */
+.jumbotron {
+  background: var(--panel);
+  border: 1px solid rgba(133, 183, 235, 0.25);
+  border-top: 4px solid var(--orange);
+  border-radius: 18px;
+  padding: 24px 28px;
+  margin: 10px 0 22px;
+}
+.jumbotron .q-cat {
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.26em;
+  color: var(--orange);
+  text-transform: uppercase;
+}
+.shotclock { text-align: center; min-width: 84px; }
+.shotclock b {
+  display: block;
+  font-size: 30px;
+  color: var(--led);
+  text-shadow: 0 0 16px rgba(255, 176, 66, 0.45);
+}
+.shotclock.danger b { color: #ff6b5e; text-shadow: 0 0 18px rgba(226, 75, 74, 0.7); }
+.clock-bar {
+  height: 5px;
+  border-radius: 3px;
+  background: var(--navy-3);
+  overflow: hidden;
+  margin-top: 10px;
+}
+.clock-bar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--orange), var(--gold));
+  transition: width 0.2s linear;
+}
+
+/* ═══ v4: conference floor (trash talk) ═══════════════ */
+.conf-layout {
+  display: grid;
+  grid-template-columns: 1fr 230px 1fr;
+  gap: 18px;
+  align-items: start;
+  max-width: 1060px;
+  margin: 26px auto 0;
+}
+.conf-col h3 {
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.34em;
+  color: var(--blue-soft);
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.conf-col .teams-grid { grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); margin: 0; }
+.champ-crest {
+  background: linear-gradient(180deg, var(--orange-hot), var(--orange));
+  border-radius: 18px;
+  padding: 26px 18px;
+  text-align: center;
+  box-shadow: 0 16px 44px rgba(245, 132, 38, 0.35);
+  position: sticky;
+  top: 90px;
+}
+.champ-crest .crest-nyk {
+  font-family: var(--display);
+  font-size: 44px;
+  color: #fff;
+  letter-spacing: 0.1em;
+  line-height: 1;
+}
+.champ-crest .crest-sub {
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.26em;
+  color: rgba(255, 255, 255, 0.92);
+  text-transform: uppercase;
+  margin-top: 6px;
+  display: block;
+}
+.champ-crest .crest-trophy { font-size: 34px; display: block; margin: 10px 0 4px; }
+.champ-crest .crest-note {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+/* ═══ v4: championship cinema ═════════════════════════ */
+.banners-row { display: flex; gap: 18px; justify-content: center; margin: 26px 0 6px; }
+.bannerflag {
+  width: 96px;
+  padding: 18px 0 26px;
+  text-align: center;
+  background: linear-gradient(180deg, var(--navy-3), var(--navy-2));
+  border: 1px solid rgba(250, 199, 117, 0.45);
+  clip-path: polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%);
+  font-family: var(--graduate, var(--display));
+  color: var(--gold);
+  font-size: 20px;
+}
+.bannerflag small {
+  display: block;
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--silver);
+  margin-top: 4px;
+}
+.bannerflag.new {
+  background: linear-gradient(180deg, var(--orange-hot), var(--orange));
+  color: #fff;
+  border-color: var(--gold);
+}
+.bannerflag.new small { color: rgba(255, 255, 255, 0.9); }
+.chip-hero {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(250, 199, 117, 0.4);
+  max-width: 1060px;
+  margin: 30px auto 0;
+}
+.chip-hero img { width: 100%; max-height: 430px; object-fit: cover; object-position: center 25%; display: block; }
+.chip-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(4, 14, 38, 0.9));
+}
+.chip-hero figcaption {
+  position: absolute;
+  bottom: 18px;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  text-align: center;
+  font-family: var(--display);
+  font-size: clamp(18px, 3vw, 28px);
+  letter-spacing: 0.14em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+.score-strip { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+.score-pill {
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  border-radius: 999px;
+  padding: 8px 18px;
+  border: 1px solid rgba(133, 183, 235, 0.35);
+  color: var(--blue-soft);
+  cursor: pointer;
+  transition: all 0.14s;
+}
+.score-pill:hover { border-color: var(--orange); color: var(--white); }
+.score-pill.w { border-color: rgba(29, 158, 117, 0.7); color: #9fe1cb; }
+.score-pill.l { border-color: rgba(226, 75, 74, 0.55); color: #f0a4a3; }
+.score-pill.on { background: var(--orange); border-color: var(--orange); color: #fff; }
+
+@media (max-width: 860px) {
+  .conf-layout { grid-template-columns: 1fr; }
+  .champ-crest { position: static; }
+  .garden-time { display: none; }
+}
+
 @media (max-width: 720px) {
   .concourse { flex-direction: column; gap: 14px; }
   .walk, .walk.right { align-items: center; text-align: center; }

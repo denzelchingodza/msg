@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Anton, Barlow_Condensed, Inter } from "next/font/google";
+import { Anton, Barlow_Condensed, Graduate, Inter } from "next/font/google";
 import Link from "next/link";
 import GardenAudio from "@/components/GardenAudio";
+import GardenTime from "@/components/GardenTime";
 import HeaderLocation from "@/components/HeaderLocation";
 import "./globals.css";
 
@@ -11,6 +12,11 @@ const barlow = Barlow_Condensed({
   weight: ["500", "600", "700"],
   subsets: ["latin"],
   variable: "--barlow",
+});
+const graduate = Graduate({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--graduate",
 });
 
 export const metadata: Metadata = {
@@ -25,7 +31,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${anton.variable} ${inter.variable} ${barlow.variable}`}
+      className={`${anton.variable} ${inter.variable} ${barlow.variable} ${graduate.variable}`}
     >
       <body>
         <header className="nav">
@@ -37,6 +43,7 @@ export default function RootLayout({
               EST. 1946
             </span>
           </Link>
+          <GardenTime />
           <HeaderLocation />
           <GardenAudio />
           <Link href="/" className="nav-home">
@@ -44,8 +51,11 @@ export default function RootLayout({
           </Link>
         </header>
         {children}
-        <div className="footer-chant">GO NEW YORK GO NEW YORK GO · BING BONG</div>
-        <footer className="court-stripe" aria-hidden="true" />
+        <footer className="site-footer">
+          <span className="made-by">DENZEL MADE THIS</span>
+          <span>NEW YORK FOREVER · BING BONG</span>
+        </footer>
+        <div className="court-stripe" aria-hidden="true" />
       </body>
     </html>
   );

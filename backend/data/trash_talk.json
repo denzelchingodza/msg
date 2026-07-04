@@ -1,184 +1,373 @@
 {
   "teams": [
-    {"name": "Atlanta Hawks", "abbr": "ATL", "nickname": "The Appetizer", "lines": [
-      "You went up 2 1 on us in the first round of 2026. We won 13 straight after that. You were the stretching routine.",
-      "Trae won at the Garden in 2021 and bowed. We won the whole thing in 2026 and paraded. Different weight classes.",
-      "Atlanta has one title since 1958. We waited 53 years and still lapped your whole franchise mood.",
-      "The State Farm Arena crowd is lovely. Quiet, but lovely."
-    ]},
-    {"name": "Boston Celtics", "abbr": "BOS", "nickname": "The Leprechauns", "lines": [
-      "18 banners and the newest one is already collecting dust. Ours still smells like confetti.",
-      "You have history. We have RIGHT NOW. Check the scoreboard, check the calendar, check yourself.",
-      "Your best trash talk is about the 80s. Ours is from LAST JUNE.",
-      "The Garden called. The real one, in New York. It wants Boston to stop borrowing the name.",
-      "Banner 18 took a superteam. Banner 3 took a second round pick and 53 years of faith. Ours reads better."
-    ]},
-    {"name": "Brooklyn Nets", "abbr": "BKN", "nickname": "The Roommates", "lines": [
-      "You're not our rival. You're our subway stop.",
-      "The superteam era ended with zero rings and a very nice practice facility.",
-      "Mikal Bridges took the 4 train out of Brooklyn and won a chip. Smartest commute in NBA history.",
-      "We waited 53 years for a title. You've waited 50 for an identity.",
-      "Barclays has great acoustics. For Knicks chants. When we visit."
-    ]},
-    {"name": "Charlotte Hornets", "abbr": "CHA", "nickname": "The Group Project", "lines": [
-      "LaMelo is electric. The standings are not.",
-      "Your franchise's biggest win is a sneaker deal.",
-      "Charlotte has never seen a conference finals. Come to ours, doors open every June now.",
-      "Even the owner's highlight reel plays in another city's jersey."
-    ]},
-    {"name": "Chicago Bulls", "abbr": "CHI", "nickname": "The Documentary", "lines": [
-      "Your whole personality is a Netflix series about the 90s. Ours is June 13, 2026.",
-      "Six rings, zero since the Backstreet Boys were touring. Original lineup.",
-      "MJ tied Brunson for most points in a road closeout game. Nice of Michael to keep pace.",
-      "You beat the 90s Knicks. Congratulations on your greatest achievement: annoying our dads."
-    ]},
-    {"name": "Cleveland Cavaliers", "abbr": "CLE", "nickname": "The Swept", "lines": [
-      "2026 East finals. Four games. You led by 22 in one of them. Thank you for the memories.",
-      "Cleveland fans called the sweep a rebuilding year. It was May.",
-      "Your only banner needed the greatest player ever to come home. Ours needed a guy Dallas didn't want.",
-      "The 22 point comeback wasn't personal. Okay, it was a little personal."
-    ]},
-    {"name": "Dallas Mavericks", "abbr": "DAL", "nickname": "The Donors", "lines": [
-      "You let Brunson walk for nothing. The 2026 banner has a special thanks section, like movie credits. You're in it.",
-      "Two franchise point guards passed through your hands. Dallas: where greatness books a connecting flight.",
-      "Every time Brunson hits a step back, a Mavs accountant wakes up screaming.",
-      "Thank you for your contribution to New York culture. Receipts available at the parade."
-    ]},
-    {"name": "Denver Nuggets", "abbr": "DEN", "nickname": "The Altitude Excuse", "lines": [
-      "Jokic is a genius. The thin air doing half your defense is also a genius.",
-      "One ring and you talk like a dynasty. We waited 53 years and still talk less. Barely, but less.",
-      "Nobody outside Denver can name your arena without googling.",
-      "The Garden at sea level is louder than your building at 5,280 feet. Physics can't explain it. Faith can."
-    ]},
-    {"name": "Detroit Pistons", "abbr": "DET", "nickname": "The Regular Season Champs", "lines": [
-      "You finished ahead of us in the 2025 26 standings. Adorable. Where were you in June?",
-      "Bad Boys was 35 years ago. The scariest thing in Detroit now is the cap sheet.",
-      "You're the team every rebuild article cites as a hopeful ending. We're the actual ending.",
-      "Seeding is a participation trophy. Ask the Garden what the real one looks like."
-    ]},
-    {"name": "Golden State Warriors", "abbr": "GSW", "nickname": "The Dynasty (Retired)", "lines": [
-      "The 25 26 Knicks sweep the 73 9 Warriors and it's only close for a half.",
-      "Prime Steph doesn't start over Brunson. He comes off the bench for spacing.",
-      "You changed basketball forever. Then 2026 happened and basketball changed back. New York fits.",
-      "Light years ahead, one championship behind the moment. Time is undefeated."
-    ]},
-    {"name": "Houston Rockets", "abbr": "HOU", "nickname": "The Clutch City Renters", "lines": [
-      "1994 was your peak and it required our Game 7 going wrong. Even your glory is Knicks adjacent.",
-      "Clutch City ran on our heartbreak. We paid that debt in full in 2026. Interest included.",
-      "Young, long, athletic, and still not in the last game of the season. We know how that story ends now.",
-      "Your best chant is a math argument about threes."
-    ]},
-    {"name": "Indiana Pacers", "abbr": "IND", "nickname": "The Ghosts of the 90s", "lines": [
-      "Reggie's 8 points in 9 seconds: iconic. Brunson's 45 in a title clincher: a banner. Different sports really.",
-      "You knocked us out in 2025 and woke something up. Technically this is your fault. Thank you.",
-      "The choke sign aged like the Pacers' title odds.",
-      "Your loudest arena moment needs our fans going quiet in it. Ours needs a trophy."
-    ]},
-    {"name": "LA Clippers", "abbr": "LAC", "nickname": "The Other Tenants", "lines": [
-      "Zero conference titles. Ever. Even the Nets look at you with sympathy.",
-      "You built a beautiful new arena for playoff disappointments. At least the parking is easy.",
-      "The Clippers experience: superteam in October, cap space in May.",
-      "We waited 53 years and it hurt. You've waited 55 and it's just Tuesday."
-    ]},
-    {"name": "Los Angeles Lakers", "abbr": "LAL", "nickname": "The Production Company", "lines": [
-      "17 rings and none of them required surviving New York media daily. Apply the difficulty multiplier: NYK 3 beats LAL 17.",
-      "Purple and gold is a costume. Blue and orange is a birth certificate.",
-      "You trade for stars. We grow legends out of second round picks. Farm to table.",
-      "Hollywood endings are scripted. Ours took 53 years of live television.",
-      "Half your celebrities fly to OUR games. Ask Timothée who he sits with."
-    ]},
-    {"name": "Memphis Grizzlies", "abbr": "MEM", "nickname": "The Grit Without the Grind", "lines": [
-      "Fine in the West, invisible in June. The NBA Finals require attendance.",
-      "Your franchise peak is a first round upset and a great slogan.",
-      "Memphis has better ribs than results. Full respect to the ribs.",
-      "Talk to us when the light in the tunnel isn't a highlight reel."
-    ]},
-    {"name": "Miami Heat", "abbr": "MIA", "nickname": "The Gym Class", "lines": [
-      "Heat Culture lost to possession over outcome. HR manual versus religion.",
-      "Your fans arrive in the second quarter. Ours arrived in 1946 and never left.",
-      "The 90s wars were fun. The 2026 banner is funnier.",
-      "Miami: where stars go to rest. New York: where legends go to work.",
-      "Even Pat Riley knows the Garden is the mecca. He worked there. His loss compounds annually."
-    ]},
-    {"name": "Milwaukee Bucks", "abbr": "MIL", "nickname": "The One Hit Wonder", "lines": [
-      "Giannis is a monster and your front office is a horror movie for Giannis.",
-      "2021 was beautiful. So was everything you've wasted since.",
-      "Milwaukee in June: great lake, no basketball.",
-      "The deer in headlights on your logo is also your playoff defense."
-    ]},
-    {"name": "Minnesota Timberwolves", "abbr": "MIN", "nickname": "The Generous Ones", "lines": [
-      "You traded us KAT. He shot 45 percent from three in our title playoffs. Send our regards to the front office.",
-      "The Wolves' trophy case has more draft hats than banners.",
-      "Zero Finals appearances since 1989. The cold preserves everything except momentum.",
-      "Ant is a superstar. Minnesota is where superstars practice patience."
-    ]},
-    {"name": "New Orleans Pelicans", "abbr": "NOP", "nickname": "The Injury Report", "lines": [
-      "Your best lineup exists mostly in theory and preseason photos.",
-      "Zion in shape is scary. The Finals in New Orleans is science fiction.",
-      "A pelican swallows anything whole. Fitting mascot for that cap situation.",
-      "Bourbon Street parties harder than your playoff runs last."
-    ]},
-    {"name": "Oklahoma City Thunder", "abbr": "OKC", "nickname": "The Spreadsheet", "lines": [
-      "60 plus wins in 2025 26 and the world still spent June watching us. Destiny had a scheduling conflict.",
-      "You have a decade of draft picks. We have a parade route. Assets versus memories.",
-      "SGA is inevitable. So were we, eventually. Ask the Spurs how eventually feels.",
-      "Loud City is a fun name for a library with a scoreboard."
-    ]},
-    {"name": "Orlando Magic", "abbr": "ORL", "nickname": "The Theme Park", "lines": [
-      "Your franchise history is two Finals sweeps and a Shaq departure. The rides at Disney finish better.",
-      "Great young core. Come back when one of them has a June highlight.",
-      "Orlando: where defenses are elite and offenses are on a waitlist.",
-      "The Magic is the name. The playoff disappearing act is the trick."
-    ]},
-    {"name": "Philadelphia 76ers", "abbr": "PHI", "nickname": "The Process (Ongoing)", "lines": [
-      "We swept you in the 2026 semis. The Process is now in year twelve of loading.",
-      "You boo your own draft picks. We sold out 17 straight lottery seasons. We are not the same.",
-      "Trust the Process. We trusted a second round pick instead. Scoreboard.",
-      "Philly throws batteries. New York throws parades. Aim differently."
-    ]},
-    {"name": "Phoenix Suns", "abbr": "PHX", "nickname": "The Timeshare", "lines": [
-      "Zero titles since 1968. The sun rises everywhere except on that trophy case.",
-      "You bet the franchise on shortcuts. We took the 53 year scenic route and still arrived first.",
-      "The Valley is beautiful. The Finals record is 0 for 3.",
-      "Your superteam era lasted one Instagram cycle."
-    ]},
-    {"name": "Portland Trail Blazers", "abbr": "POR", "nickname": "The Rain Delay", "lines": [
-      "One title in 1977 and a half century of what ifs. Respectfully, we just ended our version of that story.",
-      "Dame gave you a decade of loyalty and you gave him a rebuild.",
-      "Rip City rips tickets, not nets, in June.",
-      "Great fans, greater coffee, zero basketball in the last week of the season."
-    ]},
-    {"name": "Sacramento Kings", "abbr": "SAC", "nickname": "The Benefactors", "lines": [
-      "You fired Mike Brown. He won a chip with us 18 months later. The NBA's most generous charity.",
-      "Light the beam. We lit the Empire State Building.",
-      "2002 was a robbery, we agree. 2026 was a coronation, we insist.",
-      "The cowbell is the only ring adjacent metal in the building."
-    ]},
-    {"name": "San Antonio Spurs", "abbr": "SAS", "nickname": "The Hosts", "lines": [
-      "Thanks for hosting the party on June 13. The confetti was ours, the memory is everyone's.",
-      "You had a 29 point lead in Game 4. That's not trash talk, that's the box score out loud.",
-      "Pop taught Mike Brown everything. The student graduated. At your house. On your court.",
-      "Wemby is incredible and we sincerely look forward to beating him in June, annually.",
-      "Five titles of beautiful fundamentals. And then Brunson happened to you at home."
-    ]},
-    {"name": "Toronto Raptors", "abbr": "TOR", "nickname": "The Tourists", "lines": [
-      "One title, rented for a single season with someone else's superstar.",
-      "We The North? You The Team our bench beats on the second night of a back to back.",
-      "Drake courtside is the franchise's most consistent playoff performer.",
-      "Kawhi's shot bounced four times. Our drought bounced 53 years. Both went in. Only one stayed."
-    ]},
-    {"name": "Utah Jazz", "abbr": "UTA", "nickname": "The Elevator Music", "lines": [
-      "Zero titles, two Finals, both ended by someone else's documentary.",
-      "The Jazz. Named after New Orleans music. Playing in Utah. Identity was never the strong suit.",
-      "Your GOATs lost to MJ twice. Ours limped out of a tunnel and won. Narrative matters.",
-      "Salt Lake is lovely in June. You'd know, you're always home for it."
-    ]},
-    {"name": "Washington Wizards", "abbr": "WAS", "nickname": "The Waiting Room", "lines": [
-      "One title, 1978, and even your own fans need the year looked up.",
-      "MJ retired here so quietly the league forgot. That's the franchise effect.",
-      "The Wizards: proof that a capital city grants no power whatsoever.",
-      "Your rebuild has a rebuild. Ours had a parade."
-    ]}
+    {
+      "name": "Atlanta Hawks",
+      "abbr": "ATL",
+      "nickname": "The Appetizer",
+      "lines": [
+        "You went up 2 1 on us in the first round of 2026. We won 13 straight after that. You were the stretching routine.",
+        "Trae won at the Garden in 2021 and bowed. We won the whole thing in 2026 and paraded. Different weight classes.",
+        "Atlanta has one title since 1958. We waited 53 years and still lapped your whole franchise mood.",
+        "The State Farm Arena crowd is lovely. Quiet, but lovely."
+      ],
+      "conf": "East"
+    },
+    {
+      "name": "Boston Celtics",
+      "abbr": "BOS",
+      "nickname": "The Leprechauns",
+      "lines": [
+        "18 banners and the newest one is already collecting dust. Ours still smells like confetti.",
+        "You have history. We have RIGHT NOW. Check the scoreboard, check the calendar, check yourself.",
+        "Your best trash talk is about the 80s. Ours is from LAST JUNE.",
+        "The Garden called. The real one, in New York. It wants Boston to stop borrowing the name.",
+        "Banner 18 took a superteam. Banner 3 took a second round pick and 53 years of faith. Ours reads better.",
+        "Tatum needed three All NBA teammates. Brunson needed Josh Hart's cardio."
+      ],
+      "conf": "East"
+    },
+    {
+      "name": "Brooklyn Nets",
+      "abbr": "BKN",
+      "nickname": "The Roommates",
+      "lines": [
+        "You're not our rival. You're our subway stop.",
+        "The superteam era ended with zero rings and a very nice practice facility.",
+        "Mikal Bridges took the 4 train out of Brooklyn and won a chip. Smartest commute in NBA history.",
+        "We waited 53 years for a title. You've waited 50 for an identity.",
+        "Barclays has great acoustics. For Knicks chants. When we visit.",
+        "Your franchise player is a draft pick owed to someone else."
+      ],
+      "conf": "East"
+    },
+    {
+      "name": "Charlotte Hornets",
+      "abbr": "CHA",
+      "nickname": "The Group Project",
+      "lines": [
+        "LaMelo is electric. The standings are not.",
+        "Your franchise's biggest win is a sneaker deal.",
+        "Charlotte has never seen a conference finals. Come to ours, doors open every June now.",
+        "Even the owner's highlight reel plays in another city's jersey."
+      ],
+      "conf": "East"
+    },
+    {
+      "name": "Chicago Bulls",
+      "abbr": "CHI",
+      "nickname": "The Documentary",
+      "lines": [
+        "Your whole personality is a Netflix series about the 90s. Ours is June 13, 2026.",
+        "Six rings, zero since the Backstreet Boys were touring. Original lineup.",
+        "MJ tied Brunson for most points in a road closeout game. Nice of Michael to keep pace.",
+        "You beat the 90s Knicks. Congratulations on your greatest achievement: annoying our dads.",
+        "Your franchise player is whoever's in the Last Dance thumbnail."
+      ],
+      "conf": "East"
+    },
+    {
+      "name": "Cleveland Cavaliers",
+      "abbr": "CLE",
+      "nickname": "The Swept",
+      "lines": [
+        "2026 East finals. Four games. You led by 22 in one of them. Thank you for the memories.",
+        "Cleveland fans called the sweep a rebuilding year. It was May.",
+        "Your only banner needed the greatest player ever to come home. Ours needed a guy Dallas didn't want.",
+        "The 22 point comeback wasn't personal. Okay, it was a little personal.",
+        "Mitchell drops 40 all winter and your springs still end in group therapy."
+      ],
+      "conf": "East"
+    },
+    {
+      "name": "Dallas Mavericks",
+      "abbr": "DAL",
+      "nickname": "The Donors",
+      "lines": [
+        "You let Brunson walk for nothing. The 2026 banner has a special thanks section, like movie credits. You're in it.",
+        "Two franchise point guards passed through your hands. Dallas: where greatness books a connecting flight.",
+        "Every time Brunson hits a step back, a Mavs accountant wakes up screaming.",
+        "Thank you for your contribution to New York culture. Receipts available at the parade.",
+        "Luka is a wizard. Letting Brunson walk to save money was dark magic."
+      ],
+      "conf": "West"
+    },
+    {
+      "name": "Denver Nuggets",
+      "abbr": "DEN",
+      "nickname": "The Altitude Excuse",
+      "lines": [
+        "Jokic is a genius. The thin air doing half your defense is also a genius.",
+        "One ring and you talk like a dynasty. We waited 53 years and still talk less. Barely, but less.",
+        "Nobody outside Denver can name your arena without googling.",
+        "The Garden at sea level is louder than your building at 5,280 feet. Physics can't explain it. Faith can."
+      ],
+      "conf": "West"
+    },
+    {
+      "name": "Detroit Pistons",
+      "abbr": "DET",
+      "nickname": "The Regular Season Champs",
+      "lines": [
+        "You finished ahead of us in the 2025 26 standings. Adorable. Where were you in June?",
+        "Bad Boys was 35 years ago. The scariest thing in Detroit now is the cap sheet.",
+        "You're the team every rebuild article cites as a hopeful ending. We're the actual ending.",
+        "Seeding is a participation trophy. Ask the Garden what the real one looks like.",
+        "Cade is legit. The banner count is still zero since 1990."
+      ],
+      "conf": "East"
+    },
+    {
+      "name": "Golden State Warriors",
+      "abbr": "GSW",
+      "nickname": "The Dynasty (Retired)",
+      "lines": [
+        "The 25 26 Knicks sweep the 73 9 Warriors and it's only close for a half.",
+        "Prime Steph doesn't start over Brunson. He comes off the bench for spacing.",
+        "You changed basketball forever. Then 2026 happened and basketball changed back. New York fits.",
+        "Light years ahead, one championship behind the moment. Time is undefeated."
+      ],
+      "conf": "West"
+    },
+    {
+      "name": "Houston Rockets",
+      "abbr": "HOU",
+      "nickname": "The Clutch City Renters",
+      "lines": [
+        "1994 was your peak and it required our Game 7 going wrong. Even your glory is Knicks adjacent.",
+        "Clutch City ran on our heartbreak. We paid that debt in full in 2026. Interest included.",
+        "Young, long, athletic, and still not in the last game of the season. We know how that story ends now.",
+        "Your best chant is a math argument about threes.",
+        "Your young core's ceiling is our starting five's Tuesday."
+      ],
+      "conf": "West"
+    },
+    {
+      "name": "Indiana Pacers",
+      "abbr": "IND",
+      "nickname": "The Ghosts of the 90s",
+      "lines": [
+        "Reggie's 8 points in 9 seconds: iconic. Brunson's 45 in a title clincher: a banner. Different sports really.",
+        "You knocked us out in 2025 and woke something up. Technically this is your fault. Thank you.",
+        "The choke sign aged like the Pacers' title odds.",
+        "Your loudest arena moment needs our fans going quiet in it. Ours needs a trophy.",
+        "Haliburton runs the fastest offense that still ends before June."
+      ],
+      "conf": "East"
+    },
+    {
+      "name": "LA Clippers",
+      "abbr": "LAC",
+      "nickname": "The Other Tenants",
+      "lines": [
+        "Zero conference titles. Ever. Even the Nets look at you with sympathy.",
+        "You built a beautiful new arena for playoff disappointments. At least the parking is easy.",
+        "The Clippers experience: superteam in October, cap space in May.",
+        "We waited 53 years and it hurt. You've waited 55 and it's just Tuesday.",
+        "Kawhi load managed his way past your entire championship window."
+      ],
+      "conf": "West"
+    },
+    {
+      "name": "Los Angeles Lakers",
+      "abbr": "LAL",
+      "nickname": "The Production Company",
+      "lines": [
+        "17 rings and none of them required surviving New York media daily. Apply the difficulty multiplier: NYK 3 beats LAL 17.",
+        "Purple and gold is a costume. Blue and orange is a birth certificate.",
+        "You trade for stars. We grow legends out of second round picks. Farm to table.",
+        "Hollywood endings are scripted. Ours took 53 years of live television.",
+        "Half your celebrities fly to OUR games. Ask Timoth\u00e9e who he sits with."
+      ],
+      "conf": "West"
+    },
+    {
+      "name": "Memphis Grizzlies",
+      "abbr": "MEM",
+      "nickname": "The Grit Without the Grind",
+      "lines": [
+        "Fine in the West, invisible in June. The NBA Finals require attendance.",
+        "Your franchise peak is a first round upset and a great slogan.",
+        "Memphis has better ribs than results. Full respect to the ribs.",
+        "Talk to us when the light in the tunnel isn't a highlight reel.",
+        "Ja's highlights get more minutes than your Junes."
+      ],
+      "conf": "West"
+    },
+    {
+      "name": "Miami Heat",
+      "abbr": "MIA",
+      "nickname": "The Gym Class",
+      "lines": [
+        "Heat Culture lost to possession over outcome. HR manual versus religion.",
+        "Your fans arrive in the second quarter. Ours arrived in 1946 and never left.",
+        "The 90s wars were fun. The 2026 banner is funnier.",
+        "Miami: where stars go to rest. New York: where legends go to work.",
+        "Even Pat Riley knows the Garden is the mecca. He worked there. His loss compounds annually."
+      ],
+      "conf": "East"
+    },
+    {
+      "name": "Milwaukee Bucks",
+      "abbr": "MIL",
+      "nickname": "The One Hit Wonder",
+      "lines": [
+        "Giannis is a monster and your front office is a horror movie for Giannis.",
+        "2021 was beautiful. So was everything you've wasted since.",
+        "Milwaukee in June: great lake, no basketball.",
+        "The deer in headlights on your logo is also your playoff defense."
+      ],
+      "conf": "East"
+    },
+    {
+      "name": "Minnesota Timberwolves",
+      "abbr": "MIN",
+      "nickname": "The Generous Ones",
+      "lines": [
+        "You traded us KAT. He shot 45 percent from three in our title playoffs. Send our regards to the front office.",
+        "The Wolves' trophy case has more draft hats than banners.",
+        "Zero Finals appearances since 1989. The cold preserves everything except momentum.",
+        "Ant is a superstar. Minnesota is where superstars practice patience."
+      ],
+      "conf": "West"
+    },
+    {
+      "name": "New Orleans Pelicans",
+      "abbr": "NOP",
+      "nickname": "The Injury Report",
+      "lines": [
+        "Your best lineup exists mostly in theory and preseason photos.",
+        "Zion in shape is scary. The Finals in New Orleans is science fiction.",
+        "A pelican swallows anything whole. Fitting mascot for that cap situation.",
+        "Bourbon Street parties harder than your playoff runs last."
+      ],
+      "conf": "West"
+    },
+    {
+      "name": "Oklahoma City Thunder",
+      "abbr": "OKC",
+      "nickname": "The Spreadsheet",
+      "lines": [
+        "60 plus wins in 2025 26 and the world still spent June watching us. Destiny had a scheduling conflict.",
+        "You have a decade of draft picks. We have a parade route. Assets versus memories.",
+        "SGA is inevitable. So were we, eventually. Ask the Spurs how eventually feels.",
+        "Loud City is a fun name for a library with a scoreboard."
+      ],
+      "conf": "West"
+    },
+    {
+      "name": "Orlando Magic",
+      "abbr": "ORL",
+      "nickname": "The Theme Park",
+      "lines": [
+        "Your franchise history is two Finals sweeps and a Shaq departure. The rides at Disney finish better.",
+        "Great young core. Come back when one of them has a June highlight.",
+        "Orlando: where defenses are elite and offenses are on a waitlist.",
+        "The Magic is the name. The playoff disappearing act is the trick."
+      ],
+      "conf": "East"
+    },
+    {
+      "name": "Philadelphia 76ers",
+      "abbr": "PHI",
+      "nickname": "The Process (Ongoing)",
+      "lines": [
+        "We swept you in the 2026 semis. The Process is now in year twelve of loading.",
+        "You boo your own draft picks. We sold out 17 straight lottery seasons. We are not the same.",
+        "Trust the Process. We trusted a second round pick instead. Scoreboard.",
+        "Philly throws batteries. New York throws parades. Aim differently.",
+        "Embiid wins his awards in February. The Garden hands out its awards in June."
+      ],
+      "conf": "East"
+    },
+    {
+      "name": "Phoenix Suns",
+      "abbr": "PHX",
+      "nickname": "The Timeshare",
+      "lines": [
+        "Zero titles since 1968. The sun rises everywhere except on that trophy case.",
+        "You bet the franchise on shortcuts. We took the 53 year scenic route and still arrived first.",
+        "The Valley is beautiful. The Finals record is 0 for 3.",
+        "Your superteam era lasted one Instagram cycle.",
+        "Booker deserves better. So did the three drafts' worth of picks you torched."
+      ],
+      "conf": "West"
+    },
+    {
+      "name": "Portland Trail Blazers",
+      "abbr": "POR",
+      "nickname": "The Rain Delay",
+      "lines": [
+        "One title in 1977 and a half century of what ifs. Respectfully, we just ended our version of that story.",
+        "Dame gave you a decade of loyalty and you gave him a rebuild.",
+        "Rip City rips tickets, not nets, in June.",
+        "Great fans, greater coffee, zero basketball in the last week of the season."
+      ],
+      "conf": "West"
+    },
+    {
+      "name": "Sacramento Kings",
+      "abbr": "SAC",
+      "nickname": "The Benefactors",
+      "lines": [
+        "You fired Mike Brown. He won a chip with us 18 months later. The NBA's most generous charity.",
+        "Light the beam. We lit the Empire State Building.",
+        "2002 was a robbery, we agree. 2026 was a coronation, we insist.",
+        "The cowbell is the only ring adjacent metal in the building."
+      ],
+      "conf": "West"
+    },
+    {
+      "name": "San Antonio Spurs",
+      "abbr": "SAS",
+      "nickname": "The Hosts",
+      "lines": [
+        "Thanks for hosting the party on June 13. The confetti was ours, the memory is everyone's.",
+        "You had a 29 point lead in Game 4. That's not trash talk, that's the box score out loud.",
+        "Pop taught Mike Brown everything. The student graduated. At your house. On your court.",
+        "Wemby is incredible and we sincerely look forward to beating him in June, annually.",
+        "Five titles of beautiful fundamentals. And then Brunson happened to you at home."
+      ],
+      "conf": "West"
+    },
+    {
+      "name": "Toronto Raptors",
+      "abbr": "TOR",
+      "nickname": "The Tourists",
+      "lines": [
+        "One title, rented for a single season with someone else's superstar.",
+        "We The North? You The Team our bench beats on the second night of a back to back.",
+        "Drake courtside is the franchise's most consistent playoff performer.",
+        "Kawhi's shot bounced four times. Our drought bounced 53 years. Both went in. Only one stayed.",
+        "Scottie posts triple doubles in games nobody in Canada stays up for."
+      ],
+      "conf": "East"
+    },
+    {
+      "name": "Utah Jazz",
+      "abbr": "UTA",
+      "nickname": "The Elevator Music",
+      "lines": [
+        "Zero titles, two Finals, both ended by someone else's documentary.",
+        "The Jazz. Named after New Orleans music. Playing in Utah. Identity was never the strong suit.",
+        "Your GOATs lost to MJ twice. Ours limped out of a tunnel and won. Narrative matters.",
+        "Salt Lake is lovely in June. You'd know, you're always home for it.",
+        "Lauri leads the league in trade rumors per 36 minutes."
+      ],
+      "conf": "West"
+    },
+    {
+      "name": "Washington Wizards",
+      "abbr": "WAS",
+      "nickname": "The Waiting Room",
+      "lines": [
+        "One title, 1978, and even your own fans need the year looked up.",
+        "MJ retired here so quietly the league forgot. That's the franchise effect.",
+        "The Wizards: proof that a capital city grants no power whatsoever.",
+        "Your rebuild has a rebuild. Ours had a parade.",
+        "Your best player conversation changes every trade deadline."
+      ],
+      "conf": "East"
+    }
   ],
   "closers": [
     "Sent from the Mecca.",

@@ -59,14 +59,8 @@ export default function RageBait() {
 
       <div
         key={take?.take ?? "empty"}
-        className="card card-hot ticket swap"
-        style={{
-          maxWidth: 840,
-          margin: "36px auto",
-          minHeight: 250,
-          display: "grid",
-          placeItems: "center",
-        }}
+        className="card card-hot ticket swap card-fixed"
+        style={{ maxWidth: 840, margin: "30px auto", height: 320 }}
       >
         {take ? (
           <div style={{ width: "100%" }}>

@@ -91,15 +91,20 @@ export default function Roulette() {
 
       <div
         key={fact?.text ?? "empty"}
-        className={`card ticket swap ${fact?.rare ? "card-rare" : ""}`}
+        className={`card ticket swap card-fixed ${fact?.rare ? "card-rare" : ""}`}
         style={{
           maxWidth: 780,
-          margin: "36px auto",
-          minHeight: 220,
-          display: "grid",
-          placeItems: "center",
+          margin: "30px auto",
+          position: "relative",
         }}
       >
+        {fact && (
+          <span className="tag-chip">
+            {{ chip26: "The '26 chip", history: "Deep history", fanbase: "Fanbase lore", silly: "Nonsense" }[
+              fact.tag
+            ] ?? fact.tag}
+          </span>
+        )}
         {fact ? (
           <div>
             {fact.rare && <span className="badge">★ RARE PULL ★</span>}

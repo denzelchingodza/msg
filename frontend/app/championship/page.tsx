@@ -20,8 +20,34 @@ const ART = new Set([
   "rooftop_of_new_york.jpg",
 ]);
 
+/* One pill per story card: the five Finals games plus the parade. */
+const PILLS = [
+  { label: "G1 · W", cls: "w" },
+  { label: "G2 · W", cls: "w" },
+  { label: "G3 · L", cls: "l" },
+  { label: "G4 · W 107 106", cls: "w" },
+  { label: "G5 · W 94 90", cls: "w" },
+  { label: "PARADE", cls: "w" },
+];
+
 const caption = (name: string) =>
   name.replace(/\.[^.]+$/, "").replace(/_/g, " ").toUpperCase();
+
+function useCountUp(target: number, ms = 1300) {
+  const [v, setV] = useState(0);
+  useEffect(() => {
+    const t0 = performance.now();
+    let raf = 0;
+    const step = (t: number) => {
+      const p = Math.min(1, (t - t0) / ms);
+      setV(Math.round(target * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [target, ms]);
+  return v;
+}
 
 export default function Championship() {
   const [story, setStory] = useState<Story[]>([]);
@@ -29,6 +55,10 @@ export default function Championship() {
   const [idx, setIdx] = useState(0);
   const [zoom, setZoom] = useState<string | null>(null);
   const [offline, setOffline] = useState(false);
+
+  const years = useCountUp(53);
+  const games = useCountUp(5);
+  const parades = useCountUp(1);
 
   useEffect(() => {
     celebrate(true);
@@ -62,17 +92,29 @@ export default function Championship() {
       <p className="kicker">Championship &rsquo;26</p>
       <h1 className="page-title">The Drought Is Dead</h1>
 
+      <div className="banners-row" aria-label="Championship banners">
+        <div className="bannerflag">
+          1970<small>CHAMPIONS</small>
+        </div>
+        <div className="bannerflag">
+          1973<small>CHAMPIONS</small>
+        </div>
+        <div className="bannerflag new">
+          2026<small>CHAMPIONS</small>
+        </div>
+      </div>
+
       <div className="trio">
         <div>
-          <b>53</b>
+          <b>{years}</b>
           <span>years of waiting</span>
         </div>
         <div>
-          <b>5</b>
+          <b>{games}</b>
           <span>finals games</span>
         </div>
         <div>
-          <b>1</b>
+          <b>{parades}</b>
           <span>parade</span>
         </div>
       </div>
@@ -85,16 +127,34 @@ export default function Championship() {
         </div>
       )}
 
+      <figure className="chip-hero">
+        <img
+          src="/photos/brunson_and_the_larry_obrien.jpg"
+          alt="Jalen Brunson holding the Larry O'Brien trophy at the parade"
+        />
+        <figcaption>The trophy came home</figcaption>
+      </figure>
+
       {slide && (
         <>
-          <p className="court-label">The run, game by game. Click to advance.</p>
+          <div className="score-strip">
+            {PILLS.slice(0, story.length).map((p, i) => (
+              <button
+                key={p.label}
+                className={`score-pill ${p.cls} ${i === idx ? "on" : ""}`}
+                onClick={() => setIdx(i)}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
           <div
             key={idx}
             className="card card-hot swap"
             style={{
               maxWidth: 880,
               margin: "16px auto 0",
-              minHeight: 230,
+              minHeight: 210,
               display: "grid",
               placeItems: "center",
               cursor: "pointer",
@@ -109,15 +169,6 @@ export default function Championship() {
                 {slide.text}
               </p>
             </div>
-          </div>
-          <div className="dots">
-            {story.map((_, i) => (
-              <i
-                key={i}
-                className={i === idx ? "on" : ""}
-                onClick={() => setIdx(i)}
-              />
-            ))}
           </div>
         </>
       )}

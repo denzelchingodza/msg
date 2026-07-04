@@ -105,16 +105,21 @@ export default function FaithPage() {
       </div>
 
       {faith && (
-        <p
-          className="display center"
-          style={{
-            fontSize: "clamp(28px, 5vw, 48px)",
-            color: "var(--gold)",
-            marginTop: 30,
-          }}
-        >
-          Bing bong. Forever.
-        </p>
+        <div className="center" style={{ marginTop: 30 }}>
+          <p
+            className="display"
+            style={{ fontSize: "clamp(28px, 5vw, 48px)", color: "var(--gold)" }}
+          >
+            Bing bong. Forever.
+          </p>
+          <a
+            href="/championship"
+            className="btn"
+            style={{ marginTop: 22, display: "inline-block" }}
+          >
+            Now go see the parade
+          </a>
+        </div>
       )}
 
       <Concourse />

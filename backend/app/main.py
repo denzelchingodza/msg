@@ -76,7 +76,8 @@ def hot_take():
 @app.get("/api/trash/teams")
 def trash_teams():
     return {"teams": [{"name": t["name"], "nickname": t["nickname"],
-                       "abbr": t.get("abbr", t["name"][:3].upper())}
+                       "abbr": t.get("abbr", t["name"][:3].upper()),
+                       "conf": t.get("conf", "East")}
                       for t in CONTENT["trash_talk"]["teams"]]}
 
 

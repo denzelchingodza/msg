@@ -1,0 +1,36 @@
+{
+  "takes": [
+    {"take": "The 2025-26 Knicks sweep the 73-9 Warriors and honestly it's only close for a half.", "rage": 5, "target": "Warriors fans"},
+    {"take": "Prime Steph Curry doesn't start over Jalen Brunson. He comes off the bench for spacing.", "rage": 5, "target": "Warriors fans"},
+    {"take": "The Nets are the best team in New Jersey.", "rage": 3, "target": "Nets fans"},
+    {"take": "Boston has 18 banners and none of them came back from 29 down in the Finals. Quantity over quality.", "rage": 5, "target": "Celtics fans"},
+    {"take": "Reggie Miller needed 9 seconds to score 8 points. Brunson needed one January slump to win a whole championship. Efficiency.", "rage": 3, "target": "Pacers fans"},
+    {"take": "The 'Heat Culture' is just Knicks culture with worse pizza.", "rage": 4, "target": "Heat fans"},
+    {"take": "MJ never dropped 45 in a road closeout game at age 29 as a second-round pick. Brunson did. Just stating facts and leaving.", "rage": 5, "target": "Bulls fans"},
+    {"take": "KAT is the best shooting big man of all time and Dirk fans need to hear it from someone who loves them.", "rage": 4, "target": "Mavs fans"},
+    {"take": "Dallas had Brunson AND Dončić and chose vibes. The 2026 banner is technically a Mavs front office achievement.", "rage": 5, "target": "Mavs fans"},
+    {"take": "The Spurs got a top-tier Finals experience in 2026 and should be thanking New York for the memories.", "rage": 4, "target": "Spurs fans"},
+    {"take": "Victor Wembanyama will win many titles. Starting whenever the Knicks are done. So, check back later.", "rage": 4, "target": "Spurs fans"},
+    {"take": "LeBron's best career decision was never playing for the Knicks, he knew the Garden spotlight was too bright.", "rage": 5, "target": "Lakers fans"},
+    {"take": "The Lakers have 17 rings and none of them required surviving the MTA on game night. Difficulty multiplier says Knicks 3 > Lakers 17.", "rage": 5, "target": "Lakers fans"},
+    {"take": "Ewing never won a ring because the basketball gods were saving all of it for 2026. It was a savings account, not a drought.", "rage": 2, "target": "Everyone"},
+    {"take": "The 8-second violation should be renamed the Reggie Rule and the Pacers should apologize annually.", "rage": 3, "target": "Pacers fans"},
+    {"take": "The NBA Cup only became a real trophy the moment the Knicks won it. Before that it was a group project.", "rage": 3, "target": "The league"},
+    {"take": "Madison Square Garden is the only arena that would sell out for a scrimmage. Your team's arena has a tarp section.", "rage": 4, "target": "Small markets"},
+    {"take": "The 90s Bulls only look good because they never had to play the 2026 Knicks.", "rage": 5, "target": "Bulls fans"},
+    {"take": "Philly fans boo their own draft picks. Knicks fans sold out 17 straight lottery seasons. We are not the same.", "rage": 4, "target": "Sixers fans"},
+    {"take": "Every 'greatest Finals performance ever' list that doesn't start with Brunson's Game 5 is legally considered fan fiction.", "rage": 4, "target": "TV pundits"},
+    {"take": "The Cavs got swept by the Knicks in the 2026 East finals and Cleveland fans called it 'a rebuilding year.' It was May.", "rage": 3, "target": "Cavs fans"},
+    {"take": "OKC won 60+ games in 2025-26 and the basketball world's response was 'cool, anyway, have you seen the Knicks?'", "rage": 3, "target": "Thunder fans"},
+    {"take": "Bing Bong is a more culturally significant phrase than anything ever chanted in Boston.", "rage": 4, "target": "Celtics fans"},
+    {"take": "Timothée Chalamet has more Finals wins as a fan (1) than the Nets have as a franchise (0).", "rage": 4, "target": "Nets fans"},
+    {"take": "Mike Brown got fired by Sacramento and won a chip 18 months later. The Kings remain the NBA's most generous charity.", "rage": 3, "target": "Kings fans"}
+  ],
+  "button_labels": [
+    "GENERATE ANOTHER WAR CRIME",
+    "RUIN ANOTHER GROUP CHAT",
+    "MORE DISRESPECT PLEASE",
+    "ESCALATE THE SITUATION",
+    "SOMEONE'S UNCLE IS TYPING..."
+  ]
+}

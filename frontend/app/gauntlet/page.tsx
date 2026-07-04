@@ -1,0 +1,231 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Concourse from "@/components/Concourse";
+import PhotoHero from "@/components/PhotoHero";
+import { api, Profile, syncProfile } from "@/lib/api";
+import { celebrate } from "@/lib/celebrate";
+
+interface Question {
+  q: string;
+  options: string[];
+  correct: number;
+  why: string;
+  cat: string;
+}
+interface Run {
+  questions: Question[];
+  praise: string[];
+  roast: string[];
+  ranks: { min: number; title: string }[];
+}
+
+const LETTERS = "ABCD";
+
+export default function Gauntlet() {
+  const [run, setRun] = useState<Run | null>(null);
+  const [idx, setIdx] = useState(0);
+  const [score, setScore] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [picked, setPicked] = useState<number | null>(null);
+  const [feedback, setFeedback] = useState("");
+  const [done, setDone] = useState(false);
+  const [offline, setOffline] = useState(false);
+  const [profile, setProfile] = useState<Profile | null>(null);
+
+  useEffect(() => {
+    syncProfile()
+      .then((r) => setProfile(r.profile))
+      .catch(() => setOffline(true));
+  }, []);
+
+  async function start() {
+    try {
+      const r = await api<Run>("/api/quiz/run");
+      setOffline(false);
+      setRun(r);
+      setIdx(0);
+      setScore(0);
+      setStreak(0);
+      setPicked(null);
+      setDone(false);
+    } catch {
+      setOffline(true);
+    }
+  }
+
+  function rankFor(s: number): string {
+    if (!run) return "";
+    let title = run.ranks[0].title;
+    for (const r of run.ranks) if (s * 3 >= r.min) title = r.title;
+    return title;
+  }
+
+  function answer(i: number) {
+    if (!run || picked !== null) return;
+    const q = run.questions[idx];
+    setPicked(i);
+    if (i === q.correct) {
+      const ns = streak + 1;
+      setScore((s) => s + 1);
+      setStreak(ns);
+      setFeedback(run.praise[Math.floor(Math.random() * run.praise.length)]);
+      if (ns >= 5) celebrate(true);
+    } else {
+      setStreak(0);
+      setFeedback(run.roast[Math.floor(Math.random() * run.roast.length)]);
+    }
+  }
+
+  async function next() {
+    if (!run) return;
+    if (idx + 1 >= run.questions.length) {
+      setDone(true);
+      if (profile && score > profile.best_quiz) celebrate(true);
+      try {
+        const { profile: p } = await syncProfile("quiz_best", score);
+        setProfile(p);
+      } catch {}
+    } else {
+      setIdx((i) => i + 1);
+      setPicked(null);
+    }
+  }
+
+  if (!run) {
+    return (
+      <main className="page center">
+        <p className="kicker">The Gauntlet</p>
+        <h1 className="page-title">10 Questions. No Refunds.</h1>
+        <p className="page-sub">
+          The &rsquo;26 chip, deep history, fanbase lore, and premium shade.
+          Wrong answers get roasted.
+        </p>
+        <PhotoHero
+          src="/photos/comeback_kids_june_13.jpg"
+          caption="Comeback Kids. June 13, San Antonio."
+          maxWidth={780}
+          height={210}
+        />
+        {offline && (
+          <div style={{ margin: "24px 0" }}>
+            <span className="offline">
+              Garden offline. Start the backend: <code>./dev.sh</code>
+            </span>
+          </div>
+        )}
+        {profile && (
+          <p className="gold" style={{ margin: "26px 0", fontWeight: 600 }}>
+            Your best: {profile.best_quiz}/10 ({profile.best_quiz_rank})
+          </p>
+        )}
+        <button className="btn" onClick={start}>
+          Enter the Gauntlet
+        </button>
+        <Concourse />
+      </main>
+    );
+  }
+
+  if (done) {
+    return (
+      <main className="page center">
+        <p className="kicker">Final buzzer</p>
+        <h1 className="page-title" style={{ fontSize: 96 }}>
+          {score}/{run.questions.length}
+        </h1>
+        <div style={{ marginTop: 10 }}>
+          <span className="badge" style={{ fontSize: 15, padding: "10px 26px" }}>
+            RANK: {rankFor(score)}
+          </span>
+        </div>
+        {profile && (
+          <p className="muted" style={{ marginTop: 18 }}>
+            lifetime best: {profile.best_quiz}/10 ({profile.best_quiz_rank})
+          </p>
+        )}
+        <div style={{ marginTop: 30 }}>
+          <button className="btn" onClick={start}>
+            Run it back
+          </button>
+        </div>
+        <Concourse />
+      </main>
+    );
+  }
+
+  const q = run.questions[idx];
+  return (
+    <main className="page">
+      <div className="qhead">
+        <div>
+          <span className="lbl">Question</span>
+          <span className="led">
+            {idx + 1}/{run.questions.length}
+          </span>
+        </div>
+        <div>
+          <span className="lbl">Score</span>
+          <span className="led">{score}</span>
+        </div>
+        <div>
+          <span className="lbl">Streak</span>
+          <span className="led">{streak}</span>
+        </div>
+        <div style={{ flex: 1, minWidth: 160 }}>
+          <span className="lbl">Category</span>
+          <span className="cond" style={{ color: "var(--blue-soft)", fontSize: 15 }}>
+            {q.cat === "chip26" ? "The '26 Chip" : q.cat}
+          </span>
+        </div>
+      </div>
+      <div className="progress">
+        {run.questions.map((_, i) => (
+          <i key={i} className={i <= idx ? "done" : ""} />
+        ))}
+      </div>
+
+      <p className="big-quote swap" key={q.q} style={{ margin: "10px 0 26px" }}>
+        {q.q}
+      </p>
+
+      <div className="stagger" key={`opts-${idx}`} style={{ display: "grid", gap: 12 }}>
+        {q.options.map((opt, i) => {
+          let cls = "option";
+          if (picked !== null) {
+            if (i === q.correct) cls += " correct";
+            else if (i === picked) cls += " wrong";
+          }
+          return (
+            <button
+              key={i}
+              className={cls}
+              disabled={picked !== null}
+              onClick={() => answer(i)}
+            >
+              <span className="letter">{LETTERS[i]}</span>
+              {opt}
+            </button>
+          );
+        })}
+      </div>
+
+      {picked !== null && (
+        <div className="center swap" style={{ marginTop: 28 }}>
+          <p
+            className="kicker"
+            style={{ color: picked === q.correct ? "var(--gold)" : "var(--red)" }}
+          >
+            {feedback}
+          </p>
+          <p className="muted" style={{ margin: "12px auto 18px", maxWidth: 640 }}>
+            {q.why}
+          </p>
+          <button className="btn btn-ghost" onClick={next}>
+            {idx + 1 >= run.questions.length ? "Final score" : "Next question"}
+          </button>
+        </div>
+      )}
+    </main>
+  );
+}

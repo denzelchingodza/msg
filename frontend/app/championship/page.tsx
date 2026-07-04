@@ -61,6 +61,13 @@ export default function Championship() {
   const parades = useCountUp(1);
 
   useEffect(() => {
+    window.dispatchEvent(new CustomEvent("msg:track", { detail: "knicks" }));
+    return () => {
+      window.dispatchEvent(new CustomEvent("msg:track", { detail: "garden" }));
+    };
+  }, []);
+
+  useEffect(() => {
     celebrate(true);
     api<Gallery>("/api/gallery")
       .then((g) => setStory(g.story))

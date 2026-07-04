@@ -4,6 +4,7 @@ import Link from "next/link";
 import GardenAudio from "@/components/GardenAudio";
 import GardenTime from "@/components/GardenTime";
 import HeaderLocation from "@/components/HeaderLocation";
+import SiteFooter from "@/components/SiteFooter";
 import "./globals.css";
 
 const anton = Anton({ weight: "400", subsets: ["latin"], variable: "--anton" });
@@ -35,7 +36,7 @@ export default function RootLayout({
     >
       <body>
         <header className="nav">
-          <Link href="/" className="nav-logo">
+          <Link href="/court" className="nav-logo">
             <span className="nav-mark">MSG</span>
             <span className="nav-sub">
               THE MECCA
@@ -46,15 +47,12 @@ export default function RootLayout({
           <GardenTime />
           <HeaderLocation />
           <GardenAudio />
-          <Link href="/" className="nav-home">
+          <Link href="/court" className="nav-home">
             HOME COURT
           </Link>
         </header>
         {children}
-        <footer className="site-footer">
-          <span className="made-by">DENZEL MADE THIS</span>
-          <span>NEW YORK FOREVER · BING BONG</span>
-        </footer>
+        <SiteFooter />
         <div className="court-stripe" aria-hidden="true" />
       </body>
     </html>

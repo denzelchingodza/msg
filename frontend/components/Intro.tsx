@@ -1,25 +1,30 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
- * The front door. Orange and blue, one job:
- * welcome you, start the crowd, and open the portal to the court.
+ * Welcome gate. Shows once per session, all orange and blue.
+ * The ENTER click doubles as the user gesture that lets audio start.
  */
-export default function Welcome() {
-  const router = useRouter();
+export default function Intro() {
+  const [show, setShow] = useState(false);
   const [leaving, setLeaving] = useState(false);
 
+  useEffect(() => {
+    if (sessionStorage.getItem("msg_intro") !== "done") setShow(true);
+  }, []);
+
   function enter() {
+    sessionStorage.setItem("msg_intro", "done");
     window.dispatchEvent(new Event("msg:sound-start"));
     setLeaving(true);
-    setTimeout(() => router.push("/court"), 450);
+    setTimeout(() => setShow(false), 550);
   }
 
+  if (!show) return null;
+
   return (
-    <div className={`intro ${leaving ? "leaving" : ""}`}>
+    <div className={`intro ${leaving ? "leaving" : ""}`} role="dialog" aria-label="Welcome">
       <div className="intro-inner">
         <div className="intro-medallion">
           <img src="/photos/knicks.jpg" alt="New York Knicks logo" />
@@ -37,9 +42,6 @@ export default function Welcome() {
           ENTER THE GARDEN
         </button>
         <p className="intro-note">the crowd is waiting inside 🔊</p>
-        <p className="intro-skip">
-          <Link href="/court">skip straight to the court →</Link>
-        </p>
       </div>
     </div>
   );

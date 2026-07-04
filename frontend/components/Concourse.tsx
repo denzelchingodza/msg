@@ -33,7 +33,7 @@ export default function Concourse() {
             {s.n}
           </Link>
         ))}
-        <Link href="/" className="spot home" title="Home court">
+        <Link href="/court" className="spot home" title="Home court">
           ⌂
         </Link>
       </div>

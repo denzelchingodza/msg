@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Concourse from "@/components/Concourse";
+import PhotoHero from "@/components/PhotoHero";
 import { api } from "@/lib/api";
 
 interface Beat {
@@ -72,6 +73,14 @@ export default function FaithPage() {
       <p className="page-sub">
         {faith?.subtitle ?? "An explainer for the uninitiated."}
       </p>
+
+      <PhotoHero
+        src="/photos/knixx.jpg"
+        caption="Since 1946. Believe it."
+        maxWidth={1080}
+        height={320}
+        position="center 42%"
+      />
 
       {offline && (
         <div style={{ marginTop: 26 }}>

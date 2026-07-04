@@ -21,6 +21,14 @@ interface Run {
 }
 
 const LETTERS = "ABCD";
+const SHOT_CLOCK = 24;
+
+const CATS: Record<string, string> = {
+  chip26: "The '26 chip",
+  history: "Deep history",
+  fanbase: "Fanbase lore",
+  shade: "Premium shade",
+};
 
 export default function Gauntlet() {
   const [run, setRun] = useState<Run | null>(null);
@@ -30,6 +38,7 @@ export default function Gauntlet() {
   const [picked, setPicked] = useState<number | null>(null);
   const [feedback, setFeedback] = useState("");
   const [done, setDone] = useState(false);
+  const [clock, setClock] = useState(SHOT_CLOCK);
   const [offline, setOffline] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
 
@@ -38,6 +47,26 @@ export default function Gauntlet() {
       .then((r) => setProfile(r.profile))
       .catch(() => setOffline(true));
   }, []);
+
+  /* The shot clock. 24 seconds, same as the pros. */
+  useEffect(() => {
+    if (!run || done || picked !== null) return;
+    setClock(SHOT_CLOCK);
+    const id = setInterval(() => {
+      setClock((c) => {
+        if (c <= 0.2) {
+          clearInterval(id);
+          setPicked(-1);
+          setStreak(0);
+          setFeedback("SHOT CLOCK VIOLATION. That's a turnover.");
+          return 0;
+        }
+        return c - 0.2;
+      });
+    }, 200);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [run, idx, done, picked === null]);
 
   async function start() {
     try {
@@ -96,16 +125,16 @@ export default function Gauntlet() {
     return (
       <main className="page center">
         <p className="kicker">The Gauntlet</p>
-        <h1 className="page-title">10 Questions. No Refunds.</h1>
+        <h1 className="page-title">10 Questions. 24 Seconds Each.</h1>
         <p className="page-sub">
           The &rsquo;26 chip, deep history, fanbase lore, and premium shade.
-          Wrong answers get roasted.
+          The shot clock is real. Wrong answers get roasted.
         </p>
         <PhotoHero
           src="/photos/comeback_kids_june_13.jpg"
           caption="Comeback Kids. June 13, San Antonio."
           maxWidth={780}
-          height={210}
+          height={190}
         />
         {offline && (
           <div style={{ margin: "24px 0" }}>
@@ -115,7 +144,7 @@ export default function Gauntlet() {
           </div>
         )}
         {profile && (
-          <p className="gold" style={{ margin: "26px 0", fontWeight: 600 }}>
+          <p className="gold" style={{ margin: "24px 0", fontWeight: 600 }}>
             Your best: {profile.best_quiz}/10 ({profile.best_quiz_rank})
           </p>
         )}
@@ -172,11 +201,9 @@ export default function Gauntlet() {
           <span className="lbl">Streak</span>
           <span className="led">{streak}</span>
         </div>
-        <div style={{ flex: 1, minWidth: 160 }}>
-          <span className="lbl">Category</span>
-          <span className="cond" style={{ color: "var(--blue-soft)", fontSize: 15 }}>
-            {q.cat === "chip26" ? "The '26 Chip" : q.cat}
-          </span>
+        <div className={`shotclock ${clock <= 5 ? "danger" : ""}`}>
+          <b>{Math.ceil(clock)}</b>
+          <span className="lbl">shot clock</span>
         </div>
       </div>
       <div className="progress">
@@ -185,9 +212,15 @@ export default function Gauntlet() {
         ))}
       </div>
 
-      <p className="big-quote swap" key={q.q} style={{ margin: "10px 0 26px" }}>
-        {q.q}
-      </p>
+      <div className="jumbotron swap" key={q.q}>
+        <span className="q-cat">{CATS[q.cat] ?? q.cat}</span>
+        <p className="big-quote" style={{ margin: "10px 0 0" }}>
+          {q.q}
+        </p>
+        <div className="clock-bar">
+          <i style={{ width: `${(clock / SHOT_CLOCK) * 100}%` }} />
+        </div>
+      </div>
 
       <div className="stagger" key={`opts-${idx}`} style={{ display: "grid", gap: 12 }}>
         {q.options.map((opt, i) => {
@@ -211,7 +244,7 @@ export default function Gauntlet() {
       </div>
 
       {picked !== null && (
-        <div className="center swap" style={{ marginTop: 28 }}>
+        <div className="center swap" style={{ marginTop: 26 }}>
           <p
             className="kicker"
             style={{ color: picked === q.correct ? "var(--gold)" : "var(--red)" }}

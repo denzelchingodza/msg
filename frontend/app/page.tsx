@@ -14,10 +14,32 @@ const ZONES = [
   { href: "/faith", n: "06", title: "The Faith", x: 50, y: 88 },
 ] as const;
 
+const CLYDE = [
+  "dishing and swishing",
+  "posting and toasting",
+  "wheeling and dealing",
+  "styling and profiling",
+  "shaking and baking",
+  "hustling and bustling",
+  "swooping and hooping",
+];
+
+/* Opening night, next season. The night banner number three goes up. */
+const BANNER_NIGHT = new Date("2026-10-20T19:30:00-04:00");
+
 export default function Home() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [tampered, setTampered] = useState(false);
   const [offline, setOffline] = useState(false);
+  const [clyde, setClyde] = useState("");
+  const daysToBanner = Math.max(
+    0,
+    Math.ceil((BANNER_NIGHT.getTime() - Date.now()) / 86_400_000)
+  );
+
+  useEffect(() => {
+    setClyde(CLYDE[Math.floor(Math.random() * CLYDE.length)]);
+  }, []);
 
   useEffect(() => {
     syncProfile()
@@ -68,6 +90,13 @@ export default function Home() {
         </div>
         <p className="muted" style={{ marginTop: 16 }}>
           {offline ? "Garden offline. Start the backend with ./dev.sh" : welcome}
+          {clyde && !offline && (
+            <>
+              {" "}
+              Clyde says tonight calls for some{" "}
+              <span className="gold">{clyde}</span>.
+            </>
+          )}
         </p>
       </section>
 
@@ -110,6 +139,10 @@ export default function Home() {
 
       {profile && (
         <div className="scoreboard">
+          <div className="stat">
+            <b>{daysToBanner}</b>
+            <span>days to banner night</span>
+          </div>
           <div className="stat">
             <b>{profile.day_streak}</b>
             <span>day streak</span>

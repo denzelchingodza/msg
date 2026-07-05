@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Concourse from "@/components/Concourse";
-import PhotoHero from "@/components/PhotoHero";
 import { api, syncProfile } from "@/lib/api";
 import { celebrate } from "@/lib/celebrate";
 
@@ -80,32 +79,17 @@ export default function Roulette() {
       <h1 className="page-title">Bing Bong Machine</h1>
       <p className="page-sub">{streakLine}</p>
 
-      {!fact && (
-        <PhotoHero
-          src="/photos/the_garden_under_confetti.jpg"
-          caption="The Garden, June 2026"
-          maxWidth={780}
-          height={160}
-        />
-      )}
-
-      <div
-        key={fact?.text ?? "empty"}
-        className={`card ticket swap card-fixed ${fact?.rare ? "card-rare" : ""}`}
-        style={{
-          maxWidth: 780,
-          margin: "30px auto",
-          position: "relative",
-        }}
-      >
-        {fact && (
+      {fact ? (
+        <div
+          key={fact.text}
+          className={`card ticket swap card-fixed ${fact.rare ? "card-rare" : ""}`}
+          style={{ maxWidth: 780, margin: "30px auto", position: "relative" }}
+        >
           <span className="tag-chip">
             {{ chip26: "The '26 chip", history: "Deep history", fanbase: "Fanbase lore", silly: "Nonsense" }[
               fact.tag
             ] ?? fact.tag}
           </span>
-        )}
-        {fact ? (
           <div>
             {fact.rare && <span className="badge">★ RARE PULL ★</span>}
             <p className="big-quote" style={{ marginTop: fact.rare ? 20 : 0 }}>
@@ -117,16 +101,34 @@ export default function Roulette() {
               </p>
             )}
           </div>
-        ) : offline ? (
-          <span className="offline">
-            Garden offline. Start the backend: <code>./dev.sh</code>
-          </span>
-        ) : (
-          <p className="muted" style={{ fontSize: 18 }}>
-            53 years of material in here. SPACE works too.
-          </p>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div
+          className="stage-card"
+          style={{
+            maxWidth: 780,
+            backgroundImage: "url(/photos/the_garden_under_confetti.jpg)",
+          }}
+        >
+          {offline ? (
+            <span className="offline">
+              Garden offline. Start the backend: <code>./dev.sh</code>
+            </span>
+          ) : (
+            <div>
+              <p className="stage-title">THE FACT VAULT IS OPEN</p>
+              <div className="rule-chips">
+                <span>80 years of material</span>
+                <span>rare pull odds: 14%</span>
+                <span>confetti on rares</span>
+              </div>
+              <p className="stage-note">
+                SPACE or the big button. Streaks build. Spike is watching.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       <button className="btn" onClick={pull} disabled={busy}>
         {fact ? "Another one" : "Bing bong. Gimme a fact"}

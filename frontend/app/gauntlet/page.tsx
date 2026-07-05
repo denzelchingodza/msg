@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Concourse from "@/components/Concourse";
-import PhotoHero from "@/components/PhotoHero";
 import { api, Profile, syncProfile } from "@/lib/api";
 import { celebrate } from "@/lib/celebrate";
 
@@ -130,24 +129,36 @@ export default function Gauntlet() {
           The &rsquo;26 chip, deep history, fanbase lore, and premium shade.
           The shot clock is real. Wrong answers get roasted.
         </p>
-        <PhotoHero
-          src="/photos/comeback_kids_june_13.jpg"
-          caption="Comeback Kids. June 13, San Antonio."
-          maxWidth={780}
-          height={190}
-        />
-        {offline && (
-          <div style={{ margin: "24px 0" }}>
+        <div
+          className="stage-card"
+          style={{
+            maxWidth: 820,
+            backgroundImage: "url(/photos/comeback_kids_june_13.jpg)",
+          }}
+        >
+          {offline ? (
             <span className="offline">
               Garden offline. Start the backend: <code>./dev.sh</code>
             </span>
-          </div>
-        )}
-        {profile && (
-          <p className="gold" style={{ margin: "24px 0", fontWeight: 600 }}>
-            Your best: {profile.best_quiz}/10 ({profile.best_quiz_rank})
-          </p>
-        )}
+          ) : (
+            <div>
+              <p className="stage-title">TONIGHT&rsquo;S TEST OF FAITH</p>
+              <div className="rule-chips">
+                <span>10 questions</span>
+                <span>24 second shot clock</span>
+                <span>wrong answers get roasted</span>
+              </div>
+              {profile && (
+                <p className="stage-note gold">
+                  Your best: {profile.best_quiz}/10 · {profile.best_quiz_rank}
+                </p>
+              )}
+              <p className="stage-note">
+                Ranks climb from Tourist at the Garden to Banner Raiser.
+              </p>
+            </div>
+          )}
+        </div>
         <button className="btn" onClick={start}>
           Enter the Gauntlet
         </button>

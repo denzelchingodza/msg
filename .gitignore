@@ -20,6 +20,8 @@ frontend/public/photos/*
 !frontend/public/photos/README.md
 frontend/public/court.jpg
 frontend/public/photos_*_prev.png
+frontend/public/placed/*
+!frontend/public/placed/README.md
 
 # Downloaded audio stays local (license terms usually forbid redistribution)
 frontend/public/audio/*

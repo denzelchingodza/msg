@@ -93,8 +93,12 @@ export default function TrashTalk() {
           <div className="champ-crest">
             <span className="crest-nyk">NYK</span>
             <span className="crest-sub">New York Knicks</span>
-            <span className="crest-trophy">🏆</span>
-            <span className="crest-sub">2026 NBA Champions</span>
+            <img
+              className="crest-img"
+              src="/placed/knicks_in_4.jpg"
+              alt="Lady Liberty in a Knicks jersey saying shush"
+            />
+            <span className="crest-sub">🏆 2026 NBA Champions</span>
             <p className="crest-note">
               Not listed below because the view is better from up here.
             </p>

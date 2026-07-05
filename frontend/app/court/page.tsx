@@ -60,7 +60,10 @@ export default function Home() {
   return (
     <main className="page">
       
-      <section className="hero-stage">
+      <section
+        className="hero-stage"
+        style={{ backgroundImage: "url(/placed/arena.jpg)" }}
+      >
         <p className="kicker" style={{ color: "var(--gold)" }}>
           Welcome to the Garden
         </p>
@@ -137,6 +140,23 @@ export default function Home() {
             <span className="ln-verb">{f.verb} →</span>
           </Link>
         ))}
+      </div>
+
+      <div className="home-duo">
+        <figure className="duo-card">
+          <img src="/placed/squad_huddle.webp" alt="The 2026 Knicks huddle" />
+          <figcaption>
+            <b>THE FAMILY</b>
+            <span>your 2026 champions, mid huddle</span>
+          </figcaption>
+        </figure>
+        <figure className="duo-card">
+          <img src="/placed/splash_poster.jpg" alt="New York Knicks splash art" />
+          <figcaption>
+            <b>THE COLORS</b>
+            <span>blue and orange, forever</span>
+          </figcaption>
+        </figure>
       </div>
 
       {profile && (

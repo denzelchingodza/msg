@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 /**
- * The front door. Vintage poster, DE FENSE stomps, one job:
- * welcome you, start the crowd, open the portal to the court.
+ * The front door. Full 1946 tee print, 90s energy, DE FENSE stomps.
+ * One job: welcome you, start the crowd, open the portal to the court.
  */
 export default function Welcome() {
   const router = useRouter();
@@ -19,13 +19,9 @@ export default function Welcome() {
   }
 
   return (
-    <div className={`intro ${leaving ? "leaving quake" : ""}`}>
+    <div className={`intro intro-tee ${leaving ? "leaving quake" : ""}`}>
       <div className="intro-inner">
         <p className="intro-kicker">MADISON SQUARE GARDEN PRESENTS</p>
-
-        <div className="intro-poster rumble">
-          <img src="/photos/knixx.jpg" alt="Vintage New York Knicks poster" />
-        </div>
 
         <div className="chant" aria-hidden="true">
           <span>DE&nbsp;·&nbsp;FENSE</span>
@@ -35,10 +31,15 @@ export default function Welcome() {
           <span>DE&nbsp;·&nbsp;FENSE</span>
         </div>
 
-        <h1 className="intro-title">WELCOME TO THE GARDEN</h1>
+        <h1 className="intro-title retro">
+          WELCOME TO
+          <br />
+          THE GARDEN
+        </h1>
         <p className="intro-sub">
-          Home of the 2026 NBA champions. First title in 53 years.
+          New York basketball since 1946 · champions again in 2026
         </p>
+
         <button className="btn-ticket intro-enter" onClick={enter}>
           ENTER THE GARDEN
         </button>

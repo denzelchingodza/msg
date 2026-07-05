@@ -6,13 +6,15 @@ import { useEffect, useState } from "react";
 import { Profile, syncProfile } from "@/lib/api";
 import { SECTIONS } from "@/lib/sections";
 
+/* Placed on the real spots in the bowl: quiz on the jumbotron,
+   history up in the banners, facts down on the floor. */
 const ZONES = [
-  { href: "/roulette", n: "01", title: "Fact Roulette", x: 50, y: 50 },
-  { href: "/gauntlet", n: "02", title: "The Gauntlet", x: 15, y: 50 },
-  { href: "/ragebait", n: "03", title: "Rage Bait", x: 85, y: 50 },
-  { href: "/trashtalk", n: "04", title: "Trash Talk", x: 17, y: 13 },
-  { href: "/faith", n: "05", title: "The Faith", x: 50, y: 88 },
-  { href: "/championship", n: "06", title: "Chip '26", x: 83, y: 13 },
+  { href: "/roulette", n: "01", title: "Fact Roulette", x: 50, y: 68 },
+  { href: "/gauntlet", n: "02", title: "The Gauntlet", x: 50, y: 38 },
+  { href: "/ragebait", n: "03", title: "Rage Bait", x: 15, y: 50 },
+  { href: "/trashtalk", n: "04", title: "Trash Talk", x: 85, y: 50 },
+  { href: "/faith", n: "05", title: "The Faith", x: 25, y: 12 },
+  { href: "/championship", n: "06", title: "Chip '26", x: 75, y: 12 },
 ] as const;
 
 const CLYDE = [
@@ -62,7 +64,7 @@ export default function Home() {
       
       <section
         className="hero-stage"
-        style={{ backgroundImage: "url(/placed/arena.jpg)" }}
+        style={{ backgroundImage: "url(/photos/parade_in_watercolor.jpg)" }}
       >
         <p className="kicker" style={{ color: "var(--gold)" }}>
           Welcome to the Garden
@@ -105,12 +107,12 @@ export default function Home() {
         </p>
       </section>
 
-      <p className="court-label">The Finals floor. Every zone is a door.</p>
-      <div className="court-wrap">
+      <p className="court-label">The Garden, from the 400s. Every light is a door.</p>
+      <div className="court-wrap" style={{ maxWidth: 840 }}>
         <img
           className="court-img"
-          src="/court.jpg"
-          alt="Madison Square Garden 2026 NBA Finals court"
+          src="/placed/home_arena.jpg"
+          alt="Madison Square Garden bowl with championship banners"
         />
         {ZONES.map((z) => (
           <Link

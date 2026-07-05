@@ -1498,6 +1498,157 @@ h1, h2, .display {
 .lineup a:hover .ln-thumb { transform: scale(1.1) rotate(-1deg); }
 .scoreboard { animation: fadeUp 0.6s var(--ease) 0.3s both; }
 
+/* ═══ v7: 90s but modern ══════════════════════════════ */
+.intro-tee {
+  background:
+    linear-gradient(180deg, rgba(4, 14, 38, 0.78), rgba(4, 14, 38, 0.5) 45%, rgba(4, 14, 38, 0.88)),
+    url("/placed/welcome_tee.jpg") center / cover no-repeat,
+    #071a3f;
+}
+.retro { text-shadow: 4px 4px 0 var(--orange), 8px 8px 0 rgba(0, 107, 182, 0.55); }
+.btn-ticket, .btn {
+  box-shadow: 5px 5px 0 rgba(10, 42, 92, 0.95), 0 10px 30px rgba(245, 132, 38, 0.35);
+}
+.btn-ticket:hover, .btn:hover {
+  box-shadow: 7px 7px 0 rgba(10, 42, 92, 0.95), 0 14px 38px rgba(245, 132, 38, 0.5);
+}
+.page-title { position: relative; display: inline-block; }
+.page-title::after {
+  content: "";
+  display: block;
+  height: 8px;
+  margin-top: 10px;
+  background: repeating-linear-gradient(-45deg, var(--orange) 0 10px, transparent 10px 20px);
+  border-radius: 2px;
+  opacity: 0.85;
+}
+.center .page-title::after { margin-left: auto; margin-right: auto; }
+.card, .stage-card { outline: 1px solid rgba(133, 183, 235, 0.12); outline-offset: 5px; }
+
+/* home around the arena */
+.home-duo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  max-width: 960px;
+  margin: 44px auto 0;
+}
+.duo-card {
+  margin: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 2px solid rgba(133, 183, 235, 0.3);
+  background: var(--panel);
+  box-shadow: 6px 6px 0 rgba(10, 42, 92, 0.8);
+  transition: transform 0.16s var(--ease), border-color 0.16s;
+}
+.duo-card:hover { transform: translateY(-4px); border-color: var(--orange); }
+.duo-card img { width: 100%; height: 240px; object-fit: cover; object-position: center 30%; display: block; }
+.duo-card figcaption { padding: 14px 18px; }
+.duo-card b {
+  font-family: var(--display);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  font-size: 16px;
+  display: block;
+}
+.duo-card span { font-family: var(--cond); font-weight: 600; font-size: 12px; letter-spacing: 0.18em; color: var(--silver); text-transform: uppercase; }
+
+/* trash talk crest image */
+.crest-img {
+  width: 100%;
+  max-height: 190px;
+  object-fit: cover;
+  object-position: center 12%;
+  border-radius: 12px;
+  margin: 12px 0;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+}
+
+/* gauntlet jumbotron gets the minimal court */
+.jumbotron {
+  background:
+    linear-gradient(180deg, rgba(4, 14, 38, 0.92), rgba(4, 14, 38, 0.88)),
+    url("/placed/minimal_court.jpg") center / cover no-repeat,
+    var(--panel);
+}
+
+/* championship: banner cards + game rail */
+.trio { gap: 18px; }
+.trio div {
+  background: var(--panel);
+  border: 2px solid rgba(250, 199, 117, 0.4);
+  border-radius: 16px;
+  padding: 18px 26px 14px;
+  box-shadow: 6px 6px 0 rgba(10, 42, 92, 0.8);
+}
+.game-stage {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  max-width: 980px;
+  margin: 16px auto 0;
+}
+.game-card {
+  flex: 1;
+  min-height: 240px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 28px 30px;
+}
+.game-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.game-head .score-pill { cursor: default; }
+.game-line {
+  font-family: var(--cond);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  color: var(--blue-soft);
+  text-transform: uppercase;
+}
+.game-photo { margin: 18px auto 0; max-width: 420px; }
+.game-photo img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  object-position: center 18%;
+  border-radius: 12px;
+  border: 1px solid rgba(250, 199, 117, 0.4);
+}
+.game-photo figcaption {
+  margin-top: 8px;
+  font-family: var(--cond);
+  font-weight: 600;
+  font-size: 11.5px;
+  letter-spacing: 0.22em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+.game-arrow {
+  font-family: var(--display);
+  font-size: 22px;
+  color: var(--blue-soft);
+  background: var(--panel);
+  border: 1px solid rgba(133, 183, 235, 0.3);
+  border-radius: 14px;
+  width: 54px;
+  cursor: pointer;
+  transition: all 0.14s var(--ease);
+}
+.game-arrow:hover { color: #fff; border-color: var(--orange); background: var(--orange); }
+@media (max-width: 700px) {
+  .game-stage { flex-direction: column; }
+  .game-arrow { width: 100%; padding: 10px 0; }
+}
+
 /* ═══ v5: info footer ═════════════════════════════════ */
 .site-footer2 {
   border-top: 1px solid rgba(133, 183, 235, 0.18);

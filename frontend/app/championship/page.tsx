@@ -30,6 +30,28 @@ const PILLS = [
   { label: "PARADE", cls: "w" },
 ];
 
+/* Scoreboard detail per stop on the ride. */
+const GAME_META: {
+  badge: string;
+  cls: "w" | "l";
+  line: string;
+  photo?: string;
+  photoCaption?: string;
+}[] = [
+  { badge: "WIN", cls: "w", line: "MSG · June 3 · NYK 1, SAS 0" },
+  { badge: "WIN", cls: "w", line: "MSG · June 5 · NYK 2, SAS 0" },
+  { badge: "LOSS", cls: "l", line: "San Antonio · June 8 · NYK 2, SAS 1" },
+  { badge: "WIN", cls: "w", line: "San Antonio · June 11 · 107 to 106 · NYK 3, SAS 1" },
+  {
+    badge: "CHAMPS",
+    cls: "w",
+    line: "San Antonio · June 13 · 94 to 90 · Brunson 45",
+    photo: "/placed/mitch_23.jpg",
+    photoCaption: "Mitch: 10 boards nobody will ever forget",
+  },
+  { badge: "PARADE", cls: "w", line: "Canyon of Heroes · Lower Broadway" },
+];
+
 const caption = (name: string) =>
   name.replace(/\.[^.]+$/, "").replace(/_/g, " ").toUpperCase();
 
@@ -155,27 +177,50 @@ export default function Championship() {
               </button>
             ))}
           </div>
-          <div
-            key={idx}
-            className="card card-hot swap"
-            style={{
-              maxWidth: 880,
-              margin: "16px auto 0",
-              minHeight: 210,
-              display: "grid",
-              placeItems: "center",
-              cursor: "pointer",
-            }}
-            onClick={() => setIdx((i) => (i + 1) % story.length)}
-            role="button"
-            tabIndex={0}
-          >
-            <div>
+          <div className="game-stage">
+            <button
+              className="game-arrow"
+              aria-label="Previous game"
+              onClick={() =>
+                setIdx((i) => (i - 1 + story.length) % story.length)
+              }
+            >
+              ←
+            </button>
+            <div
+              key={idx}
+              className="card card-hot swap game-card"
+              onClick={() => setIdx((i) => (i + 1) % story.length)}
+              role="button"
+              tabIndex={0}
+            >
+              <div className="game-head">
+                <span className={`score-pill ${GAME_META[idx]?.cls ?? "w"}`}>
+                  {GAME_META[idx]?.badge ?? ""}
+                </span>
+                <span className="game-line">{GAME_META[idx]?.line ?? ""}</span>
+              </div>
               <h2 className="slide-title">{slide.title}</h2>
               <p className="big-quote" style={{ fontWeight: 400 }}>
                 {slide.text}
               </p>
+              {GAME_META[idx]?.photo && (
+                <figure className="game-photo">
+                  <img
+                    src={GAME_META[idx].photo}
+                    alt={GAME_META[idx].photoCaption ?? ""}
+                  />
+                  <figcaption>{GAME_META[idx].photoCaption}</figcaption>
+                </figure>
+              )}
             </div>
+            <button
+              className="game-arrow"
+              aria-label="Next game"
+              onClick={() => setIdx((i) => (i + 1) % story.length)}
+            >
+              →
+            </button>
           </div>
         </>
       )}

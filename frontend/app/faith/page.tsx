@@ -22,6 +22,30 @@ const PHOTO_AFTER: Record<string, { src: string; caption: string }> = {
     src: "/photos/reed_19_brunson_11.jpg",
     caption: "Number 19 walked so number 11 could dance",
   },
+  "1971": {
+    src: "/placed/earl_monroe.jpg",
+    caption: "Earl the Pearl, half of the Rolls Royce Backcourt",
+  },
+  "1985": {
+    src: "/placed/patrick_ewing.jpg",
+    caption: "Patrick Ewing. The Franchise.",
+  },
+  "1994": {
+    src: "/placed/starks_and_ewing.jpg",
+    caption: "Starks and Ewing. The war years.",
+  },
+  "1999": {
+    src: "/placed/eastern_champs_1999.jpg",
+    caption: "The 1999 Eastern Conference champions. Chaos, remembered.",
+  },
+  "2000s": {
+    src: "/placed/nineties_trio.jpg",
+    caption: "Still showing up. Always showing up.",
+  },
+  "2011": {
+    src: "/placed/melo_seven.jpg",
+    caption: "Melo time. 62 in the Garden.",
+  },
   "2021": {
     src: "/photos/thank_you_fans_new_york_forever.jpg",
     caption: "Thank you fans. New York forever.",

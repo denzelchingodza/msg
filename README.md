@@ -1,4 +1,4 @@
-# MSG — The Mecca, In App Form
+# MSG (The Mecca, In App Form)
 
 A New York Knicks shrine built as a real full stack app: **Next.js frontend**,
 **FastAPI (Python) backend**. Made by a fan, for fans, and for anyone who has
@@ -15,21 +15,24 @@ Knicks colored confetti storm. The streak text escalates as you keep pressing.
 
 **Rage Bait Machine** — hot takes engineered to end group chats ("The 25-26
 Knicks sweep the 73-9 Warriors and it's only close for a half"), each with a
-certified rage level and a count of rival fans who hated it.
+certified rage level and a count of rival fans who hated it. If you find offense thats up 
+to you.
 
-**The Gauntlet** — 10-question multiple choice trivia runs across the '26
+**The Gauntlet** — 10 question multiple choice trivia runs across the '26
 chip, deep history, fanbase lore, and premium shade. Wrong answers get
 roasted. Ranks climb from Tourist at the Garden to Banner Raiser.
 
 **Trash Talk Generator** — pick a rival (Celtics, Nets, Heat, Pacers, Bulls,
-Spurs, Lakers), receive ammunition, fire at will.
+Spurs, Lakers and all other teams in the East and West), receive ammunition, fire at will.
+
+**The Faith** - a timeline from 1946 to the parade. The sincere one. Show it to
+to someone who doesn't get it yet.
 
 **Championship '26** — the Finals run game by game, from the Game 1 dagger to
 the Canyon of Heroes. Drop your own photos in `frontend/public/photos/` and
 they join the gallery automatically.
 
-**The Faith** — a timeline from 1946 to the parade. The sincere one. Show it
-to someone who doesn't get it yet.
+
 
 
 

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Concourse from "@/components/Concourse";
-import PhotoHero from "@/components/PhotoHero";
 import { api, syncProfile } from "@/lib/api";
 import { celebrate } from "@/lib/celebrate";
 
@@ -47,22 +46,12 @@ export default function RageBait() {
         Not responsible for lost friendships. Certified true by us.
       </p>
 
-      {!take && !offline && (
-        <PhotoHero
-          src="/photos/champs_front_page.jpg"
-          caption="Champs. Says so in the paper."
-          maxWidth={840}
-          height={160}
-          position="center 25%"
-        />
-      )}
-
-      <div
-        key={take?.take ?? "empty"}
-        className="card card-hot ticket swap card-fixed"
-        style={{ maxWidth: 840, margin: "30px auto", height: 320 }}
-      >
-        {take ? (
+      {take ? (
+        <div
+          key={take.take}
+          className="card card-hot ticket swap card-fixed"
+          style={{ maxWidth: 840, margin: "30px auto", height: 320 }}
+        >
           <div style={{ width: "100%" }}>
             <p className="big-quote">&ldquo;{take.take}&rdquo;</p>
             <p className="kicker" style={{ marginTop: 28 }}>
@@ -76,17 +65,38 @@ export default function RageBait() {
               {take.hated_by.toLocaleString()} rival fans hated this
             </p>
           </div>
-        ) : offline ? (
-          <span className="offline">
-            Garden offline. Start the backend: <code>./dev.sh</code>
-          </span>
-        ) : (
-          <p className="muted" style={{ fontSize: 18 }}>
-            This machine produces facts other fanbases are too emotional to
-            accept.
-          </p>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div
+          className="stage-card taped"
+          style={{
+            maxWidth: 840,
+            backgroundImage: "url(/photos/champs_front_page.jpg)",
+          }}
+        >
+          <div className="tape">
+            <b>CAUTION · CERTIFIED HOT TAKES · HANDLE WITH GLOVES</b>
+          </div>
+          {offline ? (
+            <span className="offline">
+              Garden offline. Start the backend: <code>./dev.sh</code>
+            </span>
+          ) : (
+            <div>
+              <p className="stage-title">THE MACHINE IS WARM</p>
+              <div className="rule-chips">
+                <span>40 takes loaded</span>
+                <span>rage levels 1 to 5</span>
+                <span>no apologies issued</span>
+              </div>
+              <p className="stage-note">
+                Every take is objectively true. Rival fans are simply too
+                emotional to accept them.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       <button className="btn" onClick={generate} disabled={busy}>
         {label}

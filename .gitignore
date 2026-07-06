@@ -19,9 +19,8 @@ backend/.secret
 # site (Vercel) actually has its images. Only the preview PNGs stay out.
 frontend/public/photos_*_prev.png
 
-# Downloaded audio stays local (license terms usually forbid redistribution)
-frontend/public/audio/*
-!frontend/public/audio/README.md
+# Audio IS committed now so the deployed site has sound.
+# (Note: only do this if the clips' license permits redistribution.)
 
 # OS / IDE noise
 .DS_Store

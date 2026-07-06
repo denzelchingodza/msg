@@ -3,6 +3,7 @@
 Run:  uvicorn app.main:app --reload --port 8000  (from backend/)
 Docs: http://localhost:8000/docs
 """
+import os
 import random
 
 from fastapi import FastAPI
@@ -15,9 +16,16 @@ from .content import CONTENT
 app = FastAPI(title="MSG API", version="1.0.0",
               description="The Mecca, in API form. Go NY Go.")
 
+# Local dev origins, plus any set via ALLOWED_ORIGINS (comma-separated) for
+# production — e.g. "https://your-app.vercel.app". The regex also lets every
+# Vercel preview deploy (*.vercel.app) talk to the API without extra config.
+_default_origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
+_env_origins = [o.strip() for o in os.environ.get("ALLOWED_ORIGINS", "").split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=_default_origins + _env_origins,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )

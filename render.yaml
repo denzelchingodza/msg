@@ -1,0 +1,19 @@
+# Render Blueprint for the MSG backend (FastAPI).
+# In Render: New + → Blueprint → pick this repo. It reads this file.
+services:
+  - type: web
+    name: msg-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      # Render generates this once and keeps it stable across redeploys,
+      # so signed fan profiles stay valid. Do not edit it by hand.
+      - key: MSG_SECRET
+        generateValue: true
+      # Set this to your Vercel URL after the frontend is deployed,
+      # e.g. https://msg.vercel.app  (comma-separate multiple).
+      - key: ALLOWED_ORIGINS
+        sync: false

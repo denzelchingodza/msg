@@ -14,7 +14,7 @@ MVP, first NBA Cup + title double in league history. Bing bong.
 Knicks colored confetti storm. The streak text escalates as you keep pressing.
 
 **Rage Bait Machine** — hot takes engineered to end group chats ("The 25-26
-Knicks sweep the 73-9 Warriors and it's only close for a half"), each with a
+Knicks sweep the 73-9 Warriors and it's only close for a half typa thing"), each with a
 certified rage level and a count of rival fans who hated it. If you find offense thats up 
 to you.
 

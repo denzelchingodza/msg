@@ -5,35 +5,38 @@ import { useEffect, useState } from "react";
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 /**
- * The free backend naps between visits and takes a while to wake up.
- * On load we ping /api/health. If it answers fast (already awake) the user
- * sees nothing. If it's cold, we show a themed "Waking the Garden" screen
- * until it responds — and the ping itself warms the server, so the first
- * real click is quick.
+ * A branded loading screen shown on every fresh page load. It masks the app
+ * assembling (hydration + images) and, more importantly, the free backend
+ * waking from sleep. The health ping both times the wait AND warms the server,
+ * so the first real click is quick.
+ *
+ * It shows for at least MIN_MS (so it never flashes), and stays up longer if
+ * the backend is cold — until /api/health answers or the hard cap is hit.
+ * It lives in the layout, which only mounts on a full load, so it does NOT
+ * re-appear on in-app navigation between pages.
  */
+const MIN_MS = 1000;
+const HARD_CAP_MS = 70000;
+
 export default function WakeGate() {
-  const [waking, setWaking] = useState(false);
+  const [waking, setWaking] = useState(true);
   const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-
-    // Only show the screen if the backend is slow to answer (i.e. asleep).
-    // A warm backend replies in well under this, so nothing flashes.
-    const slowTimer = setTimeout(() => {
-      if (!cancelled) setWaking(true);
-    }, 600);
-
-    // Give a cold start plenty of time, but never hang forever.
+    const start = Date.now();
     const controller = new AbortController();
-    const hardStop = setTimeout(() => controller.abort(), 70000);
+    const hardStop = setTimeout(() => controller.abort(), HARD_CAP_MS);
 
     const finish = () => {
       if (cancelled) return;
-      clearTimeout(slowTimer);
       clearTimeout(hardStop);
-      setLeaving(true);
-      setTimeout(() => !cancelled && setWaking(false), 450);
+      const wait = Math.max(0, MIN_MS - (Date.now() - start));
+      setTimeout(() => {
+        if (cancelled) return;
+        setLeaving(true);
+        setTimeout(() => !cancelled && setWaking(false), 450);
+      }, wait);
     };
 
     fetch(`${API}/api/health`, { cache: "no-store", signal: controller.signal })
@@ -42,7 +45,6 @@ export default function WakeGate() {
 
     return () => {
       cancelled = true;
-      clearTimeout(slowTimer);
       clearTimeout(hardStop);
       controller.abort();
     };

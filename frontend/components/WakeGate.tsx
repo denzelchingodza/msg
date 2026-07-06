@@ -1,35 +1,67 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
-
-/**
- * A branded loading screen shown on every fresh page load. It stays up until
- * BOTH:
- *   1. the page has fully loaded (window "load" — all images/resources), and
- *   2. the free backend has answered a health ping (which also warms it),
- * so the user never watches pictures pop in — they see the loading screen,
- * then a finished page.
- *
- * A minimum keeps it from flashing; a hard cap guarantees it never traps the
- * user if a resource stalls. It lives in the layout (mounts once on a full
- * load), so it does NOT re-appear on in-app navigation between pages.
- */
 const MIN_MS = 700;
 const HARD_CAP_MS = 20000;
+const ARENA_PATH = "/court";
+
+/**
+ * The "Waking the Garden" loading screen.
+ *
+ * 1. On a fresh full load, it stays up until the page is fully loaded (all
+ *    images) AND the free backend has answered a health ping (which warms it).
+ * 2. It ALSO shows when you enter the arena (/court) from inside the app —
+ *    e.g. the "ENTER THE GARDEN" click — so entering always feels like a
+ *    deliberate load-in, and you never watch the arena's images pop in.
+ *
+ * Other in-app navigation stays instant (no loader), so clicking between
+ * sections is snappy.
+ */
+
+function waitForPageLoad(): Promise<void> {
+  return new Promise((resolve) => {
+    if (document.readyState === "complete") return resolve();
+    window.addEventListener("load", () => resolve(), { once: true });
+  });
+}
+
+function waitForBackend(signal: AbortSignal): Promise<void> {
+  return fetch(`${API}/api/health`, { cache: "no-store", signal })
+    .then(() => undefined)
+    .catch(() => undefined);
+}
+
+function waitForImages(): Promise<void> {
+  return new Promise((resolve) => {
+    requestAnimationFrame(() => {
+      const imgs = Array.from(document.images).filter((i) => !i.complete);
+      if (imgs.length === 0) return resolve();
+      let remaining = imgs.length;
+      const done = () => {
+        if (--remaining <= 0) resolve();
+      };
+      imgs.forEach((i) => {
+        i.addEventListener("load", done, { once: true });
+        i.addEventListener("error", done, { once: true });
+      });
+    });
+  });
+}
 
 export default function WakeGate() {
   const [waking, setWaking] = useState(true);
   const [leaving, setLeaving] = useState(false);
+  const pathname = usePathname();
+  const firstRender = useRef(true);
 
+  // 1. Fresh full page load.
   useEffect(() => {
     let cancelled = false;
-    const start = Date.now();
-    let pageReady = false;
-    let backendReady = false;
-
     const controller = new AbortController();
+    const start = Date.now();
 
     const hide = () => {
       if (cancelled) return;
@@ -41,49 +73,54 @@ export default function WakeGate() {
       }, wait);
     };
 
-    const maybeHide = () => {
-      if (pageReady && backendReady) hide();
-    };
-
-    // 1. Wait for all images/resources on this page to finish loading.
-    const onLoad = () => {
-      pageReady = true;
-      maybeHide();
-    };
-    if (document.readyState === "complete") {
-      pageReady = true;
-    } else {
-      window.addEventListener("load", onLoad);
-    }
-
-    // 2. Warm + wait for the backend.
-    fetch(`${API}/api/health`, { cache: "no-store", signal: controller.signal })
-      .then(() => {
-        backendReady = true;
-        maybeHide();
-      })
-      .catch(() => {
-        backendReady = true;
-        maybeHide();
-      });
-
-    // In case the page was already complete when we mounted.
-    maybeHide();
-
-    // Safety: never trap the user.
-    const hardStop = setTimeout(() => {
-      pageReady = true;
-      backendReady = true;
+    const cap = setTimeout(hide, HARD_CAP_MS);
+    Promise.all([waitForPageLoad(), waitForBackend(controller.signal)]).then(() => {
+      clearTimeout(cap);
       hide();
-    }, HARD_CAP_MS);
+    });
 
     return () => {
       cancelled = true;
-      clearTimeout(hardStop);
+      clearTimeout(cap);
       controller.abort();
-      window.removeEventListener("load", onLoad);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // 2. Entering the arena via in-app navigation.
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    if (pathname !== ARENA_PATH) return;
+
+    let cancelled = false;
+    const start = Date.now();
+    setLeaving(false);
+    setWaking(true);
+
+    const hide = () => {
+      if (cancelled) return;
+      const wait = Math.max(0, MIN_MS - (Date.now() - start));
+      setTimeout(() => {
+        if (cancelled) return;
+        setLeaving(true);
+        setTimeout(() => !cancelled && setWaking(false), 450);
+      }, wait);
+    };
+
+    const cap = setTimeout(hide, HARD_CAP_MS);
+    waitForImages().then(() => {
+      clearTimeout(cap);
+      hide();
+    });
+
+    return () => {
+      cancelled = true;
+      clearTimeout(cap);
+    };
+  }, [pathname]);
 
   if (!waking) return null;
 

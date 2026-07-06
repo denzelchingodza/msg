@@ -15,13 +15,9 @@ venv/
 backend/.secret
 .env*
 
-# Personal photos stay personal (copyright + privacy)
-frontend/public/photos/*
-!frontend/public/photos/README.md
-frontend/public/court.jpg
+# Photos, placed images, and court.jpg ARE committed now so the deployed
+# site (Vercel) actually has its images. Only the preview PNGs stay out.
 frontend/public/photos_*_prev.png
-frontend/public/placed/*
-!frontend/public/placed/README.md
 
 # Downloaded audio stays local (license terms usually forbid redistribution)
 frontend/public/audio/*

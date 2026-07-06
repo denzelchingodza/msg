@@ -13,6 +13,7 @@ import datetime
 import hashlib
 import hmac
 import json
+import os
 import secrets
 from pathlib import Path
 
@@ -30,6 +31,12 @@ FRESH = {
 
 
 def _secret() -> bytes:
+    # In production (e.g. Render) the filesystem is ephemeral, so prefer a
+    # secret set via the MSG_SECRET env var — that keeps signed profiles valid
+    # across redeploys. Falls back to a local .secret file for dev.
+    env_secret = os.environ.get("MSG_SECRET")
+    if env_secret:
+        return env_secret.strip().encode()
     if not SECRET_PATH.exists():
         SECRET_PATH.write_text(secrets.token_hex(32), encoding="utf-8")
         try:

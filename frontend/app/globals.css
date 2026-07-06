@@ -1308,7 +1308,11 @@ h1, h2, .display {
     radial-gradient(1100px 700px at 50% 108%, rgba(245, 132, 38, 0.4), transparent 60%),
     #030a1c;
 }
-.intro.leaving { animation: flashOut 0.55s ease forwards; }
+@keyframes introLeave {
+  from { opacity: 1; transform: none; filter: none; }
+  to { opacity: 0; transform: scale(1.05); filter: blur(2px); }
+}
+.intro.leaving { animation: introLeave 0.45s var(--ease) forwards; }
 .intro-inner { text-align: center; padding: 40px 20px; animation: fadeUp 0.7s var(--ease) both; }
 .intro-medallion {
   width: min(300px, 62vw);
@@ -1501,9 +1505,9 @@ h1, h2, .display {
 /* ═══ v7: 90s but modern ══════════════════════════════ */
 .intro-tee {
   background:
-    linear-gradient(180deg, rgba(4, 14, 38, 0.78), rgba(4, 14, 38, 0.5) 45%, rgba(4, 14, 38, 0.88)),
-    url("/placed/welcome_tee.jpg") center / cover no-repeat,
-    #071a3f;
+    linear-gradient(180deg, rgba(4, 14, 38, 0.55), rgba(4, 14, 38, 0.2) 45%, rgba(4, 14, 38, 0.66)),
+    url("/placed/welcome_tee.jpg") center / contain no-repeat,
+    #36538b;
 }
 .retro { text-shadow: 4px 4px 0 var(--orange), 8px 8px 0 rgba(0, 107, 182, 0.55); }
 .btn-ticket, .btn {
@@ -1696,6 +1700,27 @@ h1, h2, .display {
 }
 .sf-years span.new { background: var(--orange); color: #fff; border-color: var(--orange); }
 .site-footer2 .made-by { display: inline-block; }
+.sf-repo {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--blue-soft);
+  background: rgba(3, 10, 28, 0.7);
+  border: 1px solid rgba(133, 183, 235, 0.35);
+  border-radius: 999px;
+  padding: 9px 18px;
+  transition: color 0.15s, border-color 0.15s, transform 0.15s;
+}
+.sf-repo svg { flex-shrink: 0; }
+.sf-repo:hover {
+  color: var(--orange);
+  border-color: var(--orange);
+  transform: translateY(-2px);
+}
 .sf-bottom {
   text-align: center;
   margin-top: 30px;

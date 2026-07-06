@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -12,14 +11,15 @@ export default function Welcome() {
   const router = useRouter();
   const [leaving, setLeaving] = useState(false);
 
-  function enter() {
-    window.dispatchEvent(new Event("msg:sound-start"));
+  function leave(withSound: boolean) {
+    if (leaving) return;
+    if (withSound) window.dispatchEvent(new Event("msg:sound-start"));
     setLeaving(true);
-    setTimeout(() => router.push("/court"), 500);
+    setTimeout(() => router.push("/court"), 440);
   }
 
   return (
-    <div className={`intro intro-tee ${leaving ? "leaving quake" : ""}`}>
+    <div className={`intro intro-tee ${leaving ? "leaving" : ""}`}>
       <div className="intro-inner">
         <p className="intro-kicker">MADISON SQUARE GARDEN PRESENTS</p>
 
@@ -40,12 +40,20 @@ export default function Welcome() {
           New York basketball since 1946 · champions again in 2026
         </p>
 
-        <button className="btn-ticket intro-enter" onClick={enter}>
+        <button className="btn-ticket intro-enter" onClick={() => leave(true)}>
           ENTER THE GARDEN
         </button>
         <p className="intro-note">the crowd is waiting inside 🔊</p>
         <p className="intro-skip">
-          <Link href="/court">skip straight to the court →</Link>
+          <a
+            href="/court"
+            onClick={(e) => {
+              e.preventDefault();
+              leave(false);
+            }}
+          >
+            skip straight to the court →
+          </a>
         </p>
       </div>
     </div>

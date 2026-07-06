@@ -5,6 +5,7 @@ import GardenAudio from "@/components/GardenAudio";
 import GardenTime from "@/components/GardenTime";
 import HeaderLocation from "@/components/HeaderLocation";
 import SiteFooter from "@/components/SiteFooter";
+import WakeGate from "@/components/WakeGate";
 import "./globals.css";
 
 const anton = Anton({ weight: "400", subsets: ["latin"], variable: "--anton" });
@@ -35,6 +36,7 @@ export default function RootLayout({
       className={`${anton.variable} ${inter.variable} ${barlow.variable} ${graduate.variable}`}
     >
       <body>
+        <WakeGate />
         <header className="nav">
           <Link href="/court" className="nav-logo">
             <span className="nav-mark">MSG</span>

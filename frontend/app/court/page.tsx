@@ -153,7 +153,7 @@ export default function Home() {
           </figcaption>
         </figure>
         <figure className="duo-card">
-          <img src="/placed/splash_poster.jpg" alt="New York Knicks splash art" />
+          <img src="/photos/the_garden_under_confetti.jpg" alt="The Garden drenched in championship confetti" />
           <figcaption>
             <b>THE COLORS</b>
             <span>blue and orange, forever</span>

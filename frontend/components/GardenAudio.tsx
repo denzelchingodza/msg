@@ -61,8 +61,12 @@ export default function GardenAudio() {
 
     const onToggle = () => (playingRef.current ? stop() : start());
     const onForceStart = () => {
-      localStorage.setItem("msg_sound", "on");
-      start();
+      // Respect a user who muted; otherwise start (or arm the first tap if the
+      // browser blocks autoplay). Fired by WakeGate once the intro video ends.
+      if (localStorage.getItem("msg_sound") === "off") return;
+      start().then((ok) => {
+        if (!ok && !disposed) cleanupGesture = armFirstGesture();
+      });
     };
     const onTrack = (e: Event) => {
       const t = (e as CustomEvent).detail as Track;
@@ -85,15 +89,14 @@ export default function GardenAudio() {
 
     let cleanupGesture: (() => void) | undefined;
 
+    // Only detect availability (to show the toggle). We do NOT auto-start —
+    // the crowd is kicked off by WakeGate's "msg:sound-start" after the intro
+    // video, so the app stays quiet while the video plays.
     fetch(TRACKS.garden, { method: "HEAD" })
-      .then(async (r) => {
+      .then((r) => {
         const type = r.headers.get("content-type") ?? "";
         if (disposed || !r.ok || type.includes("text/html")) return;
         setAvailable(true);
-        if (localStorage.getItem("msg_sound") !== "off") {
-          const ok = await start();
-          if (!ok) cleanupGesture = armFirstGesture();
-        }
       })
       .catch(() => {});
 

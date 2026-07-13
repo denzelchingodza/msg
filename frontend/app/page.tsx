@@ -11,9 +11,10 @@ export default function Welcome() {
   const router = useRouter();
   const [leaving, setLeaving] = useState(false);
 
-  function leave(withSound: boolean) {
+  function leave() {
     if (leaving) return;
-    if (withSound) window.dispatchEvent(new Event("msg:sound-start"));
+    // The crowd audio is kicked off by the tip-in video on the arena page,
+    // so we don't start sound here — just fade out and head to the court.
     setLeaving(true);
     setTimeout(() => router.push("/court"), 440);
   }
@@ -40,7 +41,7 @@ export default function Welcome() {
           New York basketball since 1946 · champions again in 2026
         </p>
 
-        <button className="btn-ticket intro-enter" onClick={() => leave(true)}>
+        <button className="btn-ticket intro-enter" onClick={() => leave()}>
           ENTER THE GARDEN
         </button>
         <p className="intro-note">the crowd is waiting inside 🔊</p>
@@ -49,7 +50,7 @@ export default function Welcome() {
             href="/court"
             onClick={(e) => {
               e.preventDefault();
-              leave(false);
+              leave();
             }}
           >
             skip straight to the court →

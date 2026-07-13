@@ -22,6 +22,11 @@ frontend/public/photos_*_prev.png
 # Audio IS committed now so the deployed site has sound.
 # (Note: only do this if the clips' license permits redistribution.)
 
+# Raw .mov source files stay out (huge + don't play in most browsers).
+# The web-ready .mp4 conversion IS committed.
+*.mov
+*.MOV
+
 # OS / IDE noise
 .DS_Store
 Thumbs.db

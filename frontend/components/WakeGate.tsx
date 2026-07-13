@@ -1,25 +1,40 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 const MIN_MS = 700;
-const HARD_CAP_MS = 20000;
 const ARENA_PATH = "/court";
+const INTRO_VIDEO = "/photos/tip.mp4";
 
 /**
- * The "Waking the Garden" loading screen.
+ * "Waking the Garden" loading screen.
  *
- * 1. On a fresh full load, it stays up until the page is fully loaded (all
- *    images) AND the free backend has answered a health ping (which warms it).
- * 2. It ALSO shows when you enter the arena (/court) from inside the app —
- *    e.g. the "ENTER THE GARDEN" click — so entering always feels like a
- *    deliberate load-in, and you never watch the arena's images pop in.
+ * On entering the arena (/court) for the first time in a session, it plays the
+ * tip-in intro video once — trying to include its sound, falling back to muted
+ * with a "Sound" button if the browser blocks audio — with a Skip button. The
+ * crowd audio (GardenAudio) is signal-driven and only starts once this reveals
+ * the page, i.e. AFTER the video ends or is skipped.
  *
- * Other in-app navigation stays instant (no loader), so clicking between
- * sections is snappy.
+ * On other loads it's just a quick branded loader that waits for images + the
+ * backend so nothing pops in.
  */
+
+function introPlayed(): boolean {
+  try {
+    return sessionStorage.getItem("msg_intro_played") === "1";
+  } catch {
+    return false;
+  }
+}
+function markIntroPlayed() {
+  try {
+    sessionStorage.setItem("msg_intro_played", "1");
+  } catch {
+    /* private mode — fine, it just may replay */
+  }
+}
 
 function waitForPageLoad(): Promise<void> {
   return new Promise((resolve) => {
@@ -27,13 +42,11 @@ function waitForPageLoad(): Promise<void> {
     window.addEventListener("load", () => resolve(), { once: true });
   });
 }
-
 function waitForBackend(signal: AbortSignal): Promise<void> {
   return fetch(`${API}/api/health`, { cache: "no-store", signal })
     .then(() => undefined)
     .catch(() => undefined);
 }
-
 function waitForImages(): Promise<void> {
   return new Promise((resolve) => {
     requestAnimationFrame(() => {
@@ -54,88 +67,187 @@ function waitForImages(): Promise<void> {
 export default function WakeGate() {
   const [waking, setWaking] = useState(true);
   const [leaving, setLeaving] = useState(false);
+  const [videoMode, setVideoMode] = useState(false);
+  const [showSound, setShowSound] = useState(false);
   const pathname = usePathname();
+
   const firstRender = useRef(true);
+  const cancelled = useRef(false);
+  const contentReady = useRef(false);
+  const videoDone = useRef(false);
+  const cycleArena = useRef(false);
+  const startTime = useRef(Date.now());
+  const capTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  // 1. Fresh full page load.
+  const tryHide = useCallback(() => {
+    if (cancelled.current) return;
+    if (!(contentReady.current && videoDone.current)) return;
+    if (capTimer.current) clearTimeout(capTimer.current);
+    const wait = Math.max(0, MIN_MS - (Date.now() - startTime.current));
+    setTimeout(() => {
+      if (cancelled.current) return;
+      setLeaving(true);
+      // Crowd audio starts as the loader fades — i.e. after the video.
+      if (cycleArena.current) {
+        window.dispatchEvent(new Event("msg:sound-start"));
+      }
+      setTimeout(() => !cancelled.current && setWaking(false), 450);
+    }, wait);
+  }, []);
+
+  const beginCycle = useCallback(
+    (path: string, waitForContent: () => Promise<void>) => {
+      const playVideo = path === ARENA_PATH && !introPlayed();
+      cycleArena.current = path === ARENA_PATH;
+      contentReady.current = false;
+      videoDone.current = !playVideo; // no video → nothing to wait on
+      startTime.current = Date.now();
+      setShowSound(false);
+      setVideoMode(playVideo);
+      setLeaving(false);
+      setWaking(true);
+      if (playVideo) markIntroPlayed();
+
+      if (capTimer.current) clearTimeout(capTimer.current);
+      capTimer.current = setTimeout(
+        () => {
+          contentReady.current = true;
+          videoDone.current = true;
+          tryHide();
+        },
+        playVideo ? 25000 : 8000
+      );
+
+      waitForContent().then(() => {
+        contentReady.current = true;
+        tryHide();
+      });
+    },
+    [tryHide]
+  );
+
+  // Fresh full page load.
   useEffect(() => {
-    let cancelled = false;
+    cancelled.current = false;
     const controller = new AbortController();
-    const start = Date.now();
-
-    const hide = () => {
-      if (cancelled) return;
-      const wait = Math.max(0, MIN_MS - (Date.now() - start));
-      setTimeout(() => {
-        if (cancelled) return;
-        setLeaving(true);
-        setTimeout(() => !cancelled && setWaking(false), 450);
-      }, wait);
-    };
-
-    const cap = setTimeout(hide, HARD_CAP_MS);
-    Promise.all([waitForPageLoad(), waitForBackend(controller.signal)]).then(() => {
-      clearTimeout(cap);
-      hide();
-    });
-
+    beginCycle(pathname ?? "/", () =>
+      Promise.all([waitForPageLoad(), waitForBackend(controller.signal)]).then(
+        () => undefined
+      )
+    );
     return () => {
-      cancelled = true;
-      clearTimeout(cap);
+      cancelled.current = true;
       controller.abort();
+      if (capTimer.current) clearTimeout(capTimer.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 2. Entering the arena via in-app navigation.
+  // Entering the arena via in-app navigation.
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
       return;
     }
     if (pathname !== ARENA_PATH) return;
-
-    let cancelled = false;
-    const start = Date.now();
-    setLeaving(false);
-    setWaking(true);
-
-    const hide = () => {
-      if (cancelled) return;
-      const wait = Math.max(0, MIN_MS - (Date.now() - start));
-      setTimeout(() => {
-        if (cancelled) return;
-        setLeaving(true);
-        setTimeout(() => !cancelled && setWaking(false), 450);
-      }, wait);
-    };
-
-    const cap = setTimeout(hide, HARD_CAP_MS);
-    waitForImages().then(() => {
-      clearTimeout(cap);
-      hide();
-    });
-
-    return () => {
-      cancelled = true;
-      clearTimeout(cap);
-    };
+    beginCycle(ARENA_PATH, () => waitForImages());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+
+  // Play the intro video: try with sound, fall back to muted + Sound button.
+  useEffect(() => {
+    if (!videoMode) return;
+    const v = videoRef.current;
+    if (!v) return;
+    v.currentTime = 0;
+    v.muted = false;
+    const attempt = v.play();
+    if (attempt) {
+      attempt
+        .then(() => setShowSound(false))
+        .catch(() => {
+          v.muted = true;
+          setShowSound(true);
+          v.play().catch(() => {
+            videoDone.current = true;
+            tryHide();
+          });
+        });
+    }
+  }, [videoMode, tryHide]);
+
+  const onVideoEnd = () => {
+    videoDone.current = true;
+    tryHide();
+  };
+  const onVideoError = () => {
+    videoDone.current = true;
+    setVideoMode(false);
+    tryHide();
+  };
+  const skip = () => {
+    videoRef.current?.pause();
+    videoDone.current = true;
+    contentReady.current = true;
+    tryHide();
+  };
+  const enableSound = () => {
+    const v = videoRef.current;
+    if (v) {
+      v.muted = false;
+      v.play().catch(() => {});
+    }
+    setShowSound(false);
+  };
 
   if (!waking) return null;
 
   return (
     <div className={`wake ${leaving ? "wake-out" : ""}`} aria-live="polite">
-      <div className="wake-inner">
-        <div className="wake-ball" aria-hidden="true">
-          🏀
+      {videoMode ? (
+        <>
+          <video
+            className="wake-video-bg"
+            src={INTRO_VIDEO}
+            autoPlay
+            muted
+            loop
+            playsInline
+            aria-hidden="true"
+          />
+          <video
+            ref={videoRef}
+            className="wake-video"
+            src={INTRO_VIDEO}
+            playsInline
+            preload="auto"
+            onEnded={onVideoEnd}
+            onError={onVideoError}
+          />
+          <div className="wake-controls">
+            {showSound && (
+              <button className="wake-sound" onClick={enableSound}>
+                🔊 Sound
+              </button>
+            )}
+            <button className="wake-skip" onClick={skip}>
+              Skip ›
+            </button>
+          </div>
+        </>
+      ) : (
+        <div className="wake-inner">
+          <div className="wake-ball" aria-hidden="true">
+            🏀
+          </div>
+          <p className="wake-title">WAKING THE GARDEN</p>
+          <p className="wake-sub">the crowd&rsquo;s filing in — one sec…</p>
+          <div className="wake-bar" aria-hidden="true">
+            <i />
+          </div>
         </div>
-        <p className="wake-title">WAKING THE GARDEN</p>
-        <p className="wake-sub">the crowd&rsquo;s filing in — one sec…</p>
-        <div className="wake-bar" aria-hidden="true">
-          <i />
-        </div>
-      </div>
+      )}
     </div>
   );
 }

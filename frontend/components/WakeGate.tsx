@@ -79,7 +79,6 @@ export default function WakeGate() {
   const startTime = useRef(Date.now());
   const capTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const bgRef = useRef<HTMLVideoElement | null>(null);
 
   const tryHide = useCallback(() => {
     if (cancelled.current) return;
@@ -156,24 +155,26 @@ export default function WakeGate() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  // Play the intro video muted+immediately (browsers always allow this, so it
-  // shows instantly — no blurred-only gap). The Sound button unmutes it.
+  // Play the intro video: try with sound, fall back to muted + Sound button.
   useEffect(() => {
     if (!videoMode) return;
-    const bg = bgRef.current;
-    if (bg) {
-      bg.muted = true;
-      bg.play().catch(() => {});
-    }
     const v = videoRef.current;
     if (!v) return;
-    v.muted = true;
     v.currentTime = 0;
-    setShowSound(true);
-    v.play().catch(() => {
-      videoDone.current = true;
-      tryHide();
-    });
+    v.muted = false;
+    const attempt = v.play();
+    if (attempt) {
+      attempt
+        .then(() => setShowSound(false))
+        .catch(() => {
+          v.muted = true;
+          setShowSound(true);
+          v.play().catch(() => {
+            videoDone.current = true;
+            tryHide();
+          });
+        });
+    }
   }, [videoMode, tryHide]);
 
   const onVideoEnd = () => {
@@ -207,9 +208,9 @@ export default function WakeGate() {
       {videoMode ? (
         <>
           <video
-            ref={bgRef}
             className="wake-video-bg"
             src={INTRO_VIDEO}
+            autoPlay
             muted
             loop
             playsInline

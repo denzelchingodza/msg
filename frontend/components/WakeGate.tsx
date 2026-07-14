@@ -68,7 +68,6 @@ export default function WakeGate() {
   const [waking, setWaking] = useState(true);
   const [leaving, setLeaving] = useState(false);
   const [videoMode, setVideoMode] = useState(false);
-  const [showSound, setShowSound] = useState(false);
   const pathname = usePathname();
 
   const firstRender = useRef(true);
@@ -103,7 +102,6 @@ export default function WakeGate() {
       contentReady.current = false;
       videoDone.current = !playVideo; // no video → nothing to wait on
       startTime.current = Date.now();
-      setShowSound(false);
       setVideoMode(playVideo);
       setLeaving(false);
       setWaking(true);
@@ -155,20 +153,46 @@ export default function WakeGate() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  // Play the intro video muted + immediately (browsers always allow this, so
-  // it shows instantly — no blurred gap, no double-play). The Sound button
-  // unmutes it.
+  // Play the intro video WITH sound. Works automatically when the user has
+  // already interacted (e.g. clicked ENTER). If a cold load blocks unmuted
+  // autoplay, play muted and switch sound on at the first interaction — no
+  // button, no manual step.
   useEffect(() => {
     if (!videoMode) return;
     const v = videoRef.current;
     if (!v) return;
-    v.muted = true;
     v.currentTime = 0;
-    setShowSound(true);
+
+    let cleanupGesture: (() => void) | undefined;
+    const armUnmute = () => {
+      const onGesture = () => {
+        v.muted = false;
+        v.play().catch(() => {});
+        remove();
+      };
+      const remove = () => {
+        window.removeEventListener("pointerdown", onGesture);
+        window.removeEventListener("keydown", onGesture);
+        window.removeEventListener("touchstart", onGesture);
+      };
+      window.addEventListener("pointerdown", onGesture);
+      window.addEventListener("keydown", onGesture);
+      window.addEventListener("touchstart", onGesture);
+      return remove;
+    };
+
+    v.muted = false;
     v.play().catch(() => {
-      videoDone.current = true;
-      tryHide();
+      // Cold load blocked unmuted autoplay — play muted, unmute on first tap.
+      v.muted = true;
+      v.play().catch(() => {
+        videoDone.current = true;
+        tryHide();
+      });
+      cleanupGesture = armUnmute();
     });
+
+    return () => cleanupGesture?.();
   }, [videoMode, tryHide]);
 
   const onVideoEnd = () => {
@@ -185,14 +209,6 @@ export default function WakeGate() {
     videoDone.current = true;
     contentReady.current = true;
     tryHide();
-  };
-  const enableSound = () => {
-    const v = videoRef.current;
-    if (v) {
-      v.muted = false;
-      v.play().catch(() => {});
-    }
-    setShowSound(false);
   };
 
   if (!waking) return null;
@@ -211,11 +227,6 @@ export default function WakeGate() {
             onError={onVideoError}
           />
           <div className="wake-controls">
-            {showSound && (
-              <button className="wake-sound" onClick={enableSound}>
-                🔊 Sound
-              </button>
-            )}
             <button className="wake-skip" onClick={skip}>
               Skip ›
             </button>

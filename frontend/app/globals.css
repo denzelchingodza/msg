@@ -1822,7 +1822,7 @@ a, button, summary, label,
   gap: 10px;
   align-items: center;
 }
-.wake-skip, .wake-sound {
+.wake-skip {
   font-family: var(--cond);
   font-weight: 700;
   font-size: 13px;
@@ -1838,12 +1838,6 @@ a, button, summary, label,
   transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
 .wake-skip:hover { color: var(--orange); border-color: var(--orange); }
-.wake-sound {
-  color: var(--gold);
-  border-color: var(--gold);
-  background: rgba(4, 14, 38, 0.72);
-}
-.wake-sound:hover { background: rgba(250, 199, 117, 0.18); }
 .wake-ball {
   font-size: 64px;
   line-height: 1;

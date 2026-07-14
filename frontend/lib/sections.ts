@@ -2,6 +2,7 @@
 export const SECTIONS = [
   { href: "/roulette", n: "01", title: "Fact Roulette", spot: "Center court", thumb: "/photos/the_garden_under_confetti.jpg", does: "Press one button, get a Knicks fact. Rare pulls rain confetti.", verb: "Spin" },
   { href: "/gauntlet", n: "02", title: "The Gauntlet", spot: "Left paint", thumb: "/photos/comeback_kids_june_13.jpg", does: "10 trivia questions. Right answers get praised, wrong ones get roasted.", verb: "Play" },
+  { href: "/buzzer", n: "07", title: "Beat the Buzzer", spot: "Baseline", thumb: "/photos/rising_at_the_rim.jpg", does: "Rapid-fire trivia against a 60-second clock. How many can you drain?", verb: "Race" },
   { href: "/ragebait", n: "03", title: "Rage Bait", spot: "Right paint", thumb: "/photos/champs_front_page.jpg", does: "Hot takes built to end group chats. Rage levels certified.", verb: "Generate" },
   { href: "/trashtalk", n: "04", title: "Trash Talk", spot: "Left corner", thumb: "/photos/brunson_hears_the_garden.jpg", does: "Pick any of the other 29 teams. Receive ammunition.", verb: "Fire" },
   { href: "/faith", n: "05", title: "The Faith", spot: "The tunnel", thumb: "/photos/reed_19_brunson_11.jpg", does: "The whole story, 1946 to the parade. For fans and the unconverted.", verb: "Read" },

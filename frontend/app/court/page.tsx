@@ -15,6 +15,7 @@ const ZONES = [
   { href: "/trashtalk", n: "04", title: "Trash Talk", x: 85, y: 50 },
   { href: "/faith", n: "05", title: "The Faith", x: 25, y: 12 },
   { href: "/championship", n: "06", title: "Chip '26", x: 75, y: 12 },
+  { href: "/buzzer", n: "07", title: "Beat the Buzzer", x: 50, y: 10 },
 ] as const;
 
 const CLYDE = [

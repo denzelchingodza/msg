@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Concourse from "@/components/Concourse";
+import EdgeFlash from "@/components/EdgeFlash";
 import { api, Profile, syncProfile } from "@/lib/api";
 import { celebrate } from "@/lib/celebrate";
 
@@ -40,6 +41,8 @@ export default function Gauntlet() {
   const [clock, setClock] = useState(SHOT_CLOCK);
   const [offline, setOffline] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [flashTone, setFlashTone] = useState<"correct" | "wrong" | null>(null);
+  const [flashPulse, setFlashPulse] = useState(0);
 
   useEffect(() => {
     syncProfile()
@@ -93,6 +96,8 @@ export default function Gauntlet() {
     if (!run || picked !== null) return;
     const q = run.questions[idx];
     setPicked(i);
+    setFlashTone(i === q.correct ? "correct" : "wrong");
+    setFlashPulse((p) => p + 1);
     if (i === q.correct) {
       const ns = streak + 1;
       setScore((s) => s + 1);
@@ -197,6 +202,7 @@ export default function Gauntlet() {
   const q = run.questions[idx];
   return (
     <main className="page">
+      <EdgeFlash tone={flashTone} pulse={flashPulse} />
       <div className="qhead">
         <div>
           <span className="lbl">Question</span>

@@ -73,6 +73,25 @@ def quiz_run():
             "ranks": quiz["ranks"]}
 
 
+@app.get("/api/buzzer")
+def buzzer():
+    """Beat the Buzzer: the whole question pool, shuffled, for rapid fire."""
+    quiz = CONTENT["quiz"]
+    qs = list(quiz["questions"])
+    random.shuffle(qs)
+    out = []
+    for q in qs:
+        order = list(range(len(q["o"])))
+        random.shuffle(order)
+        out.append({
+            "q": q["q"],
+            "options": [q["o"][i] for i in order],
+            "correct": order.index(q["a"]),
+            "cat": q["cat"],
+        })
+    return {"questions": out}
+
+
 @app.get("/api/take")
 def hot_take():
     take = random.choice(CONTENT["hot_takes"]["takes"])

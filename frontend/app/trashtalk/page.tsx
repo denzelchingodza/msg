@@ -2,8 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Concourse from "@/components/Concourse";
+import EdgeFlash from "@/components/EdgeFlash";
 import { api } from "@/lib/api";
 import { celebrate } from "@/lib/celebrate";
+
+// The marquee franchises — roasting these rattles the whole building.
+const BIG_DOGS = ["Celtics", "Lakers", "Nets", "Heat", "Bulls", "Warriors", "76ers", "Bucks"];
 
 interface TeamMeta {
   name: string;
@@ -24,6 +28,8 @@ export default function TrashTalk() {
   const [line, setLine] = useState<Line | null>(null);
   const [busy, setBusy] = useState(false);
   const [offline, setOffline] = useState(false);
+  const [flashPulse, setFlashPulse] = useState(0);
+  const [flashStrong, setFlashStrong] = useState(false);
 
   useEffect(() => {
     api<{ teams: TeamMeta[] }>("/api/trash/teams")
@@ -41,6 +47,8 @@ export default function TrashTalk() {
     try {
       const l = await api<Line>(`/api/trash/${teamIdx}`);
       setLine(l);
+      setFlashStrong(BIG_DOGS.some((n) => teams[teamIdx]?.name.includes(n)));
+      setFlashPulse((p) => p + 1);
       celebrate(false);
     } catch {
       setOffline(true);
@@ -72,6 +80,7 @@ export default function TrashTalk() {
 
   return (
     <main className="page compact center">
+      <EdgeFlash tone={flashPulse > 0 ? "roast" : null} pulse={flashPulse} strong={flashStrong} />
       <p className="kicker">Trash Talk Generator</p>
       <h1 className="page-title">The League Report Card</h1>
       <p className="page-sub">

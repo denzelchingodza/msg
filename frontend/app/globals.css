@@ -1852,14 +1852,39 @@ a, button, summary, label,
     inset 0 0 90px 18px rgba(29, 158, 117, 0.55);
 }
 .edge-flash.wrong {
-  box-shadow: inset 0 0 0 8px var(--red),
+  box-shadow: inset 0 0 0 10px var(--red),
     inset 0 0 90px 18px rgba(226, 75, 74, 0.6);
+}
+.edge-flash.roast {
+  box-shadow: inset 0 0 0 10px var(--orange),
+    inset 0 0 90px 20px rgba(245, 132, 38, 0.55);
 }
 @keyframes edgeFlash {
   0% { opacity: 0; }
   15% { opacity: 1; }
   100% { opacity: 0; }
 }
+
+/* ═══ energy: screen shake (wrong answers + roasts) ═══════════ */
+@keyframes screenShake {
+  0%, 100% { transform: translate(0, 0); }
+  15% { transform: translate(-8px, 3px); }
+  30% { transform: translate(8px, -3px); }
+  45% { transform: translate(-7px, 2px); }
+  60% { transform: translate(7px, -2px); }
+  80% { transform: translate(-4px, 1px); }
+}
+.screen-shake { animation: screenShake 0.5s ease; }
+@keyframes screenShakeStrong {
+  0%, 100% { transform: translate(0, 0) rotate(0); }
+  10% { transform: translate(-13px, 5px) rotate(-0.7deg); }
+  25% { transform: translate(13px, -5px) rotate(0.7deg); }
+  40% { transform: translate(-11px, 4px) rotate(-0.6deg); }
+  55% { transform: translate(11px, -4px) rotate(0.6deg); }
+  70% { transform: translate(-7px, 2px); }
+  85% { transform: translate(6px, -2px); }
+}
+.screen-shake-strong { animation: screenShakeStrong 0.65s ease; }
 
 /* ═══ energy: shot clock heartbeat when time is low ═══════════ */
 @keyframes heartbeat {

@@ -155,26 +155,20 @@ export default function WakeGate() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  // Play the intro video: try with sound, fall back to muted + Sound button.
+  // Play the intro video muted + immediately (browsers always allow this, so
+  // it shows instantly — no blurred gap, no double-play). The Sound button
+  // unmutes it.
   useEffect(() => {
     if (!videoMode) return;
     const v = videoRef.current;
     if (!v) return;
+    v.muted = true;
     v.currentTime = 0;
-    v.muted = false;
-    const attempt = v.play();
-    if (attempt) {
-      attempt
-        .then(() => setShowSound(false))
-        .catch(() => {
-          v.muted = true;
-          setShowSound(true);
-          v.play().catch(() => {
-            videoDone.current = true;
-            tryHide();
-          });
-        });
-    }
+    setShowSound(true);
+    v.play().catch(() => {
+      videoDone.current = true;
+      tryHide();
+    });
   }, [videoMode, tryHide]);
 
   const onVideoEnd = () => {
@@ -207,15 +201,6 @@ export default function WakeGate() {
     <div className={`wake ${leaving ? "wake-out" : ""}`} aria-live="polite">
       {videoMode ? (
         <>
-          <video
-            className="wake-video-bg"
-            src={INTRO_VIDEO}
-            autoPlay
-            muted
-            loop
-            playsInline
-            aria-hidden="true"
-          />
           <video
             ref={videoRef}
             className="wake-video"

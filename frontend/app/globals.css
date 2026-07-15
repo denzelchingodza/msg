@@ -2092,7 +2092,17 @@ a, button, summary, label,
 /* wall decorations (jersey, trophy, sneaker) */
 .hoops-decor { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 .decor { position: absolute; filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.55)); }
-.decor-jersey { top: 22%; right: 4%; width: clamp(66px, 8vw, 104px); transform: rotate(1.2deg); }
+.decor-jersey {
+  top: 20%; right: 4%;
+  width: clamp(84px, 10vw, 130px);
+  margin: 0;
+  padding: 6px;
+  background: linear-gradient(150deg, #d9b45c, #a07a27);
+  border-radius: 4px;
+  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  transform: rotate(1.4deg);
+}
+.decor-jersey img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border: 3px solid #efe7d2; border-radius: 2px; }
 .decor-trophy { top: 34%; right: 7%; width: clamp(46px, 5.5vw, 76px); }
 .decor-shoe { top: 34%; left: 6%; width: clamp(84px, 10vw, 134px); transform: rotate(-4deg); }
 @media (max-width: 760px) { .decor-trophy, .decor-shoe { display: none; } }

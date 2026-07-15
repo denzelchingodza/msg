@@ -8,16 +8,10 @@
 export default function WallDecor() {
   return (
     <div className="hoops-decor" aria-hidden="true">
-      {/* framed jersey — right */}
-      <div className="decor decor-jersey">
-        <svg viewBox="0 0 110 132" width="100%" height="100%">
-          <rect x="2" y="2" width="106" height="128" rx="4" fill="#3a2a18" />
-          <rect x="8" y="8" width="94" height="116" fill="#e9edf4" />
-          <path d="M40 24 L28 34 L20 52 L30 60 L34 52 L34 108 L76 108 L76 52 L80 60 L90 52 L82 34 L70 24 Q55 34 40 24 Z" fill="#0a58b0" stroke="#063a7a" strokeWidth="1.5" />
-          <path d="M40 24 Q55 34 70 24" fill="none" stroke="#f58426" strokeWidth="3" />
-          <text x="55" y="90" textAnchor="middle" fontFamily="Arial Black, Impact, sans-serif" fontSize="34" fill="#ffffff">11</text>
-        </svg>
-      </div>
+      {/* framed photo — right */}
+      <figure className="decor decor-jersey">
+        <img src="/photos/IMG_4789.JPG" alt="" />
+      </figure>
 
       {/* trophy — right, lower */}
       <div className="decor decor-trophy">

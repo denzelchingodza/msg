@@ -16,7 +16,11 @@ export default function Welcome() {
     // The crowd audio is kicked off by the tip-in video on the arena page,
     // so we don't start sound here — just fade out and head to the court.
     setLeaving(true);
-    setTimeout(() => router.push("/court"), 440);
+    setTimeout(() => {
+      // Raise the loading curtain first so the arena never flashes into view.
+      window.dispatchEvent(new Event("msg:entering"));
+      router.push("/court");
+    }, 440);
   }
 
   return (

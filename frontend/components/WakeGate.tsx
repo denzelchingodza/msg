@@ -142,6 +142,17 @@ export default function WakeGate() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Raise the curtain instantly when the welcome page signals entry, BEFORE
+  // the /court content paints — kills the split-second flash of the arena.
+  useEffect(() => {
+    const onEntering = () => {
+      setLeaving(false);
+      setWaking(true);
+    };
+    window.addEventListener("msg:entering", onEntering);
+    return () => window.removeEventListener("msg:entering", onEntering);
+  }, []);
+
   // Entering the arena via in-app navigation.
   useEffect(() => {
     if (firstRender.current) {

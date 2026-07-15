@@ -39,7 +39,7 @@ export function PauseMenu({ onResume, onRestart, onSettings, onLocker }: {
     <GlassModal kicker="Timeout" title="Paused">
       <div className="hoops-menu-btns">
         <button className="btn" onClick={onResume}>Resume</button>
-        <button className="btn btn-ghost" onClick={onLocker}>🧺 Locker</button>
+        <button className="btn btn-ghost" onClick={onLocker}>Locker</button>
         <button className="btn btn-ghost" onClick={onRestart}>Restart</button>
         <button className="btn btn-ghost" onClick={onSettings}>Settings</button>
       </div>
@@ -74,17 +74,17 @@ export function DailyPanel({ makes, goal, reward, claimed, onClaim, onClose, can
     <GlassModal kicker="Daily" title={`Make ${goal} threes`} onClose={onClose}>
       {canLogin && (
         <button className="hoops-login" onClick={onLogin}>
-          🎁 Daily login bonus <b>+{loginReward} 🪙</b>
+          Daily login bonus <b>+{loginReward} coins</b>
         </button>
       )}
-      <p className="hoops-modal-body">Sink {goal} today for {reward} 🪙. Resets at midnight.</p>
+      <p className="hoops-modal-body">Sink {goal} today for {reward} coins. Resets at midnight.</p>
       <div className="hoops-daily-bar"><i style={{ width: `${Math.min(1, makes / goal) * 100}%` }} /></div>
-      <p className="muted" style={{ margin: "10px 0 18px" }}>{Math.min(makes, goal)} / {goal} made</p>
+      <p className="muted" style={{ margin: "10px 0 18px" }}>{Math.min(makes, goal)} of {goal} made</p>
       <div className="hoops-menu-btns">
         {done && !claimed ? (
-          <button className="btn" onClick={onClaim}>Claim {reward} 🪙</button>
+          <button className="btn" onClick={onClaim}>Claim {reward} coins</button>
         ) : (
-          <button className="btn btn-ghost" onClick={onClose}>{claimed ? "Claimed today ✓" : "Keep shooting"}</button>
+          <button className="btn btn-ghost" onClick={onClose}>{claimed ? "Claimed today" : "Keep shooting"}</button>
         )}
       </div>
     </GlassModal>

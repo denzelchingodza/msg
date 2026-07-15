@@ -44,11 +44,11 @@ export default function HoopsHUD(p: HudProps) {
 
       {/* right: coins + buttons */}
       <div className="hud-right">
-        <div className="hud-coins glass">🪙 {p.coins}</div>
-        <button className="hud-btn glass" onClick={p.onDaily} aria-label="Daily challenge" title="Daily challenge">
-          🎯<span className="hud-daily-dot">{p.dailyMakes}/{p.dailyGoal}</span>
+        <div className="hud-coins glass"><b>{p.coins}</b><span>Coins</span></div>
+        <button className="hud-btn glass" onClick={p.onDaily} aria-label="Daily challenge">
+          Daily<span className="hud-daily-dot">{p.dailyMakes}/{p.dailyGoal}</span>
         </button>
-        <button className="hud-btn glass" onClick={p.onPause} aria-label="Pause" title="Pause">⏸</button>
+        <button className="hud-btn glass" onClick={p.onPause} aria-label="Pause">Pause</button>
       </div>
 
       {/* combo indicator */}

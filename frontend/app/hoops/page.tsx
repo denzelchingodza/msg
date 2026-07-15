@@ -7,6 +7,7 @@ import HoopsHUD from "@/components/hoops/HoopsHUD";
 import { PauseMenu, SettingsMenu, DailyPanel } from "@/components/hoops/HoopsMenus";
 import HoopsLocker from "@/components/hoops/HoopsLocker";
 import Basketball from "@/components/hoops/Basketball";
+import CourtFloor from "@/components/hoops/CourtFloor";
 import { ballById } from "@/lib/hoopsBalls";
 import { Achievement, newlyUnlocked } from "@/lib/hoopsAchievements";
 import { DAILY_GOAL, DAILY_LOGIN_REWARD, DAILY_REWARD, HoopsProgress, levelFromXp, todayStr, useHoopsProgress } from "@/lib/hoopsStore";
@@ -352,7 +353,7 @@ export default function Hoops() {
 
   return (
     <div ref={wrapRef} className={`hoops-full ${settings.reducedMotion ? "rm" : ""}`} onPointerDown={down} onPointerMove={move} onPointerUp={upFn} onPointerCancel={upFn} onPointerLeave={upFn}>
-      <div className="hoops-floor" aria-hidden="true" />
+      <CourtFloor />
       <div className="hoops-spot" aria-hidden="true" />
       <EdgeFlash tone={flashTone} pulse={flashPulse} />
 
@@ -373,7 +374,7 @@ export default function Hoops() {
         />
       )}
 
-      {bonus && phase === "playing" && <div className="hoops-bonus-tag">🔥 2× BONUS</div>}
+      {bonus && phase === "playing" && <div className="hoops-bonus-tag">2× BONUS</div>}
 
       <div ref={hoopRef} className={`hoops-hoop ${bonus ? "bonus" : ""}`} aria-hidden="true">
         <svg viewBox="0 0 220 170" width="100%" height="100%">
@@ -418,7 +419,7 @@ export default function Hoops() {
         </div>
       )}
 
-      {idle && <div className="hoops-grab">drag up to shoot ↑</div>}
+      {idle && <div className="hoops-grab">Drag up to shoot</div>}
       {call && <div key={call.n} className={`hoops-call ${call.tone}`}>{call.text}</div>}
 
       {phase === "intro" && (
@@ -426,14 +427,14 @@ export default function Hoops() {
           <div className="hoops-card">
             <p className="kicker">MSG Hoops</p>
             <h2 className="hoops-modal-title">Drag up to shoot</h2>
-            <p className="hoops-modal-body">Pull the ball back and up — the dotted arc shows where it&rsquo;s going. Swish it dead-center for a green <b>PERFECT</b>.</p>
+            <p className="hoops-modal-body">Pull the ball back and up. The dotted arc shows where it&rsquo;s going. Swish it dead center for a green <b>PERFECT</b>.</p>
             <ul className="hoops-rules">
-              <li>⏱️ 60s · makes are 3 × your combo</li>
-              <li>🎯 PERFECT (center) & 🔥 BONUS windows = 2×</li>
-              <li>💻 click-drag-release &nbsp;·&nbsp; 📱 swipe up</li>
+              <li>60 seconds. Every make is 3 points times your combo.</li>
+              <li>Dead-center PERFECT and gold BONUS windows both score double.</li>
+              <li>Computer: click, drag, release. Phone: swipe up.</li>
             </ul>
             <button className="btn" onClick={begin}>Start shooting</button>
-            <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => setOverlay("locker")}>🧺 Locker</button>
+            <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => setOverlay("locker")}>Locker</button>
           </div>
         </div>
       )}
@@ -444,7 +445,7 @@ export default function Hoops() {
             <p className="kicker">Final buzzer</p>
             <p className="hoops-final">{points}<small> PTS</small></p>
             <h2 className="hoops-modal-title">{points > opp * 3 ? "You beat the Rival" : points === opp * 3 ? "Deadlock" : "Rival took it"}</h2>
-            <p className="hoops-modal-body">Level {lv.level} · Best {Math.max(progress.best, points)} · 🪙 {progress.coins}</p>
+            <p className="hoops-modal-body">Level {lv.level} &nbsp; Best {Math.max(progress.best, points)} &nbsp; {progress.coins} coins</p>
             <button className="btn" onClick={begin}>Run it back</button>
           </div>
         </div>
@@ -474,8 +475,7 @@ export default function Hoops() {
         <div className="hoops-toast">
           {toast.map((a) => (
             <div key={a.id} className="hoops-toast-row">
-              <span>{a.icon}</span>
-              <div><b>Achievement unlocked</b><small>{a.name} · +{a.reward} 🪙</small></div>
+              <div><b>Achievement unlocked</b><small>{a.name} &nbsp; +{a.reward} coins</small></div>
             </div>
           ))}
         </div>

@@ -29,7 +29,7 @@ export default function HoopsLocker({ progress, onBuy, onEquip, onClose }: {
       <div className="hoops-card wide" onClick={(e) => e.stopPropagation()}>
         <div className="locker-head">
           <h2 className="hoops-modal-title" style={{ margin: 0 }}>Locker</h2>
-          <span className="locker-coins">🪙 {progress.coins}</span>
+          <span className="locker-coins">{progress.coins} coins</span>
         </div>
 
         <div className="locker-tabs">
@@ -53,7 +53,7 @@ export default function HoopsLocker({ progress, onBuy, onEquip, onClose }: {
                     ) : owned ? (
                       <button className="ball-btn" onClick={() => onEquip(b.id)}>Equip</button>
                     ) : (
-                      <button className="ball-btn buy" disabled={progress.coins < b.price} onClick={() => onBuy(b.id)}>🪙 {b.price}</button>
+                      <button className="ball-btn buy" disabled={progress.coins < b.price} onClick={() => onBuy(b.id)}>Buy {b.price}</button>
                     )}
                   </div>
                 );
@@ -67,9 +67,8 @@ export default function HoopsLocker({ progress, onBuy, onEquip, onClose }: {
                 const got = progress.achievements.includes(a.id);
                 return (
                   <div key={a.id} className={`cheeve ${got ? "got" : ""}`}>
-                    <span className="cheeve-ic">{got ? a.icon : "🔒"}</span>
                     <span className="cheeve-body"><b>{a.name}</b><small>{a.desc}</small></span>
-                    <span className="cheeve-rw">{got ? "✓" : `+${a.reward}`}</span>
+                    <span className="cheeve-rw">{got ? "Unlocked" : `+${a.reward}`}</span>
                   </div>
                 );
               })}

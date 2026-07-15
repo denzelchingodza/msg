@@ -8,6 +8,7 @@ import { PauseMenu, SettingsMenu, DailyPanel } from "@/components/hoops/HoopsMen
 import HoopsLocker from "@/components/hoops/HoopsLocker";
 import Basketball from "@/components/hoops/Basketball";
 import CourtFloor from "@/components/hoops/CourtFloor";
+import WallDecor from "@/components/hoops/WallDecor";
 import { ballById } from "@/lib/hoopsBalls";
 import { Achievement, newlyUnlocked } from "@/lib/hoopsAchievements";
 import { DAILY_GOAL, DAILY_LOGIN_REWARD, DAILY_REWARD, HoopsProgress, levelFromXp, todayStr, useHoopsProgress } from "@/lib/hoopsStore";
@@ -356,8 +357,9 @@ export default function Hoops() {
       <CourtFloor />
       <div className="hoops-spot" aria-hidden="true" />
       <figure className="hoops-frame" aria-hidden="true">
-        <img src="/photos/champs_front_page.jpg" alt="" />
+        <img src="/placed/patrick_ewing.jpg" alt="" />
       </figure>
+      <WallDecor />
       <EdgeFlash tone={flashTone} pulse={flashPulse} />
 
       <Link href="/court" className="hoops-exit">← Exit</Link>

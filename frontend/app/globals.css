@@ -2070,8 +2070,8 @@ a, button, summary, label,
 /* framed photo hung on the wall */
 .hoops-frame {
   position: absolute;
-  top: 19%; left: 5%;
-  width: clamp(96px, 12vw, 150px);
+  top: 15%; left: 4%;
+  width: clamp(88px, 11vw, 132px);
   margin: 0;
   z-index: 1;
   padding: 6px;
@@ -2083,11 +2083,19 @@ a, button, summary, label,
 .hoops-frame img {
   display: block;
   width: 100%;
-  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
   border: 3px solid #efe7d2;
   border-radius: 2px;
 }
-@media (max-width: 640px) { .hoops-frame { top: 15%; left: 3%; } }
+
+/* wall decorations (jersey, trophy, sneaker) */
+.hoops-decor { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.decor { position: absolute; filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.55)); }
+.decor-jersey { top: 22%; right: 4%; width: clamp(66px, 8vw, 104px); transform: rotate(1.2deg); }
+.decor-trophy { top: 34%; right: 7%; width: clamp(46px, 5.5vw, 76px); }
+.decor-shoe { top: 34%; left: 6%; width: clamp(84px, 10vw, 134px); transform: rotate(-4deg); }
+@media (max-width: 760px) { .decor-trophy, .decor-shoe { display: none; } }
 .hoops-exit {
   position: absolute;
   top: 16px; left: 16px;

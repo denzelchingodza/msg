@@ -8,7 +8,7 @@ import { PauseMenu, SettingsMenu, DailyPanel } from "@/components/hoops/HoopsMen
 import { DAILY_GOAL, DAILY_REWARD, levelFromXp, useHoopsProgress } from "@/lib/hoopsStore";
 import { celebrate } from "@/lib/celebrate";
 
-/* ── tunable feel (distance-based power; trajectory preview shows it) ── */
+/* ── tunable feel ─────────────────────────────────────────────── */
 const ROUND = 60;
 const GRAVITY = 0.37;
 const K = 0.058;
@@ -17,12 +17,18 @@ const BALL_Y_FRAC = 0.82;
 const HOOP_Y_FRAC = 0.3;
 const RIM_HALF_FRAC = 0.125;
 const ASSIST_FRAC = 0.2;
+const PERFECT_FRAC = 0.36; // within this share of the rim = PERFECT (green)
 const HOT_STREAK = 3;
 const DOTS = 16;
+const TRAIL = 7;
+const SPIN = 5; // ball spin factor
+const SPOT_AFTER = 4; // makes before the shooting spot starts moving
+const BONUS_EVERY = 13000; // ms between bonus windows
+const BONUS_LEN = 5000; // ms a bonus window stays open
 
 interface Ball {
   x: number; y: number; vx: number; vy: number;
-  flying: boolean; scored: boolean; scale: number;
+  flying: boolean; scored: boolean; scale: number; rot: number; spin: number;
 }
 type Overlay = "none" | "pause" | "settings" | "daily";
 
@@ -40,6 +46,8 @@ export default function Hoops() {
   const [overlay, setOverlay] = useState<Overlay>("none");
   const [settings, setSettings] = useState({ assist: true, reducedMotion: false });
   const [call, setCall] = useState<{ text: string; tone: string; n: number } | null>(null);
+  const [bonus, setBonus] = useState(false);
+  const [burst, setBurst] = useState<{ n: number; x: number; y: number; gold: boolean } | null>(null);
   const [flashTone, setFlashTone] = useState<"correct" | "wrong" | null>(null);
   const [flashPulse, setFlashPulse] = useState(0);
 
@@ -47,33 +55,37 @@ export default function Hoops() {
   const ballRef = useRef<HTMLDivElement>(null);
   const hoopRef = useRef<HTMLDivElement>(null);
   const netRef = useRef<SVGGElement>(null);
+  const rimRef = useRef<SVGGElement>(null);
   const dotEls = useRef<(HTMLDivElement | null)[]>([]);
+  const trailEls = useRef<(HTMLDivElement | null)[]>([]);
+  const trailPos = useRef<{ x: number; y: number; s: number }[]>([]);
   const dims = useRef({ w: 400, h: 720 });
-  const ball = useRef<Ball>({ x: 200, y: 590, vx: 0, vy: 0, flying: false, scored: false, scale: 1 });
+  const ball = useRef<Ball>({ x: 200, y: 590, vx: 0, vy: 0, flying: false, scored: false, scale: 1, rot: 0, spin: 0 });
   const hoopX = useRef(0.5);
   const streakRef = useRef(0);
   const pointsRef = useRef(0);
+  const makesRef = useRef(0);
+  const restXRef = useRef(200);
   const drag = useRef<{ x: number; y: number } | null>(null);
   const pausedRef = useRef(false);
   const settingsRef = useRef(settings);
+  const bonusRef = useRef(false);
+  const slowMoRef = useRef(false);
+  const awaitBuzzerRef = useRef(false);
 
-  // Keep refs in sync for the animation loop / handlers.
   useEffect(() => { pausedRef.current = overlay !== "none"; }, [overlay]);
   useEffect(() => { settingsRef.current = settings; }, [settings]);
   useEffect(() => { try { const r = localStorage.getItem("msg_hoops_settings"); if (r) setSettings(JSON.parse(r)); } catch {} }, []);
-
-  // Persist only on real changes (avoids overwriting saved prefs on mount).
   const changeSettings = useCallback((fn: (s: typeof settings) => typeof settings) => {
-    setSettings((s) => {
-      const n = fn(s);
-      try { localStorage.setItem("msg_hoops_settings", JSON.stringify(n)); } catch { /* private mode */ }
-      return n;
-    });
+    setSettings((s) => { const n = fn(s); try { localStorage.setItem("msg_hoops_settings", JSON.stringify(n)); } catch {} return n; });
   }, []);
 
+  // Position the ball at the (possibly moving) shooting spot.
   const rest = useCallback(() => {
     const { w, h } = dims.current;
-    ball.current = { x: w / 2, y: h * BALL_Y_FRAC, vx: 0, vy: 0, flying: false, scored: false, scale: 1 };
+    const spot = makesRef.current >= SPOT_AFTER ? 0.3 + Math.random() * 0.4 : 0.5;
+    restXRef.current = spot * w;
+    ball.current = { x: restXRef.current, y: h * BALL_Y_FRAC, vx: 0, vy: 0, flying: false, scored: false, scale: 1, rot: 0, spin: 0 };
   }, []);
   const measure = useCallback(() => {
     const el = wrapRef.current;
@@ -81,40 +93,67 @@ export default function Hoops() {
     dims.current = { w: el.clientWidth, h: el.clientHeight };
     if (!ball.current.flying) rest();
   }, [rest]);
-  const hideDots = useCallback(() => {
-    dotEls.current.forEach((d) => d && (d.style.opacity = "0"));
-  }, []);
+  const hideDots = useCallback(() => { dotEls.current.forEach((d) => d && (d.style.opacity = "0")); }, []);
 
-  const resolve = useCallback((made: boolean) => {
+  // Small imperative FX helpers.
+  const flick = (ref: React.RefObject<SVGGElement | HTMLDivElement | null>, anim: string, ms: number) => {
+    const el = ref.current as HTMLElement | SVGElement | null;
+    if (!el || settingsRef.current.reducedMotion) return;
+    (el as HTMLElement).style.animation = "none";
+    void (el as HTMLElement).getBoundingClientRect();
+    (el as HTMLElement).style.animation = `${anim} ${ms}ms ease`;
+  };
+  const camShake = () => {
+    const el = wrapRef.current;
+    if (!el || settingsRef.current.reducedMotion) return;
+    el.classList.remove("cam-shake"); void el.offsetWidth; el.classList.add("cam-shake");
+    setTimeout(() => el.classList.remove("cam-shake"), 430);
+  };
+  const particleBurst = (gold: boolean) => {
+    const { w, h } = dims.current;
+    setBurst({ n: Date.now(), x: hoopX.current * w, y: h * HOOP_Y_FRAC, gold });
+    setTimeout(() => setBurst(null), 680);
+  };
+
+  const resolve = useCallback((made: boolean, perfect: boolean) => {
     setFlashTone(made ? "correct" : "wrong");
     setFlashPulse((p) => p + 1);
     if (made) {
-      const ns = streakRef.current + 1;
-      streakRef.current = ns;
+      const ns = streakRef.current + 1; streakRef.current = ns;
+      makesRef.current += 1;
       const m = multFor(ns);
-      pointsRef.current += 3 * m; // three-pointers × combo
-      setPoints(pointsRef.current);
+      const gained = 3 * m * (bonusRef.current ? 2 : 1) * (perfect ? 2 : 1);
+      pointsRef.current += gained; setPoints(pointsRef.current);
       setStreak(ns);
       update((prev) => ({
         ...prev,
-        coins: prev.coins + 2 * m,
+        coins: prev.coins + 2 * m * (bonusRef.current ? 2 : 1),
         xp: prev.xp + 10 * m,
         makes: prev.makes + 1,
         dailyMakes: prev.dailyMakes + 1,
       }));
-      setCall({ text: ["SWISH!", "COUNT IT!", "WET!", "BANG!"][Math.floor(Math.random() * 4)], tone: "make", n: Date.now() });
-      if (netRef.current) { netRef.current.style.animation = "none"; void netRef.current.getBoundingClientRect(); netRef.current.style.animation = "netSway 0.5s ease"; }
-      if (ns >= 3) celebrate(false);
+      const text = perfect ? "PERFECT!" : bonusRef.current ? "BONUS!" : ["SWISH!", "COUNT IT!", "WET!", "BANG!"][Math.floor(Math.random() * 4)];
+      setCall({ text, tone: perfect ? "perfect" : "make", n: Date.now() });
+      flick(netRef, "netSway", 500);
+      flick(rimRef, "rimVibe", 320);
+      particleBurst(perfect || bonusRef.current);
+      if (perfect) { camShake(); celebrate(true); }
+      else if (ns >= 3) celebrate(false);
     } else {
-      streakRef.current = 0;
-      setStreak(0);
+      streakRef.current = 0; setStreak(0);
       setCall({ text: ["BRICK.", "OFF THE IRON.", "SHORT.", "AIRBALL."][Math.floor(Math.random() * 4)], tone: "miss", n: Date.now() });
     }
-    setTimeout(() => setCall(null), 750);
-    setTimeout(rest, 350);
+    setTimeout(() => setCall(null), 800);
+    if (awaitBuzzerRef.current) {
+      awaitBuzzerRef.current = false; slowMoRef.current = false;
+      if (made) celebrate(true);
+      setTimeout(() => setPhase("done"), 700);
+    } else {
+      setTimeout(rest, 350);
+    }
   }, [rest, update]);
 
-  // Game loop — freezes cleanly while paused (menus open).
+  // Game loop.
   useEffect(() => {
     let raf = 0;
     let elapsed = 0;
@@ -125,28 +164,46 @@ export default function Hoops() {
       const hoopY = h * HOOP_Y_FRAC;
       const startY = h * BALL_Y_FRAC;
       const b = ball.current;
+      const sf = slowMoRef.current ? 0.35 : 1; // buzzer-beater slow motion
+
       if (!pausedRef.current) {
         elapsed += dt;
-        hoopX.current = streakRef.current >= HOT_STREAK ? 0.5 + 0.3 * Math.sin(elapsed / 660) : 0.5;
+        const moveSpeed = 660 / (1 + makesRef.current * 0.05); // difficulty ramp
+        hoopX.current = streakRef.current >= HOT_STREAK ? 0.5 + 0.3 * Math.sin(elapsed / moveSpeed) : 0.5;
         if (b.flying) {
           const prevY = b.y;
-          b.x += b.vx; b.y += b.vy; b.vy += GRAVITY;
+          b.x += b.vx * sf; b.y += b.vy * sf; b.vy += GRAVITY * sf; b.rot += b.spin * sf;
           b.scale = 1 - 0.58 * Math.min(Math.max((startY - b.y) / (startY - hoopY), 0), 1);
           const hx = hoopX.current * w;
           const rim = w * RIM_HALF_FRAC * b.scale;
           if (settingsRef.current.assist && b.vy > 0 && Math.abs(b.y - hoopY) < h * 0.07 && Math.abs(b.x - hx) < rim * 1.7) {
             b.x += (hx - b.x) * ASSIST_FRAC;
           }
+          // record trail
+          trailPos.current.unshift({ x: b.x, y: b.y, s: b.scale });
+          if (trailPos.current.length > TRAIL) trailPos.current.pop();
           if (!b.scored && prevY < hoopY && b.y >= hoopY && b.vy > 0 && Math.abs(b.x - hx) < rim) {
-            b.scored = true; b.flying = false; resolve(true);
+            b.scored = true; b.flying = false;
+            resolve(true, Math.abs(b.x - hx) < rim * PERFECT_FRAC);
           }
           if (b.flying && (b.y > h + 100 || b.x < -100 || b.x > w + 100)) {
-            b.flying = false; if (!b.scored) resolve(false);
+            b.flying = false; if (!b.scored) resolve(false, false);
           }
         }
       }
+      // paint trail
+      for (let i = 0; i < TRAIL; i++) {
+        const el = trailEls.current[i];
+        const p = trailPos.current[i];
+        if (el) {
+          if (b.flying && p) {
+            el.style.opacity = String(0.4 * (1 - i / TRAIL));
+            el.style.transform = `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(${p.s * 0.9})`;
+          } else el.style.opacity = "0";
+        }
+      }
       if (hoopRef.current) hoopRef.current.style.left = `${hoopX.current * 100}%`;
-      if (ballRef.current) ballRef.current.style.transform = `translate(${b.x}px, ${b.y}px) translate(-50%, -50%) scale(${b.scale})`;
+      if (ballRef.current) ballRef.current.style.transform = `translate(${b.x}px, ${b.y}px) translate(-50%, -50%) scale(${b.scale}) rotate(${b.rot}deg)`;
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
@@ -159,13 +216,18 @@ export default function Hoops() {
     return () => window.removeEventListener("resize", measure);
   }, [measure]);
 
-  // Clock — pauses with the menus.
+  // Clock — pauses with menus, and lets a shot in flight finish in slow-mo (buzzer beater).
   useEffect(() => {
     if (phase !== "playing") return;
     const id = setInterval(() => {
       if (pausedRef.current) return;
       setTime((t) => {
-        if (t <= 1) { clearInterval(id); setPhase("done"); return 0; }
+        if (t <= 1) {
+          clearInterval(id);
+          if (ball.current.flying) { slowMoRef.current = true; awaitBuzzerRef.current = true; }
+          else setPhase("done");
+          return 0;
+        }
         return t - 1;
       });
     }, 1000);
@@ -175,13 +237,25 @@ export default function Hoops() {
   // Rival.
   useEffect(() => {
     if (phase !== "playing") return;
-    const id = setInterval(() => {
-      if (!pausedRef.current && Math.random() < 0.66) setOpp((o) => o + 1);
-    }, 3400);
+    const id = setInterval(() => { if (!pausedRef.current && Math.random() < 0.66) setOpp((o) => o + 1); }, 3400);
     return () => clearInterval(id);
   }, [phase]);
 
-  // Bank the result when the buzzer sounds.
+  // Bonus windows (golden rim, double points).
+  useEffect(() => {
+    if (phase !== "playing") return;
+    let on: ReturnType<typeof setTimeout>, off: ReturnType<typeof setTimeout>;
+    const cycle = () => {
+      on = setTimeout(() => {
+        bonusRef.current = true; setBonus(true);
+        off = setTimeout(() => { bonusRef.current = false; setBonus(false); cycle(); }, BONUS_LEN);
+      }, BONUS_EVERY);
+    };
+    cycle();
+    return () => { clearTimeout(on); clearTimeout(off); bonusRef.current = false; setBonus(false); };
+  }, [phase]);
+
+  // Bank the game when the buzzer sounds.
   useEffect(() => {
     if (phase !== "done") return;
     update((prev) => ({ ...prev, best: Math.max(prev.best, pointsRef.current), games: prev.games + 1 }));
@@ -201,16 +275,13 @@ export default function Hoops() {
     const p = rel(e);
     const dx = p.x - d.x, dy = p.y - d.y;
     if (dy > -25) { hideDots(); return; }
-    const { w, h } = dims.current;
-    let x = w / 2, y = h * BALL_Y_FRAC;
+    const { h } = dims.current;
+    let x = restXRef.current, y = h * BALL_Y_FRAC;
     let vx = cap(dx * K), vy = cap(dy * K);
     for (let i = 0; i < DOTS; i++) {
       for (let s = 0; s < 4; s++) { x += vx; y += vy; vy += GRAVITY; }
       const el = dotEls.current[i];
-      if (el) {
-        el.style.opacity = String(Math.max(0.15, 0.85 - i * 0.045));
-        el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
-      }
+      if (el) { el.style.opacity = String(Math.max(0.15, 0.85 - i * 0.045)); el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`; }
     }
   }
   function upFn(e: React.PointerEvent) {
@@ -222,13 +293,20 @@ export default function Hoops() {
     const dx = p.x - d.x, dy = p.y - d.y;
     if (dy > -25) return;
     const b = ball.current;
-    const { w, h } = dims.current;
-    b.x = w / 2; b.y = h * BALL_Y_FRAC;
+    const { h } = dims.current;
+    b.x = restXRef.current; b.y = h * BALL_Y_FRAC;
     b.vx = cap(dx * K); b.vy = cap(dy * K);
+    b.rot = 0; b.spin = b.vx * SPIN;
     b.scored = false; b.flying = true;
+    trailPos.current = [];
   }
 
-  function begin() { pointsRef.current = 0; setPoints(0); setStreak(0); streakRef.current = 0; setOpp(0); setTime(ROUND); rest(); setPhase("playing"); }
+  function begin() {
+    pointsRef.current = 0; setPoints(0); setStreak(0); streakRef.current = 0;
+    makesRef.current = 0; setOpp(0); setTime(ROUND);
+    slowMoRef.current = false; awaitBuzzerRef.current = false;
+    rest(); setPhase("playing");
+  }
   function claimDaily() { update((prev) => ({ ...prev, coins: prev.coins + DAILY_REWARD, dailyClaimed: true })); setOverlay("none"); }
 
   const mm = String(Math.floor(time / 60)).padStart(2, "0");
@@ -259,15 +337,13 @@ export default function Hoops() {
         />
       )}
 
-      <div ref={hoopRef} className="hoops-hoop" aria-hidden="true">
+      {bonus && phase === "playing" && <div className="hoops-bonus-tag">🔥 2× BONUS</div>}
+
+      <div ref={hoopRef} className={`hoops-hoop ${bonus ? "bonus" : ""}`} aria-hidden="true">
         <svg viewBox="0 0 220 170" width="100%" height="100%">
           <defs>
-            <linearGradient id="board" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ffffff" /><stop offset="100%" stopColor="#cfdaeb" />
-            </linearGradient>
-            <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ff9a3d" /><stop offset="100%" stopColor="#d9600f" />
-            </linearGradient>
+            <linearGradient id="board" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#ffffff" /><stop offset="100%" stopColor="#cfdaeb" /></linearGradient>
+            <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#ff9a3d" /><stop offset="100%" stopColor="#d9600f" /></linearGradient>
           </defs>
           <rect x="34" y="8" width="152" height="98" rx="9" fill="url(#board)" stroke="#9fb0c8" strokeWidth="3" />
           <rect x="37" y="11" width="146" height="92" rx="7" fill="none" stroke="#006bb6" strokeWidth="4" />
@@ -278,11 +354,17 @@ export default function Hoops() {
             <ellipse cx="110" cy="150" rx="20" ry="5" />
             <path d="M66 121 L86 156 M80 125 L96 156 M95 127 L106 157 M110 128 L110 158 M125 127 L114 157 M140 125 L124 156 M154 121 L134 156" />
           </g>
-          <ellipse cx="110" cy="120" rx="48" ry="12.5" fill="none" stroke="#5c2a06" strokeWidth="11" opacity="0.35" />
-          <ellipse cx="110" cy="120" rx="48" ry="12.5" fill="none" stroke="url(#rim)" strokeWidth="8" />
-          <path d="M62 120 A48 12.5 0 0 0 158 120" fill="none" stroke="#ffc078" strokeWidth="4" opacity="0.85" />
+          <g ref={rimRef} style={{ transformOrigin: "110px 120px" }}>
+            <ellipse cx="110" cy="120" rx="48" ry="12.5" fill="none" stroke="#5c2a06" strokeWidth="11" opacity="0.35" />
+            <ellipse cx="110" cy="120" rx="48" ry="12.5" fill="none" stroke="url(#rim)" strokeWidth="8" />
+            <path d="M62 120 A48 12.5 0 0 0 158 120" fill="none" stroke="#ffc078" strokeWidth="4" opacity="0.85" />
+          </g>
         </svg>
       </div>
+
+      {Array.from({ length: TRAIL }).map((_, i) => (
+        <div key={`t${i}`} ref={(el) => { trailEls.current[i] = el; }} className="hoops-trail" aria-hidden="true" />
+      ))}
 
       {Array.from({ length: DOTS }).map((_, i) => (
         <div key={i} ref={(el) => { dotEls.current[i] = el; }} className="hoops-dot" style={{ width: `${Math.max(5, 12 - i * 0.4)}px`, height: `${Math.max(5, 12 - i * 0.4)}px` }} />
@@ -298,12 +380,19 @@ export default function Hoops() {
           </defs>
           <circle cx="50" cy="50" r="47.5" fill="url(#bg)" stroke="#5c2a06" strokeWidth="1.5" />
           <g stroke="#3d1c05" strokeWidth="2.4" fill="none" strokeLinecap="round">
-            <path d="M50 3 V97" /><path d="M4 50 H96" />
-            <path d="M17 13 Q46 50 17 87" /><path d="M83 13 Q54 50 83 87" />
+            <path d="M50 3 V97" /><path d="M4 50 H96" /><path d="M17 13 Q46 50 17 87" /><path d="M83 13 Q54 50 83 87" />
           </g>
           <ellipse cx="35" cy="29" rx="12" ry="7.5" fill="#fff" opacity="0.33" />
         </svg>
       </div>
+
+      {burst && (
+        <div key={burst.n} className={`hoops-burst ${burst.gold ? "gold" : ""}`} style={{ left: burst.x, top: burst.y }}>
+          {Array.from({ length: 14 }).map((_, i) => (
+            <span key={i} style={{ ["--a" as string]: `${(i / 14) * 360}deg` } as React.CSSProperties} />
+          ))}
+        </div>
+      )}
 
       {idle && <div className="hoops-grab">drag up to shoot ↑</div>}
       {call && <div key={call.n} className={`hoops-call ${call.tone}`}>{call.text}</div>}
@@ -313,13 +402,10 @@ export default function Hoops() {
           <div className="hoops-card">
             <p className="kicker">MSG Hoops</p>
             <h2 className="hoops-modal-title">Drag up to shoot</h2>
-            <p className="hoops-modal-body">
-              Pull the ball back and up — the dotted arc shows exactly where it&rsquo;s going.
-              Sink threes, stack a combo, climb the levels.
-            </p>
+            <p className="hoops-modal-body">Pull the ball back and up — the dotted arc shows where it&rsquo;s going. Swish it dead-center for a green <b>PERFECT</b>.</p>
             <ul className="hoops-rules">
-              <li>⏱️ 60 seconds · every make is 3 &nbsp;×&nbsp; your combo</li>
-              <li>🔥 3 in a row and the rim starts moving</li>
+              <li>⏱️ 60s · makes are 3 × your combo</li>
+              <li>🎯 PERFECT (center) & 🔥 BONUS windows = 2×</li>
               <li>💻 click-drag-release &nbsp;·&nbsp; 📱 swipe up</li>
             </ul>
             <button className="btn" onClick={begin}>Start shooting</button>
@@ -332,9 +418,7 @@ export default function Hoops() {
           <div className="hoops-card">
             <p className="kicker">Final buzzer</p>
             <p className="hoops-final">{points}<small> PTS</small></p>
-            <h2 className="hoops-modal-title">
-              {points > opp * 3 ? "You beat the Rival" : points === opp * 3 ? "Deadlock" : "Rival took it"}
-            </h2>
+            <h2 className="hoops-modal-title">{points > opp * 3 ? "You beat the Rival" : points === opp * 3 ? "Deadlock" : "Rival took it"}</h2>
             <p className="hoops-modal-body">Level {lv.level} · Best {Math.max(progress.best, points)} · 🪙 {progress.coins}</p>
             <button className="btn" onClick={begin}>Run it back</button>
           </div>
@@ -345,12 +429,10 @@ export default function Hoops() {
         <PauseMenu onResume={() => setOverlay("none")} onRestart={() => { begin(); setOverlay("none"); }} onSettings={() => setOverlay("settings")} />
       )}
       {overlay === "settings" && (
-        <SettingsMenu
-          assist={settings.assist} reducedMotion={settings.reducedMotion}
+        <SettingsMenu assist={settings.assist} reducedMotion={settings.reducedMotion}
           onAssist={() => changeSettings((s) => ({ ...s, assist: !s.assist }))}
           onReduced={() => changeSettings((s) => ({ ...s, reducedMotion: !s.reducedMotion }))}
-          onBack={() => setOverlay("none")}
-        />
+          onBack={() => setOverlay("none")} />
       )}
       {overlay === "daily" && (
         <DailyPanel makes={progress.dailyMakes} goal={DAILY_GOAL} reward={DAILY_REWARD} claimed={progress.dailyClaimed} onClaim={claimDaily} onClose={() => setOverlay("none")} />

@@ -2007,9 +2007,37 @@ a, button, summary, label,
   -webkit-user-select: none;
   cursor: grab;
   background:
-    radial-gradient(120% 70% at 50% 8%, rgba(0, 107, 182, 0.4), transparent 55%),
-    radial-gradient(150% 90% at 50% 108%, rgba(245, 132, 38, 0.2), transparent 60%),
-    linear-gradient(180deg, #0a1c42 0%, #071634 55%, #040e26 100%);
+    radial-gradient(120% 55% at 50% 3%, rgba(190, 220, 255, 0.16), transparent 55%),
+    linear-gradient(180deg, rgba(4, 14, 38, 0.1) 0%, rgba(4, 14, 38, 0.34) 52%, rgba(4, 14, 38, 0.85) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60'%3E%3Crect width='120' height='60' fill='%233a180d'/%3E%3Crect x='2' y='2' width='56' height='26' rx='2' fill='%239c4529'/%3E%3Crect x='62' y='2' width='56' height='26' rx='2' fill='%238c3c22'/%3E%3Crect x='-28' y='32' width='56' height='26' rx='2' fill='%238c3c22'/%3E%3Crect x='32' y='32' width='56' height='26' rx='2' fill='%239c4529'/%3E%3Crect x='92' y='32' width='56' height='26' rx='2' fill='%238c3c22'/%3E%3C/svg%3E") repeat,
+    #7c3318;
+  background-size: auto, auto, 120px 60px, auto;
+}
+.hoops-banners {
+  position: absolute;
+  top: 8px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  gap: 10px;
+  pointer-events: none;
+}
+.hoops-banner {
+  width: 46px;
+  padding: 9px 0 20px;
+  text-align: center;
+  font-family: var(--graduate, var(--display));
+  font-size: 15px;
+  color: var(--gold);
+  background: linear-gradient(180deg, #0b2f66, #06244f);
+  border: 1px solid rgba(250, 199, 117, 0.45);
+  clip-path: polygon(0 0, 100% 0, 100% 76%, 50% 100%, 0 76%);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+}
+.hoops-banner.champ {
+  background: linear-gradient(180deg, var(--orange-hot), var(--orange));
+  color: #fff;
+  border-color: var(--gold);
 }
 .hoops-full:active { cursor: grabbing; }
 /* spotlight behind the rim */
@@ -2066,7 +2094,7 @@ a, button, summary, label,
 /* glass scoreboard */
 .hoops-board {
   position: absolute;
-  top: 16px; left: 50%;
+  top: 66px; left: 50%;
   transform: translateX(-50%);
   z-index: 7;
   display: flex;
@@ -2116,7 +2144,7 @@ a, button, summary, label,
 }
 .hoops-streak {
   position: absolute;
-  top: 96px; left: 50%;
+  top: 150px; left: 50%;
   transform: translateX(-50%);
   z-index: 7;
   font-family: var(--cond);
@@ -2135,10 +2163,10 @@ a, button, summary, label,
 }
 .hoops-hoop {
   position: absolute;
-  top: 27%; left: 50%;
+  top: 30%; left: 50%;
   width: clamp(190px, 36vmin, 340px);
   aspect-ratio: 22 / 17;
-  transform: translate(-50%, -64%);
+  transform: translate(-50%, -72%);
   z-index: 3;
   pointer-events: none;
   filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.6));

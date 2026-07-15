@@ -7,12 +7,13 @@ import { celebrate } from "@/lib/celebrate";
 
 /* ── tunable feel (distance-based power; trajectory preview shows it) ── */
 const ROUND = 60;
-const GRAVITY = 0.42;
+const GRAVITY = 0.37;
 const K = 0.058; // drag distance → launch velocity
 const MAX_V = 27;
 const BALL_Y_FRAC = 0.82;
-const HOOP_Y_FRAC = 0.27;
-const RIM_HALF_FRAC = 0.085;
+const HOOP_Y_FRAC = 0.3;
+const RIM_HALF_FRAC = 0.125; // wider rim = easier makes
+const ASSIST_FRAC = 0.2; // "rim magnet" strength for near misses
 const HOT_STREAK = 3;
 const DOTS = 16;
 
@@ -102,6 +103,11 @@ export default function Hoops() {
         b.scale = 1 - 0.58 * Math.min(Math.max((startY - b.y) / (startY - hoopY), 0), 1);
         const hx = hoopX.current * w;
         const rim = w * RIM_HALF_FRAC * b.scale;
+        // Rim magnet: as the descending ball nears the rim, nudge it toward
+        // center so near misses drop — makes swishing forgiving and fun.
+        if (b.vy > 0 && Math.abs(b.y - hoopY) < h * 0.07 && Math.abs(b.x - hx) < rim * 1.7) {
+          b.x += (hx - b.x) * ASSIST_FRAC;
+        }
         if (!b.scored && prevY < hoopY && b.y >= hoopY && b.vy > 0 && Math.abs(b.x - hx) < rim) {
           b.scored = true; b.flying = false; resolve(true);
         }
@@ -201,6 +207,12 @@ export default function Hoops() {
 
       <Link href="/court" className="hoops-exit">← Exit</Link>
 
+      <div className="hoops-banners" aria-hidden="true">
+        <span className="hoops-banner">1970</span>
+        <span className="hoops-banner">1973</span>
+        <span className="hoops-banner champ">2026</span>
+      </div>
+
       <div className="hoops-board">
         <div className="hb-side"><span>You</span><b>{String(score).padStart(2, "0")}</b></div>
         <div className="hb-clock"><b>{mm}:{ss}</b><i>4th · :{ss}</i></div>
@@ -215,18 +227,28 @@ export default function Hoops() {
         <svg viewBox="0 0 220 170" width="100%" height="100%">
           <defs>
             <linearGradient id="board" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ffffff" /><stop offset="100%" stopColor="#dbe6f5" />
+              <stop offset="0%" stopColor="#ffffff" /><stop offset="100%" stopColor="#cfdaeb" />
             </linearGradient>
             <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ffa34d" /><stop offset="100%" stopColor="#e06b12" />
+              <stop offset="0%" stopColor="#ff9a3d" /><stop offset="100%" stopColor="#d9600f" />
             </linearGradient>
           </defs>
-          <rect x="36" y="6" width="148" height="100" rx="10" fill="url(#board)" stroke="#006bb6" strokeWidth="6" />
-          <rect x="80" y="42" width="60" height="44" rx="4" fill="none" stroke="#f58426" strokeWidth="6" />
-          <g ref={netRef} style={{ transformOrigin: "110px 116px" }}>
-            <path d="M66 118 Q78 150 92 132 M92 132 Q100 156 110 134 M110 134 Q120 156 128 132 M128 132 Q142 150 154 118" stroke="#eef3fb" strokeWidth="2.6" fill="none" opacity="0.9" />
+          {/* backboard */}
+          <rect x="34" y="8" width="152" height="98" rx="9" fill="url(#board)" stroke="#9fb0c8" strokeWidth="3" />
+          <rect x="37" y="11" width="146" height="92" rx="7" fill="none" stroke="#006bb6" strokeWidth="4" />
+          <rect x="80" y="44" width="60" height="40" rx="2" fill="none" stroke="#f58426" strokeWidth="5" />
+          {/* connector */}
+          <rect x="104" y="104" width="12" height="9" rx="2" fill="#c85a10" />
+          {/* net */}
+          <g ref={netRef} style={{ transformOrigin: "110px 120px" }} stroke="#eef3fb" strokeWidth="1.6" fill="none" opacity="0.9">
+            <ellipse cx="110" cy="134" rx="34" ry="7" />
+            <ellipse cx="110" cy="150" rx="20" ry="5" />
+            <path d="M66 121 L86 156 M80 125 L96 156 M95 127 L106 157 M110 128 L110 158 M125 127 L114 157 M140 125 L124 156 M154 121 L134 156" />
           </g>
-          <ellipse cx="110" cy="116" rx="48" ry="12" fill="none" stroke="url(#rim)" strokeWidth="9" />
+          {/* rim with depth */}
+          <ellipse cx="110" cy="120" rx="48" ry="12.5" fill="none" stroke="#5c2a06" strokeWidth="11" opacity="0.35" />
+          <ellipse cx="110" cy="120" rx="48" ry="12.5" fill="none" stroke="url(#rim)" strokeWidth="8" />
+          <path d="M62 120 A48 12.5 0 0 0 158 120" fill="none" stroke="#ffc078" strokeWidth="4" opacity="0.85" />
         </svg>
       </div>
 
@@ -237,13 +259,21 @@ export default function Hoops() {
       <div ref={ballRef} className={`hoops-ball ${idle ? "idle" : ""}`} aria-hidden="true">
         <svg viewBox="0 0 100 100" width="100%" height="100%">
           <defs>
-            <radialGradient id="bg" cx="36%" cy="32%" r="72%">
-              <stop offset="0%" stopColor="#ffce8f" /><stop offset="45%" stopColor="#ef7d1f" /><stop offset="100%" stopColor="#a94a0d" />
+            <radialGradient id="bg" cx="35%" cy="30%" r="75%">
+              <stop offset="0%" stopColor="#ffd9a8" />
+              <stop offset="32%" stopColor="#f4951f" />
+              <stop offset="78%" stopColor="#cf6416" />
+              <stop offset="100%" stopColor="#8a3c0b" />
             </radialGradient>
           </defs>
-          <circle cx="50" cy="50" r="48" fill="url(#bg)" stroke="#7a3708" strokeWidth="2" />
-          <ellipse cx="36" cy="30" rx="16" ry="10" fill="#fff" opacity="0.28" />
-          <path d="M2 50 H98 M50 2 V98 M14 14 Q50 50 14 86 M86 14 Q50 50 86 86" stroke="#5c2a06" strokeWidth="2.4" fill="none" />
+          <circle cx="50" cy="50" r="47.5" fill="url(#bg)" stroke="#5c2a06" strokeWidth="1.5" />
+          <g stroke="#3d1c05" strokeWidth="2.4" fill="none" strokeLinecap="round">
+            <path d="M50 3 V97" />
+            <path d="M4 50 H96" />
+            <path d="M17 13 Q46 50 17 87" />
+            <path d="M83 13 Q54 50 83 87" />
+          </g>
+          <ellipse cx="35" cy="29" rx="12" ry="7.5" fill="#fff" opacity="0.33" />
         </svg>
       </div>
 

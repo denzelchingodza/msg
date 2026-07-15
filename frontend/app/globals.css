@@ -1996,7 +1996,7 @@ a, button, summary, label,
 }
 .ft-hint { margin: 12px auto 0; max-width: 460px; }
 
-/* ═══ MSG Hoops (full-screen flick shooter) ═══════════════════ */
+/* ═══ MSG Hoops (premium full-screen flick shooter) ═══════════ */
 .hoops-full {
   position: fixed;
   inset: 0;
@@ -2007,18 +2007,43 @@ a, button, summary, label,
   -webkit-user-select: none;
   cursor: grab;
   background:
-    linear-gradient(180deg, rgba(4, 14, 38, 0.5) 0%, rgba(4, 14, 38, 0.2) 40%, rgba(4, 14, 38, 0.85) 100%),
-    url("/placed/minimal_court.jpg") center / cover no-repeat,
-    var(--navy);
+    radial-gradient(120% 70% at 50% 8%, rgba(0, 107, 182, 0.4), transparent 55%),
+    radial-gradient(150% 90% at 50% 108%, rgba(245, 132, 38, 0.2), transparent 60%),
+    linear-gradient(180deg, #0a1c42 0%, #071634 55%, #040e26 100%);
 }
 .hoops-full:active { cursor: grabbing; }
-.hoops-full::after {
+/* spotlight behind the rim */
+.hoops-spot {
+  position: absolute;
+  top: 4%; left: 50%;
+  transform: translateX(-50%);
+  width: 74vmin; height: 40vmin;
+  background: radial-gradient(closest-side, rgba(180, 214, 255, 0.28), transparent 72%);
+  pointer-events: none;
+  z-index: 1;
+}
+/* perspective court floor */
+.hoops-floor {
+  position: absolute;
+  left: 50%; bottom: 0;
+  transform: translateX(-50%);
+  width: 200%; height: 42%;
+  background:
+    radial-gradient(60% 80% at 50% 100%, rgba(245, 132, 38, 0.16), transparent 70%),
+    linear-gradient(180deg, transparent, rgba(0, 107, 182, 0.22) 40%, rgba(4, 14, 38, 0.9));
+  border-top: 2px solid rgba(133, 183, 235, 0.18);
+  clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+.hoops-floor::after {
   content: "";
   position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 36%;
-  background: linear-gradient(180deg, transparent, rgba(245, 132, 38, 0.12) 55%, rgba(4, 14, 38, 0.9));
-  pointer-events: none;
+  left: 50%; bottom: 12%;
+  transform: translateX(-50%);
+  width: 30%; height: 40%;
+  border: 2px solid rgba(133, 183, 235, 0.25);
+  border-radius: 50%;
 }
 .hoops-exit {
   position: absolute;
@@ -2030,12 +2055,15 @@ a, button, summary, label,
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--blue-soft);
-  background: rgba(4, 14, 38, 0.72);
-  border: 1px solid rgba(133, 183, 235, 0.4);
+  background: rgba(9, 22, 48, 0.6);
+  border: 1px solid rgba(133, 183, 235, 0.35);
   border-radius: 999px;
-  padding: 8px 16px;
+  padding: 9px 18px;
+  backdrop-filter: blur(8px);
+  transition: color 0.15s, border-color 0.15s;
 }
 .hoops-exit:hover { color: var(--orange); border-color: var(--orange); }
+/* glass scoreboard */
 .hoops-board {
   position: absolute;
   top: 16px; left: 50%;
@@ -2043,89 +2071,143 @@ a, button, summary, label,
   z-index: 7;
   display: flex;
   align-items: center;
-  gap: 14px;
-  background: rgba(3, 8, 22, 0.92);
-  border: 2px solid rgba(133, 183, 235, 0.35);
-  border-radius: 14px;
-  padding: 9px 20px;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+  gap: 18px;
+  background: rgba(6, 16, 38, 0.55);
+  border: 1px solid rgba(180, 214, 255, 0.25);
+  border-radius: 18px;
+  padding: 10px 22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
 }
-.hb-side { text-align: center; min-width: 64px; }
+.hb-side { text-align: center; min-width: 62px; }
 .hb-side span {
   display: block;
   font-family: var(--cond);
   font-weight: 700;
   font-size: 10px;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--silver);
+  margin-bottom: 2px;
 }
 .hb-side b {
   font-family: var(--graduate, var(--display));
   font-size: 30px;
-  color: #ff5a52;
-  text-shadow: 0 0 12px rgba(255, 90, 82, 0.55);
+  color: #ff6a62;
+  text-shadow: 0 0 14px rgba(255, 90, 82, 0.6);
 }
+.hb-clock { text-align: center; padding: 0 6px; border-left: 1px solid rgba(180, 214, 255, 0.18); border-right: 1px solid rgba(180, 214, 255, 0.18); }
 .hb-clock b {
+  display: block;
   font-family: var(--graduate, var(--display));
-  font-size: 28px;
+  font-size: 30px;
   color: var(--led);
-  text-shadow: 0 0 14px rgba(255, 176, 66, 0.5);
+  text-shadow: 0 0 16px rgba(255, 176, 66, 0.55);
   letter-spacing: 0.06em;
+}
+.hb-clock i {
+  font-style: normal;
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--silver);
+  text-transform: uppercase;
 }
 .hoops-streak {
   position: absolute;
-  top: 88px; left: 50%;
+  top: 96px; left: 50%;
   transform: translateX(-50%);
   z-index: 7;
   font-family: var(--cond);
   font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 0.14em;
+  font-size: 12.5px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--gold);
-  background: rgba(4, 14, 38, 0.7);
+  background: rgba(9, 22, 48, 0.65);
   border: 1px solid var(--orange);
   border-radius: 999px;
   padding: 6px 16px;
   white-space: nowrap;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 22px rgba(245, 132, 38, 0.35);
 }
 .hoops-hoop {
   position: absolute;
-  top: 26%; left: 50%;
-  width: clamp(180px, 34vmin, 320px);
-  aspect-ratio: 4 / 3;
+  top: 27%; left: 50%;
+  width: clamp(190px, 36vmin, 340px);
+  aspect-ratio: 22 / 17;
   transform: translate(-50%, -64%);
   z-index: 3;
   pointer-events: none;
-  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.55));
+  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.6));
+}
+.hoops-dot {
+  position: absolute;
+  top: 0; left: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, var(--gold), var(--orange));
+  box-shadow: 0 0 8px rgba(245, 132, 38, 0.8);
+  opacity: 0;
+  z-index: 4;
+  pointer-events: none;
 }
 .hoops-ball {
   position: absolute;
   top: 0; left: 0;
-  width: clamp(64px, 13vmin, 120px);
+  width: clamp(66px, 13vmin, 122px);
   aspect-ratio: 1 / 1;
   z-index: 5;
   pointer-events: none;
   will-change: transform;
-  filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.5));
 }
-.hoops-aim-anchor {
+.hoops-ball.idle { animation: ballIdle 1.5s ease-in-out infinite; }
+@keyframes ballIdle {
+  0%, 100% { filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.5)); }
+  50% { filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 18px rgba(245, 132, 38, 0.85)); }
+}
+@keyframes netSway {
+  0% { transform: scaleY(1); }
+  35% { transform: scaleY(1.28) translateY(2px); }
+  100% { transform: scaleY(1); }
+}
+.hoops-grab {
   position: absolute;
-  left: 50%;
-  width: 0; height: 0;
+  bottom: 9%; left: 50%;
+  transform: translateX(-50%);
   z-index: 4;
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(250, 199, 117, 0.85);
+  animation: grabBob 1.5s ease-in-out infinite;
   pointer-events: none;
 }
-.hoops-aim {
+@keyframes grabBob {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.7; }
+  50% { transform: translateX(-50%) translateY(-6px); opacity: 1; }
+}
+.hoops-call {
   position: absolute;
-  left: 0; top: 0;
-  width: 0; height: 12px;
-  transform-origin: 0 50%;
-  opacity: 0;
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgba(245, 132, 38, 0.35), var(--orange), var(--gold));
-  box-shadow: 0 0 16px rgba(245, 132, 38, 0.7);
+  top: 40%; left: 50%;
+  z-index: 9;
+  font-family: var(--display);
+  font-size: clamp(34px, 8vw, 62px);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  pointer-events: none;
+  animation: hoopsCall 0.75s ease-out forwards;
+}
+.hoops-call.make { color: #8ff2cd; text-shadow: 0 0 26px rgba(29, 158, 117, 0.7), 0 4px 0 rgba(15, 90, 67, 0.6); }
+.hoops-call.miss { color: #ff8a83; text-shadow: 0 0 26px rgba(226, 75, 74, 0.6); }
+@keyframes hoopsCall {
+  0% { opacity: 0; transform: translate(-50%, -20%) scale(0.6) rotate(-4deg); }
+  25% { opacity: 1; transform: translate(-50%, -50%) scale(1.12) rotate(-2deg); }
+  100% { opacity: 0; transform: translate(-50%, -95%) scale(1) rotate(0); }
 }
 .hoops-modal {
   position: absolute;
@@ -2133,51 +2215,57 @@ a, button, summary, label,
   z-index: 20;
   display: grid;
   place-content: center;
-  justify-items: center;
-  text-align: center;
-  padding: 28px;
-  background: rgba(3, 8, 22, 0.82);
-  backdrop-filter: blur(5px);
+  padding: 24px;
+  background: rgba(4, 11, 28, 0.7);
+  backdrop-filter: blur(8px);
   animation: fadeUp 0.3s var(--ease);
+}
+.hoops-card {
+  width: min(460px, 92vw);
+  text-align: center;
+  background: linear-gradient(165deg, rgba(16, 40, 84, 0.85), rgba(7, 22, 50, 0.9));
+  border: 1px solid rgba(180, 214, 255, 0.28);
+  border-radius: 24px;
+  padding: 34px 30px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 .hoops-modal-title {
   font-family: var(--display);
-  font-size: clamp(22px, 5vw, 34px);
-  letter-spacing: 0.06em;
+  font-size: clamp(24px, 6vw, 38px);
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  margin: 8px 0 12px;
+  margin: 6px 0 12px;
   color: #fff;
   text-shadow: 0 4px 0 rgba(245, 132, 38, 0.75);
 }
-.hoops-modal-body { color: #d7e3f4; max-width: 440px; line-height: 1.6; margin-bottom: 14px; }
+.hoops-modal-body { color: #d7e3f4; line-height: 1.6; margin-bottom: 16px; }
 .hoops-rules {
   list-style: none;
   display: grid;
   gap: 8px;
-  margin: 0 auto 22px;
+  margin: 0 0 24px;
   padding: 0;
-  max-width: 440px;
 }
 .hoops-rules li {
   font-family: var(--cond);
   font-weight: 600;
   font-size: 14px;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   color: var(--blue-soft);
   background: rgba(133, 183, 235, 0.1);
   border: 1px solid rgba(133, 183, 235, 0.2);
-  border-radius: 10px;
-  padding: 9px 14px;
+  border-radius: 12px;
+  padding: 10px 14px;
 }
 .hoops-final {
   font-family: var(--graduate, var(--display));
-  font-size: 72px;
+  font-size: 76px;
   color: var(--led);
-  text-shadow: 0 0 22px rgba(255, 176, 66, 0.5);
+  text-shadow: 0 0 24px rgba(255, 176, 66, 0.55);
   line-height: 1;
   margin-bottom: 4px;
 }
-.hoops-final small { font-size: 24px; color: var(--silver); }
+.hoops-final small { font-size: 26px; color: var(--silver); }
 
 /* ═══ energy: shot clock heartbeat when time is low ═══════════ */
 @keyframes heartbeat {

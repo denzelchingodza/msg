@@ -2007,11 +2007,12 @@ a, button, summary, label,
   -webkit-user-select: none;
   cursor: grab;
   background:
-    radial-gradient(120% 55% at 50% 3%, rgba(190, 220, 255, 0.16), transparent 55%),
-    linear-gradient(180deg, rgba(4, 14, 38, 0.1) 0%, rgba(4, 14, 38, 0.34) 52%, rgba(4, 14, 38, 0.85) 100%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60'%3E%3Crect width='120' height='60' fill='%233a180d'/%3E%3Crect x='2' y='2' width='56' height='26' rx='2' fill='%239c4529'/%3E%3Crect x='62' y='2' width='56' height='26' rx='2' fill='%238c3c22'/%3E%3Crect x='-28' y='32' width='56' height='26' rx='2' fill='%238c3c22'/%3E%3Crect x='32' y='32' width='56' height='26' rx='2' fill='%239c4529'/%3E%3Crect x='92' y='32' width='56' height='26' rx='2' fill='%238c3c22'/%3E%3C/svg%3E") repeat,
-    #7c3318;
-  background-size: auto, auto, 120px 60px, auto;
+    radial-gradient(125% 90% at 50% 40%, transparent 50%, rgba(3, 9, 24, 0.6)),
+    radial-gradient(90% 45% at 50% 0%, rgba(190, 220, 255, 0.12), transparent 60%),
+    linear-gradient(180deg, rgba(4, 14, 38, 0.16) 0%, rgba(4, 14, 38, 0.3) 55%, rgba(4, 14, 38, 0.8) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60'%3E%3Crect width='120' height='60' fill='%233f322b'/%3E%3Crect x='2' y='2' width='56' height='26' rx='2' fill='%2377473a'/%3E%3Crect x='62' y='2' width='56' height='26' rx='2' fill='%236c3f33'/%3E%3Crect x='-28' y='32' width='56' height='26' rx='2' fill='%236c3f33'/%3E%3Crect x='32' y='32' width='56' height='26' rx='2' fill='%2377473a'/%3E%3Crect x='92' y='32' width='56' height='26' rx='2' fill='%236c3f33'/%3E%3C/svg%3E") repeat,
+    #5e3a2c;
+  background-size: auto, auto, auto, 120px 60px, auto;
 }
 .hoops-banners {
   position: absolute;
@@ -2066,6 +2067,27 @@ a, button, summary, label,
   background: linear-gradient(180deg, rgba(4, 14, 38, 0.35), transparent 30%);
   pointer-events: none;
 }
+/* framed photo hung on the wall */
+.hoops-frame {
+  position: absolute;
+  top: 19%; left: 5%;
+  width: clamp(96px, 12vw, 150px);
+  margin: 0;
+  z-index: 1;
+  padding: 6px;
+  background: linear-gradient(150deg, #d9b45c, #a07a27);
+  border-radius: 4px;
+  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  transform: rotate(-1.6deg);
+}
+.hoops-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 3px solid #efe7d2;
+  border-radius: 2px;
+}
+@media (max-width: 640px) { .hoops-frame { top: 15%; left: 3%; } }
 .hoops-exit {
   position: absolute;
   top: 16px; left: 16px;
@@ -2156,13 +2178,13 @@ a, button, summary, label,
 }
 .hoops-hoop {
   position: absolute;
-  top: 30%; left: 50%;
-  width: clamp(190px, 36vmin, 340px);
-  aspect-ratio: 22 / 17;
-  transform: translate(-50%, -72%);
+  top: 28%; left: 50%;
+  width: clamp(210px, 38vmin, 350px);
+  aspect-ratio: 6 / 5;
+  transform: translate(-50%, -67%);
   z-index: 3;
   pointer-events: none;
-  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.6));
+  filter: drop-shadow(0 16px 22px rgba(0, 0, 0, 0.6));
 }
 .hoops-dot {
   position: absolute;

@@ -19,7 +19,7 @@ const GRAVITY = 0.37;
 const K = 0.058;
 const MAX_V = 27;
 const BALL_Y_FRAC = 0.82;
-const HOOP_Y_FRAC = 0.3;
+const HOOP_Y_FRAC = 0.28;
 const RIM_HALF_FRAC = 0.125;
 const ASSIST_FRAC = 0.2;
 const PERFECT_FRAC = 0.36; // within this share of the rim = PERFECT (green)
@@ -355,6 +355,9 @@ export default function Hoops() {
     <div ref={wrapRef} className={`hoops-full ${settings.reducedMotion ? "rm" : ""}`} onPointerDown={down} onPointerMove={move} onPointerUp={upFn} onPointerCancel={upFn} onPointerLeave={upFn}>
       <CourtFloor />
       <div className="hoops-spot" aria-hidden="true" />
+      <figure className="hoops-frame" aria-hidden="true">
+        <img src="/photos/champs_front_page.jpg" alt="" />
+      </figure>
       <EdgeFlash tone={flashTone} pulse={flashPulse} />
 
       <Link href="/court" className="hoops-exit">← Exit</Link>
@@ -377,24 +380,33 @@ export default function Hoops() {
       {bonus && phase === "playing" && <div className="hoops-bonus-tag">2× BONUS</div>}
 
       <div ref={hoopRef} className={`hoops-hoop ${bonus ? "bonus" : ""}`} aria-hidden="true">
-        <svg viewBox="0 0 220 170" width="100%" height="100%">
+        <svg viewBox="0 0 240 200" width="100%" height="100%">
           <defs>
-            <linearGradient id="board" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#ffffff" /><stop offset="100%" stopColor="#cfdaeb" /></linearGradient>
+            <linearGradient id="pad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#1560b4" /><stop offset="100%" stopColor="#083a7a" /></linearGradient>
+            <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#ffffff" stopOpacity="0.96" /><stop offset="100%" stopColor="#d7e3f4" stopOpacity="0.9" /></linearGradient>
             <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#ff9a3d" /><stop offset="100%" stopColor="#d9600f" /></linearGradient>
           </defs>
-          <rect x="34" y="8" width="152" height="98" rx="9" fill="url(#board)" stroke="#9fb0c8" strokeWidth="3" />
-          <rect x="37" y="11" width="146" height="92" rx="7" fill="none" stroke="#006bb6" strokeWidth="4" />
-          <rect x="80" y="44" width="60" height="40" rx="2" fill="none" stroke="#f58426" strokeWidth="5" />
-          <rect x="104" y="104" width="12" height="9" rx="2" fill="#c85a10" />
-          <g ref={netRef} style={{ transformOrigin: "110px 120px" }} stroke="#eef3fb" strokeWidth="1.6" fill="none" opacity="0.9">
-            <ellipse cx="110" cy="134" rx="34" ry="7" />
-            <ellipse cx="110" cy="150" rx="20" ry="5" />
-            <path d="M66 121 L86 156 M80 125 L96 156 M95 127 L106 157 M110 128 L110 158 M125 127 L114 157 M140 125 L124 156 M154 121 L134 156" />
+          {/* blue padded backboard frame */}
+          <rect x="24" y="4" width="192" height="122" rx="14" fill="url(#pad)" />
+          {/* glass */}
+          <rect x="34" y="13" width="172" height="104" rx="7" fill="url(#glass)" stroke="#9fb0c8" strokeWidth="1.5" />
+          <rect x="42" y="18" width="156" height="24" rx="4" fill="#ffffff" opacity="0.4" />
+          {/* shooter's square */}
+          <rect x="90" y="54" width="60" height="42" rx="3" fill="none" stroke="#f58426" strokeWidth="6" />
+          {/* connector */}
+          <rect x="112" y="120" width="16" height="10" rx="2" fill="#c85a10" />
+          {/* net */}
+          <g ref={netRef} style={{ transformOrigin: "120px 134px" }} stroke="#eef3fb" strokeWidth="1.5" fill="none" opacity="0.92">
+            <ellipse cx="120" cy="150" rx="40" ry="8" />
+            <ellipse cx="120" cy="168" rx="26" ry="6" />
+            <path d="M70 135 L92 184 M84 139 L100 186 M100 141 L110 187 M120 142 L120 188 M140 141 L130 187 M156 139 L140 186 M170 135 L148 184" />
+            <path d="M70 135 L100 186 M100 141 L120 188 M140 141 L120 188 M170 135 L140 186" opacity="0.45" />
           </g>
-          <g ref={rimRef} style={{ transformOrigin: "110px 120px" }}>
-            <ellipse cx="110" cy="120" rx="48" ry="12.5" fill="none" stroke="#5c2a06" strokeWidth="11" opacity="0.35" />
-            <ellipse cx="110" cy="120" rx="48" ry="12.5" fill="none" stroke="url(#rim)" strokeWidth="8" />
-            <path d="M62 120 A48 12.5 0 0 0 158 120" fill="none" stroke="#ffc078" strokeWidth="4" opacity="0.85" />
+          {/* rim with depth */}
+          <g ref={rimRef} style={{ transformOrigin: "120px 134px" }}>
+            <ellipse cx="120" cy="134" rx="54" ry="13" fill="none" stroke="#5c2a06" strokeWidth="12" opacity="0.4" />
+            <ellipse cx="120" cy="134" rx="54" ry="13" fill="none" stroke="url(#rim)" strokeWidth="8.5" />
+            <path d="M66 134 A54 13 0 0 0 174 134" fill="none" stroke="#ffc078" strokeWidth="4" opacity="0.9" />
           </g>
         </svg>
       </div>

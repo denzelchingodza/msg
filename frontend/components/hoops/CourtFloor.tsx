@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * A perspective half-court floor drawn in SVG — hardwood plus real markings
- * (baseline, painted key, free-throw line + circle, three-point arc, half-court
- * line and center circle). Sits at the bottom of the screen so the hoop reads
- * as mounted over an actual court instead of floating.
+ * A perspective half-court floor in SVG — hardwood plus clean, non-overlapping
+ * markings: sidelines, baseline, the painted key, free-throw line + circle, a
+ * three-point line (corner segments + arc) that stays inside the sidelines and
+ * clear of the key, and the half-court line with center circle.
  */
 export default function CourtFloor() {
   return (
@@ -20,25 +20,29 @@ export default function CourtFloor() {
         <rect x="0" y="0" width="1000" height="620" fill="url(#wood)" />
 
         {/* faint plank shading */}
-        <g stroke="#000000" strokeOpacity="0.13" strokeWidth="2">
-          <line x1="0" y1="150" x2="1000" y2="150" />
-          <line x1="0" y1="300" x2="1000" y2="300" />
-          <line x1="0" y1="450" x2="1000" y2="450" />
+        <g stroke="#000000" strokeOpacity="0.1" strokeWidth="2">
+          <line x1="0" y1="200" x2="1000" y2="200" />
+          <line x1="0" y1="400" x2="1000" y2="400" />
         </g>
 
-        {/* painted key tint */}
-        <path d="M430 24 L392 300 L608 300 L570 24 Z" fill="#0a2e63" fillOpacity="0.22" />
+        {/* painted key */}
+        <path d="M450 30 L410 290 L590 290 L550 30 Z" fill="#0a2e63" fillOpacity="0.2" />
 
-        {/* court lines */}
-        <g fill="none" stroke="#f4f7fc" strokeOpacity="0.6" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round">
-          <path d="M60 620 L330 24" />
-          <path d="M940 620 L670 24" />
-          <path d="M330 24 L670 24" />
+        <g fill="none" stroke="#f4f7fc" strokeOpacity="0.55" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round">
+          {/* sidelines + baseline */}
+          <path d="M80 620 L360 30" />
+          <path d="M920 620 L640 30" />
+          <path d="M360 30 L640 30" />
+          {/* key + free-throw line and circle */}
+          <path d="M450 30 L410 290 L590 290 L550 30" />
+          <ellipse cx="500" cy="290" rx="95" ry="26" />
+          {/* three-point line: corner segments + arc */}
+          <path d="M310 30 L310 165" />
+          <path d="M690 30 L690 165" />
+          <path d="M310 165 C290 470 710 470 690 165" />
+          {/* half court + center circle */}
           <path d="M78 600 L922 600" />
           <ellipse cx="500" cy="600" rx="104" ry="26" />
-          <path d="M430 24 L392 300 L608 300 L570 24" />
-          <ellipse cx="500" cy="300" rx="112" ry="30" />
-          <path d="M215 24 C150 250 340 452 500 452 C660 452 850 250 785 24" />
         </g>
       </svg>
     </div>

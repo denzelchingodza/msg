@@ -2479,6 +2479,66 @@ a, button, summary, label,
   font-size: clamp(40px, 9vw, 72px);
 }
 
+/* ── Phase 3: locker (shop / achievements / stats), toast, login ── */
+.hoops-card.wide { width: min(580px, 94vw); }
+.locker-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.locker-coins { font-family: var(--graduate, var(--display)); color: var(--gold); font-size: 18px; }
+.locker-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.locker-tabs button {
+  flex: 1;
+  font-family: var(--cond); font-weight: 700; font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--silver); background: rgba(133, 183, 235, 0.08);
+  border: 1px solid rgba(133, 183, 235, 0.2); border-radius: 10px; padding: 9px; cursor: pointer;
+  transition: all 0.14s;
+}
+.locker-tabs button.on { background: linear-gradient(180deg, var(--orange-hot), var(--orange)); color: #fff; border-color: var(--orange); }
+.locker-body { max-height: 54vh; overflow-y: auto; margin: 0 -4px; padding: 0 4px; }
+.locker-balls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.ball-card {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  background: rgba(133, 183, 235, 0.08); border: 1px solid rgba(133, 183, 235, 0.2);
+  border-radius: 14px; padding: 12px 8px; text-align: center;
+}
+.ball-card.equipped { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold), 0 0 20px rgba(250, 199, 117, 0.25); }
+.ball-prev { width: 62px; height: 62px; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.4)); }
+.ball-card b { font-family: var(--cond); font-weight: 700; font-size: 11px; color: var(--white); letter-spacing: 0.03em; }
+.ball-btn { font-family: var(--cond); font-weight: 700; font-size: 12px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--blue-soft); background: transparent; color: var(--blue-soft); cursor: pointer; }
+.ball-btn.buy { border-color: var(--gold); color: var(--gold); }
+.ball-btn:disabled { opacity: 0.4; cursor: default; }
+.ball-eq { font-family: var(--cond); font-weight: 700; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); }
+.locker-cheeves { display: grid; gap: 8px; }
+.cheeve {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(133, 183, 235, 0.06); border: 1px solid rgba(133, 183, 235, 0.15);
+  border-radius: 12px; padding: 10px 12px; opacity: 0.55;
+}
+.cheeve.got { opacity: 1; border-color: rgba(250, 199, 117, 0.4); }
+.cheeve-ic { font-size: 22px; }
+.cheeve-body { flex: 1; display: flex; flex-direction: column; text-align: left; }
+.cheeve-body b { font-family: var(--cond); font-weight: 700; font-size: 14px; color: var(--white); }
+.cheeve-body small { color: var(--silver); font-size: 11.5px; }
+.cheeve-rw { font-family: var(--graduate, var(--display)); color: var(--gold); font-size: 14px; }
+.locker-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(72px, 1fr)); gap: 8px; }
+.stat-card { background: rgba(3, 10, 28, 0.6); border: 1px solid rgba(133, 183, 235, 0.16); border-radius: 12px; padding: 10px 6px; text-align: center; }
+.stat-card b { display: block; font-family: var(--graduate, var(--display)); font-size: 22px; color: var(--led); }
+.stat-card span { font-family: var(--cond); font-weight: 600; font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--silver); }
+.hoops-login {
+  display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+  margin-bottom: 14px; font-family: var(--cond); font-weight: 700; font-size: 13px; letter-spacing: 0.06em;
+  color: #fff; background: linear-gradient(180deg, #1d9e75, #0e5a43);
+  border: 1px solid rgba(159, 225, 203, 0.5); border-radius: 12px; padding: 11px; cursor: pointer;
+}
+.hoops-login b { color: var(--gold); }
+.hoops-toast { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 22; display: grid; gap: 8px; }
+.hoops-toast-row {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(3, 8, 22, 0.92); border: 1px solid var(--gold); border-radius: 14px;
+  padding: 10px 18px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); animation: fadeUp 0.4s var(--ease);
+}
+.hoops-toast-row span { font-size: 24px; }
+.hoops-toast-row b { display: block; font-family: var(--cond); font-weight: 700; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+.hoops-toast-row small { color: var(--white); font-size: 13px; }
+
 /* ═══ energy: shot clock heartbeat when time is low ═══════════ */
 @keyframes heartbeat {
   0%, 100% { transform: scale(1); }

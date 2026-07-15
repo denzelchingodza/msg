@@ -5,7 +5,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import EdgeFlash from "@/components/EdgeFlash";
 import HoopsHUD from "@/components/hoops/HoopsHUD";
 import { PauseMenu, SettingsMenu, DailyPanel } from "@/components/hoops/HoopsMenus";
-import { DAILY_GOAL, DAILY_REWARD, levelFromXp, useHoopsProgress } from "@/lib/hoopsStore";
+import HoopsLocker from "@/components/hoops/HoopsLocker";
+import Basketball from "@/components/hoops/Basketball";
+import { ballById } from "@/lib/hoopsBalls";
+import { Achievement, newlyUnlocked } from "@/lib/hoopsAchievements";
+import { DAILY_GOAL, DAILY_LOGIN_REWARD, DAILY_REWARD, HoopsProgress, levelFromXp, todayStr, useHoopsProgress } from "@/lib/hoopsStore";
 import { celebrate } from "@/lib/celebrate";
 
 /* ── tunable feel ─────────────────────────────────────────────── */
@@ -30,7 +34,7 @@ interface Ball {
   x: number; y: number; vx: number; vy: number;
   flying: boolean; scored: boolean; scale: number; rot: number; spin: number;
 }
-type Overlay = "none" | "pause" | "settings" | "daily";
+type Overlay = "none" | "pause" | "settings" | "daily" | "locker";
 
 const cap = (v: number) => Math.max(-MAX_V, Math.min(MAX_V, v));
 const multFor = (s: number) => (s >= 9 ? 4 : s >= 6 ? 3 : s >= 3 ? 2 : 1);
@@ -48,6 +52,7 @@ export default function Hoops() {
   const [call, setCall] = useState<{ text: string; tone: string; n: number } | null>(null);
   const [bonus, setBonus] = useState(false);
   const [burst, setBurst] = useState<{ n: number; x: number; y: number; gold: boolean } | null>(null);
+  const [toast, setToast] = useState<Achievement[]>([]);
   const [flashTone, setFlashTone] = useState<"correct" | "wrong" | null>(null);
   const [flashPulse, setFlashPulse] = useState(0);
 
@@ -65,6 +70,8 @@ export default function Hoops() {
   const streakRef = useRef(0);
   const pointsRef = useRef(0);
   const makesRef = useRef(0);
+  const perfectsRef = useRef(0); // perfects this game
+  const maxStreakRef = useRef(0); // best streak this game
   const restXRef = useRef(200);
   const drag = useRef<{ x: number; y: number } | null>(null);
   const pausedRef = useRef(false);
@@ -121,6 +128,8 @@ export default function Hoops() {
     if (made) {
       const ns = streakRef.current + 1; streakRef.current = ns;
       makesRef.current += 1;
+      if (ns > maxStreakRef.current) maxStreakRef.current = ns;
+      if (perfect) perfectsRef.current += 1;
       const m = multFor(ns);
       const gained = 3 * m * (bonusRef.current ? 2 : 1) * (perfect ? 2 : 1);
       pointsRef.current += gained; setPoints(pointsRef.current);
@@ -255,11 +264,36 @@ export default function Hoops() {
     return () => { clearTimeout(on); clearTimeout(off); bonusRef.current = false; setBonus(false); };
   }, [phase]);
 
-  // Bank the game when the buzzer sounds.
+  // Bank the game + check achievements when the buzzer sounds.
   useEffect(() => {
     if (phase !== "done") return;
-    update((prev) => ({ ...prev, best: Math.max(prev.best, pointsRef.current), games: prev.games + 1 }));
-  }, [phase, update]);
+    const gained = pointsRef.current;
+    const np: HoopsProgress = {
+      ...progress,
+      best: Math.max(progress.best, gained),
+      games: progress.games + 1,
+      totalPoints: progress.totalPoints + gained,
+      perfects: progress.perfects + perfectsRef.current,
+      bestStreak: Math.max(progress.bestStreak, maxStreakRef.current),
+    };
+    const unlocked = newlyUnlocked(np);
+    if (unlocked.length) {
+      np.achievements = [...np.achievements, ...unlocked.map((a) => a.id)];
+      np.coins += unlocked.reduce((s, a) => s + a.reward, 0);
+      setToast(unlocked);
+      setTimeout(() => setToast([]), 4200);
+    }
+    update(() => np);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase]);
+
+  const buyBall = (id: string) => update((prev) => {
+    const skin = ballById(id);
+    if (prev.ownedBalls.includes(id) || prev.coins < skin.price) return prev;
+    return { ...prev, coins: prev.coins - skin.price, ownedBalls: [...prev.ownedBalls, id], equippedBall: id };
+  });
+  const equipBall = (id: string) => update((prev) => (prev.ownedBalls.includes(id) ? { ...prev, equippedBall: id } : prev));
+  const claimLogin = () => update((prev) => (prev.loginDate === todayStr() ? prev : { ...prev, coins: prev.coins + DAILY_LOGIN_REWARD, loginDate: todayStr() }));
 
   function rel(e: React.PointerEvent) {
     const r = wrapRef.current!.getBoundingClientRect();
@@ -303,7 +337,8 @@ export default function Hoops() {
 
   function begin() {
     pointsRef.current = 0; setPoints(0); setStreak(0); streakRef.current = 0;
-    makesRef.current = 0; setOpp(0); setTime(ROUND);
+    makesRef.current = 0; perfectsRef.current = 0; maxStreakRef.current = 0;
+    setOpp(0); setTime(ROUND);
     slowMoRef.current = false; awaitBuzzerRef.current = false;
     rest(); setPhase("playing");
   }
@@ -313,6 +348,7 @@ export default function Hoops() {
   const ss = String(time % 60).padStart(2, "0");
   const idle = phase === "playing" && !ball.current.flying;
   const lv = levelFromXp(progress.xp);
+  const equipped = ballById(progress.equippedBall);
 
   return (
     <div ref={wrapRef} className={`hoops-full ${settings.reducedMotion ? "rm" : ""}`} onPointerDown={down} onPointerMove={move} onPointerUp={upFn} onPointerCancel={upFn} onPointerLeave={upFn}>
@@ -371,19 +407,7 @@ export default function Hoops() {
       ))}
 
       <div ref={ballRef} className={`hoops-ball ${idle ? "idle" : ""}`} aria-hidden="true">
-        <svg viewBox="0 0 100 100" width="100%" height="100%">
-          <defs>
-            <radialGradient id="bg" cx="35%" cy="30%" r="75%">
-              <stop offset="0%" stopColor="#ffd9a8" /><stop offset="32%" stopColor="#f4951f" />
-              <stop offset="78%" stopColor="#cf6416" /><stop offset="100%" stopColor="#8a3c0b" />
-            </radialGradient>
-          </defs>
-          <circle cx="50" cy="50" r="47.5" fill="url(#bg)" stroke="#5c2a06" strokeWidth="1.5" />
-          <g stroke="#3d1c05" strokeWidth="2.4" fill="none" strokeLinecap="round">
-            <path d="M50 3 V97" /><path d="M4 50 H96" /><path d="M17 13 Q46 50 17 87" /><path d="M83 13 Q54 50 83 87" />
-          </g>
-          <ellipse cx="35" cy="29" rx="12" ry="7.5" fill="#fff" opacity="0.33" />
-        </svg>
+        <Basketball skin={equipped} gid="game" />
       </div>
 
       {burst && (
@@ -409,6 +433,7 @@ export default function Hoops() {
               <li>💻 click-drag-release &nbsp;·&nbsp; 📱 swipe up</li>
             </ul>
             <button className="btn" onClick={begin}>Start shooting</button>
+            <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => setOverlay("locker")}>🧺 Locker</button>
           </div>
         </div>
       )}
@@ -426,7 +451,10 @@ export default function Hoops() {
       )}
 
       {overlay === "pause" && (
-        <PauseMenu onResume={() => setOverlay("none")} onRestart={() => { begin(); setOverlay("none"); }} onSettings={() => setOverlay("settings")} />
+        <PauseMenu onResume={() => setOverlay("none")} onRestart={() => { begin(); setOverlay("none"); }} onSettings={() => setOverlay("settings")} onLocker={() => setOverlay("locker")} />
+      )}
+      {overlay === "locker" && (
+        <HoopsLocker progress={progress} onBuy={buyBall} onEquip={equipBall} onClose={() => setOverlay("none")} />
       )}
       {overlay === "settings" && (
         <SettingsMenu assist={settings.assist} reducedMotion={settings.reducedMotion}
@@ -435,7 +463,22 @@ export default function Hoops() {
           onBack={() => setOverlay("none")} />
       )}
       {overlay === "daily" && (
-        <DailyPanel makes={progress.dailyMakes} goal={DAILY_GOAL} reward={DAILY_REWARD} claimed={progress.dailyClaimed} onClaim={claimDaily} onClose={() => setOverlay("none")} />
+        <DailyPanel
+          makes={progress.dailyMakes} goal={DAILY_GOAL} reward={DAILY_REWARD} claimed={progress.dailyClaimed}
+          onClaim={claimDaily} onClose={() => setOverlay("none")}
+          canLogin={progress.loginDate !== todayStr()} loginReward={DAILY_LOGIN_REWARD} onLogin={claimLogin}
+        />
+      )}
+
+      {toast.length > 0 && (
+        <div className="hoops-toast">
+          {toast.map((a) => (
+            <div key={a.id} className="hoops-toast-row">
+              <span>{a.icon}</span>
+              <div><b>Achievement unlocked</b><small>{a.name} · +{a.reward} 🪙</small></div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

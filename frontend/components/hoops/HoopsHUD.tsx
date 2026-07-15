@@ -30,16 +30,11 @@ export default function HoopsHUD(p: HudProps) {
         <div className="hud-xp"><i style={{ width: `${p.xpPct * 100}%` }} /></div>
       </div>
 
-      {/* center: score + clock */}
-      <div className="hud-center">
-        <div className="hud-score glass">
-          <span key={p.points} className="hud-points">{p.points}</span>
-          <span className="hud-pts-label">PTS</span>
-        </div>
-        <div className={`hud-clock glass ${p.low ? "low" : ""}`}>
-          {p.mm}:{p.ss}
-        </div>
-        <div className="hud-rival">vs Rival {p.rival}</div>
+      {/* center: slim scoreboard bar */}
+      <div className="hud-board glass">
+        <div className="hb-col"><b key={p.points} className="hb-score">{p.points}</b><span>You</span></div>
+        <div className={`hb-col clock ${p.low ? "low" : ""}`}><b>{p.mm}:{p.ss}</b><span>Clock</span></div>
+        <div className="hb-col"><b>{p.rival}</b><span>Rival</span></div>
       </div>
 
       {/* right: coins + buttons */}

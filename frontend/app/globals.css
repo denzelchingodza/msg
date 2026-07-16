@@ -2105,7 +2105,8 @@ a, button, summary, label,
 .decor-jersey img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border: 3px solid #efe7d2; border-radius: 2px; }
 .decor-trophy { top: 34%; right: 7%; width: clamp(46px, 5.5vw, 76px); }
 .decor-shoe { top: 34%; left: 6%; width: clamp(84px, 10vw, 134px); transform: rotate(-4deg); }
-@media (max-width: 760px) { .decor-trophy, .decor-shoe { display: none; } }
+.decor-window { top: 3%; left: 14%; width: clamp(120px, 14vw, 196px); }
+@media (max-width: 760px) { .decor-trophy, .decor-shoe, .decor-window { display: none; } }
 .hoops-exit {
   position: absolute;
   top: 16px; left: 16px;

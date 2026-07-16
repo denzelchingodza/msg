@@ -175,7 +175,10 @@ export default function Hoops() {
       const hoopY = h * HOOP_Y_FRAC;
       const startY = h * BALL_Y_FRAC;
       const b = ball.current;
-      const sf = slowMoRef.current ? 0.35 : 1; // buzzer-beater slow motion
+      // Frame-rate independent step: normalize to 60fps so the ball moves at
+      // the right speed even if some frames are dropped (no more dragging).
+      const f = Math.min(dt, 48) / 16.667;
+      const sf = (slowMoRef.current ? 0.35 : 1) * f; // buzzer-beater slow motion
 
       if (!pausedRef.current) {
         elapsed += dt;

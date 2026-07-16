@@ -62,10 +62,7 @@ export default function WallDecor() {
       {/* spray-paint on the wall */}
       <div className="decor decor-graffiti">
         <svg viewBox="0 0 270 96" width="100%" height="100%">
-          <defs>
-            <filter id="spray"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n" /><feDisplacementMap in="SourceGraphic" in2="n" scale="3" /></filter>
-          </defs>
-          <g filter="url(#spray)" fontFamily="Impact, 'Arial Black', sans-serif" fontStyle="italic">
+          <g fontFamily="Impact, 'Arial Black', sans-serif" fontStyle="italic">
             <text x="10" y="46" fontSize="44" fill="#f58426" stroke="#9c4d12" strokeWidth="1" transform="rotate(-5 10 46)">BING</text>
             <text x="66" y="86" fontSize="44" fill="#4b86d6" stroke="#1f5bb0" strokeWidth="1" transform="rotate(-5 66 86)">BONG</text>
           </g>

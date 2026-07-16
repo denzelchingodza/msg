@@ -2555,10 +2555,13 @@ a, button, summary, label,
 /* ═══ redesigned home ═════════════════════════════════════════ */
 .home-hero {
   position: relative;
+  display: grid;
+  place-items: center;
+  min-height: min(86vh, 780px);
   text-align: center;
   border-radius: 24px;
   overflow: hidden;
-  padding: 88px 24px 72px;
+  padding: 48px 24px;
   margin-top: 8px;
   background: url("/photos/parade_in_watercolor.jpg") center 30% / cover no-repeat;
   border: 1px solid rgba(133, 183, 235, 0.3);
@@ -2566,9 +2569,38 @@ a, button, summary, label,
   animation: kenburns 26s ease-in-out infinite alternate;
 }
 @keyframes kenburns {
-  0% { background-size: 114%; background-position: 50% 30%; }
-  100% { background-size: 126%; background-position: 50% 38%; }
+  0% { background-size: 116%; background-position: 50% 30%; }
+  100% { background-size: 128%; background-position: 50% 38%; }
 }
+.home-hero-inner { position: relative; max-width: 640px; animation: fadeUp 0.7s var(--ease) both; }
+.home-hook { max-width: 540px; margin: 18px auto 0; color: #e4edfa; font-size: clamp(16px, 2.2vw, 19px); line-height: 1.6; }
+.home-hook b { color: var(--gold); }
+.home-scroll {
+  position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 1;
+  font-family: var(--cond); font-weight: 700; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6); animation: bounce 2.4s ease-in-out infinite;
+}
+
+/* clean icon-led feature menu */
+.feat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+.feat-grid.two { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.feat {
+  display: flex; gap: 14px; align-items: flex-start;
+  background: var(--panel); border: 1px solid rgba(133, 183, 235, 0.2); border-radius: 16px;
+  padding: 18px 20px; box-shadow: 6px 6px 0 rgba(10, 42, 92, 0.55);
+  transition: transform 0.16s var(--ease), border-color 0.16s, box-shadow 0.16s;
+}
+.feat:hover { transform: translateY(-4px); border-color: var(--orange); box-shadow: 8px 10px 0 rgba(10, 42, 92, 0.85); }
+.feat-ico {
+  flex-shrink: 0; width: 48px; height: 48px; border-radius: 13px; display: grid; place-items: center;
+  background: rgba(245, 132, 38, 0.14); border: 1px solid rgba(245, 132, 38, 0.35); color: var(--orange);
+  transition: background 0.16s, color 0.16s;
+}
+.feat-ico svg { width: 24px; height: 24px; }
+.feat:hover .feat-ico { background: var(--orange); color: #fff; }
+.feat-txt { min-width: 0; }
+.feat-txt b { display: block; font-family: var(--display); font-weight: 400; font-size: 17px; letter-spacing: 0.05em; text-transform: uppercase; color: #fff; }
+.feat-txt small { display: block; color: var(--silver); font-size: 13px; line-height: 1.45; margin-top: 4px; }
 .home-hero::before {
   content: "";
   position: absolute;

@@ -89,14 +89,19 @@ export default function GardenAudio() {
 
     let cleanupGesture: (() => void) | undefined;
 
-    // Only detect availability (to show the toggle). We do NOT auto-start —
-    // the crowd is kicked off by WakeGate's "msg:sound-start" after the intro
-    // video, so the app stays quiet while the video plays.
+    // Detect availability, then auto-start the crowd. Browsers block unmuted
+    // autoplay until the user interacts, so if the immediate play is blocked we
+    // arm the first tap/keypress to start it — the crowd comes on the moment
+    // the user does anything (entering the app).
     fetch(TRACKS.garden, { method: "HEAD" })
-      .then((r) => {
+      .then(async (r) => {
         const type = r.headers.get("content-type") ?? "";
         if (disposed || !r.ok || type.includes("text/html")) return;
         setAvailable(true);
+        if (localStorage.getItem("msg_sound") !== "off") {
+          const ok = await start();
+          if (!ok && !disposed) cleanupGesture = armFirstGesture();
+        }
       })
       .catch(() => {});
 

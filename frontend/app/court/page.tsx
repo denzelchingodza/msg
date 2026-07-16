@@ -62,7 +62,7 @@ export default function Home() {
       </section>
 
       <Link href="/hoops" className="hero-play reveal" id="inside">
-        <img className="hero-play-img" src="/photos/rising_at_the_rim.jpg" alt="" />
+        <img className="hero-play-img" src="/photos/subway_to_the_title.jpg" alt="" />
         <div className="hero-play-body">
           <span className="hero-play-tag">Featured game</span>
           <b>MSG Hoops</b>

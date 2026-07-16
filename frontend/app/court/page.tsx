@@ -1,25 +1,32 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import GardenGallery from "@/components/home/GardenGallery";
 import SectionIcon from "@/components/home/SectionIcon";
 import { syncProfile } from "@/lib/api";
 import { SECTIONS, Section } from "@/lib/sections";
 
-const GAMES = ["/roulette", "/gauntlet", "/buzzer", "/hoops", "/ragebait", "/trashtalk"];
-const CHIP = new Date("2026-06-13T00:00:00-04:00");
+const GAMES = ["/roulette", "/gauntlet", "/buzzer", "/ragebait", "/trashtalk"];
 
 export default function Home() {
-  const [offline, setOffline] = useState(false);
-  const daysChamps = Math.max(0, Math.floor((Date.now() - CHIP.getTime()) / 86_400_000));
+  useEffect(() => { syncProfile().catch(() => {}); }, []);
 
+  // Reveal sections as they scroll into view.
   useEffect(() => {
-    syncProfile().catch(() => setOffline(true));
+    const els = document.querySelectorAll(".reveal");
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      }),
+      { threshold: 0.14 }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
   }, []);
 
   const games = SECTIONS.filter((s) => GAMES.includes(s.href));
-  const story = SECTIONS.filter((s) => !GAMES.includes(s.href));
+  const story = SECTIONS.filter((s) => !GAMES.includes(s.href) && s.href !== "/hoops");
 
   const card = (s: Section) => (
     <Link key={s.href} href={s.href} className="feat">
@@ -35,43 +42,36 @@ export default function Home() {
     <main className="page home">
       <section className="home-hero">
         <div className="home-hero-inner">
-          <p className="home-eyebrow center" style={{ color: "var(--gold)", marginBottom: 18 }}>
-            The Mecca, in app form
-          </p>
-          <h1 className="home-mark">MSG</h1>
-          <p className="home-hook">
-            Knicks heaven, on demand. Play the games, spin the facts, roast every
-            rival, and relive the <b>2026 championship</b>.
-          </p>
-          <div className="home-badges">
-            <span className="hot">2026 NBA Champions</span>
-            <span>{daysChamps} days as champions</span>
-            <span>Est. 1946</span>
-          </div>
-          <div className="home-cta">
-            <Link href="/hoops" className="btn">Play MSG Hoops</Link>
-            <a href="#inside" className="btn btn-ghost">See what&rsquo;s inside</a>
-          </div>
-          <button className="sound-pill" onClick={() => window.dispatchEvent(new Event("msg:sound"))}>
-            Turn the crowd on
-          </button>
+          <p className="home-eyebrow center hero-sub">The Mecca, in app form</p>
+          <h1 className="home-mark">
+            <span style={{ animationDelay: "0.05s" }}>M</span>
+            <span style={{ animationDelay: "0.18s" }}>S</span>
+            <span style={{ animationDelay: "0.31s" }}>G</span>
+          </h1>
         </div>
-        <div className="home-scroll" aria-hidden="true">Scroll to explore</div>
+        <a href="#inside" className="home-scroll" aria-label="Scroll to explore">
+          Scroll
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+        </a>
       </section>
 
-      {offline && (
-        <p className="muted center" style={{ marginTop: 24 }}>
-          Garden offline. Start the backend with <code>./dev.sh</code>
-        </p>
-      )}
+      <Link href="/hoops" className="hero-play reveal" id="inside">
+        <img className="hero-play-img" src="/photos/rising_at_the_rim.jpg" alt="" />
+        <div className="hero-play-body">
+          <span className="hero-play-tag">Featured game</span>
+          <b>MSG Hoops</b>
+          <small>Flick to shoot. A 60-second race against a rival, streaks, bonus targets, and a rim that moves when you get hot.</small>
+          <span className="hero-play-cta">Play now</span>
+        </div>
+      </Link>
 
-      <p id="inside" className="home-eyebrow center">Step onto the court</p>
-      <div className="feat-grid">{games.map(card)}</div>
+      <p className="home-eyebrow center reveal">More to play</p>
+      <div className="feat-grid reveal">{games.map(card)}</div>
 
-      <p className="home-eyebrow center">The story</p>
-      <div className="feat-grid two">{story.map(card)}</div>
+      <p className="home-eyebrow center reveal">The story</p>
+      <div className="feat-grid two reveal">{story.map(card)}</div>
 
-      <GardenGallery />
+      <div className="reveal"><GardenGallery /></div>
     </main>
   );
 }

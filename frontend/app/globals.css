@@ -2577,10 +2577,40 @@ a, button, summary, label,
 .home-hook { max-width: 540px; margin: 18px auto 0; color: #e4edfa; font-size: clamp(16px, 2.2vw, 19px); line-height: 1.6; }
 .home-hook b { color: var(--gold); }
 .home-scroll {
-  position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 1;
+  position: absolute; bottom: 20px; left: 50%; z-index: 1;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
   font-family: var(--cond); font-weight: 700; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6); animation: bounce 2.4s ease-in-out infinite;
+  color: rgba(255, 255, 255, 0.65); animation: scrollBob 2s ease-in-out infinite;
 }
+.home-scroll svg { opacity: 0.85; }
+@keyframes scrollBob { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(6px); } }
+
+/* featured game banner (right after the hero) */
+.hero-play {
+  position: relative; display: block; margin-top: 30px;
+  height: clamp(210px, 30vw, 310px); border-radius: 22px; overflow: hidden;
+  border: 1px solid rgba(245, 132, 38, 0.4); box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
+}
+.hero-play-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 28%; z-index: 0; transition: transform 0.5s var(--ease); }
+.hero-play:hover .hero-play-img { transform: scale(1.05); }
+.hero-play::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(100deg, rgba(4, 14, 38, 0.92) 32%, rgba(4, 14, 38, 0.35)); }
+.hero-play-body { position: absolute; left: 28px; bottom: 24px; z-index: 2; max-width: 470px; text-align: left; }
+.hero-play-tag { display: inline-block; font-family: var(--cond); font-weight: 700; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+.hero-play-body b { display: block; font-family: var(--display); font-size: clamp(30px, 5vw, 52px); letter-spacing: 0.05em; text-transform: uppercase; color: #fff; line-height: 0.95; text-shadow: 0 4px 0 rgba(245, 132, 38, 0.8); }
+.hero-play-body small { display: block; color: #dbe6f5; font-size: 14.5px; line-height: 1.5; margin-top: 10px; }
+.hero-play-cta { display: inline-block; margin-top: 16px; font-family: var(--cond); font-weight: 700; font-size: 14px; letter-spacing: 0.16em; text-transform: uppercase; color: #fff; background: linear-gradient(180deg, var(--orange-hot), var(--orange)); border-radius: 999px; padding: 11px 26px; box-shadow: 0 8px 20px rgba(245, 132, 38, 0.4); }
+.hero-play:hover .hero-play-cta { filter: brightness(1.08); }
+
+/* scroll reveal */
+.reveal { opacity: 0; }
+.reveal.in { animation: fadeUp 0.6s var(--ease) both; }
+.feat-grid.reveal .feat { opacity: 0; }
+.feat-grid.reveal.in { animation: none; opacity: 1; }
+.feat-grid.reveal.in .feat { animation: fadeUp 0.5s var(--ease) both; }
+.feat-grid.reveal.in .feat:nth-child(2) { animation-delay: 0.06s; }
+.feat-grid.reveal.in .feat:nth-child(3) { animation-delay: 0.12s; }
+.feat-grid.reveal.in .feat:nth-child(4) { animation-delay: 0.18s; }
+.feat-grid.reveal.in .feat:nth-child(5) { animation-delay: 0.24s; }
 
 /* clean icon-led feature menu */
 .feat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
@@ -2611,13 +2641,21 @@ a, button, summary, label,
 .home-hero > * { position: relative; }
 .home-mark {
   font-family: var(--display);
-  font-size: clamp(80px, 15vw, 168px);
-  letter-spacing: 0.22em;
-  margin-right: -0.22em;
+  font-size: clamp(88px, 17vw, 196px);
+  letter-spacing: 0.16em;
+  margin-right: -0.16em;
   line-height: 0.9;
-  color: #fff;
-  text-shadow: 0 6px 0 rgba(245, 132, 38, 0.85), 0 18px 50px rgba(0, 0, 0, 0.7);
+  animation: markFloat 5.5s ease-in-out infinite;
 }
+.home-mark span {
+  display: inline-block;
+  color: #fff;
+  text-shadow: 0 6px 0 rgba(245, 132, 38, 0.9), 0 20px 55px rgba(0, 0, 0, 0.75);
+  animation: markRise 0.9s var(--ease) both;
+}
+@keyframes markRise { 0% { opacity: 0; transform: translateY(48px) scale(0.9); } 100% { opacity: 1; transform: none; } }
+@keyframes markFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+.hero-sub { animation: fadeUp 0.7s var(--ease) both; margin-bottom: 6px; }
 .home-badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
 .home-badges span {
   font-family: var(--cond); font-weight: 700; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase;

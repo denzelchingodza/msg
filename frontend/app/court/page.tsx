@@ -48,6 +48,12 @@ export default function Home() {
             <span style={{ animationDelay: "0.18s" }}>S</span>
             <span style={{ animationDelay: "0.31s" }}>G</span>
           </h1>
+          <p className="hero-welcome-line">Welcome to the Garden</p>
+          <p className="hero-desc">
+            The Mecca in your pocket. MSG is a living New York Knicks shrine where
+            you play the games, spin the facts, roast every rival, and relive the
+            2026 championship. All the joy of being a fan, in one place.
+          </p>
         </div>
         <a href="#inside" className="home-scroll" aria-label="Scroll to explore">
           Scroll

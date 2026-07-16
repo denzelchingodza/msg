@@ -41,6 +41,7 @@ export default function GardenGallery() {
         onMouseEnter={() => (hover.current = true)}
         onMouseLeave={() => (hover.current = false)}
       >
+        <img key={`bg-${photos[i]}`} src={`/photos/${photos[i]}`} alt="" className="gallery-bg" aria-hidden="true" />
         <img key={photos[i]} src={`/photos/${photos[i]}`} alt="" className="gallery-img" />
         <div className="gallery-cap">{caption(photos[i])}</div>
         <button className="gallery-nav prev" onClick={prev} aria-label="Previous photo">‹</button>

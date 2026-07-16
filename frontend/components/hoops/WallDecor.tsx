@@ -59,15 +59,54 @@ export default function WallDecor() {
         </svg>
       </div>
 
-      {/* sneaker — left, lower */}
-      <div className="decor decor-shoe">
-        <svg viewBox="0 0 150 96" width="100%" height="100%">
-          <path d="M8 78 Q4 92 20 92 L128 92 Q140 92 138 80 L138 74 L10 74 Z" fill="#f58426" stroke="#9c4d12" strokeWidth="1.5" />
-          <path d="M10 74 L138 74" stroke="#ffffff" strokeWidth="2" opacity="0.6" />
-          <path d="M14 74 L14 40 Q14 22 40 20 L70 18 L96 30 L120 40 Q136 46 136 62 L136 74 Z" fill="#0a58b0" stroke="#063a7a" strokeWidth="1.5" />
-          <path d="M96 30 L120 40 Q136 46 136 62 L108 60 Q98 44 96 30 Z" fill="#0d4a96" />
-          <g stroke="#e8eef7" strokeWidth="3" strokeLinecap="round"><path d="M52 34 L70 30 M56 44 L74 40 M60 54 L78 50" /></g>
-          <path d="M60 66 Q90 50 128 60" stroke="#ffffff" strokeWidth="5" fill="none" opacity="0.85" />
+      {/* spray-paint on the wall */}
+      <div className="decor decor-graffiti">
+        <svg viewBox="0 0 270 96" width="100%" height="100%">
+          <defs>
+            <filter id="spray"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n" /><feDisplacementMap in="SourceGraphic" in2="n" scale="3" /></filter>
+          </defs>
+          <g filter="url(#spray)" fontFamily="Impact, 'Arial Black', sans-serif" fontStyle="italic">
+            <text x="10" y="46" fontSize="44" fill="#f58426" stroke="#9c4d12" strokeWidth="1" transform="rotate(-5 10 46)">BING</text>
+            <text x="66" y="86" fontSize="44" fill="#4b86d6" stroke="#1f5bb0" strokeWidth="1" transform="rotate(-5 66 86)">BONG</text>
+          </g>
+          <g strokeWidth="3" strokeLinecap="round" opacity="0.9">
+            <path d="M30 50 v11" stroke="#f58426" /><path d="M58 50 v15" stroke="#f58426" />
+            <path d="M92 88 v10" stroke="#4b86d6" /><path d="M132 88 v8" stroke="#4b86d6" />
+          </g>
+        </svg>
+      </div>
+
+      {/* dumbbells — floor left */}
+      <div className="decor decor-dumbbell">
+        <svg viewBox="0 0 150 80" width="100%" height="100%">
+          <g fill="#2a3340" stroke="#151b24" strokeWidth="2">
+            <rect x="20" y="30" width="40" height="8" rx="4" /><rect x="9" y="22" width="13" height="24" rx="3" /><rect x="58" y="22" width="13" height="24" rx="3" />
+            <rect x="80" y="46" width="40" height="8" rx="4" /><rect x="69" y="38" width="13" height="24" rx="3" /><rect x="118" y="38" width="13" height="24" rx="3" />
+          </g>
+          <g fill="#f58426"><circle cx="15" cy="34" r="4" /><circle cx="65" cy="34" r="4" /><circle cx="75" cy="50" r="4" /><circle cx="125" cy="50" r="4" /></g>
+        </svg>
+      </div>
+
+      {/* barbell — floor right */}
+      <div className="decor decor-barbell">
+        <svg viewBox="0 0 220 60" width="100%" height="100%">
+          <rect x="10" y="26" width="200" height="7" rx="3" fill="#8a929c" stroke="#4a4f57" strokeWidth="1.5" />
+          <rect x="34" y="10" width="12" height="40" rx="3" fill="#2a3340" stroke="#151b24" strokeWidth="1.5" />
+          <rect x="48" y="14" width="9" height="32" rx="2" fill="#f58426" stroke="#9c4d12" strokeWidth="1.5" />
+          <rect x="174" y="10" width="12" height="40" rx="3" fill="#2a3340" stroke="#151b24" strokeWidth="1.5" />
+          <rect x="163" y="14" width="9" height="32" rx="2" fill="#f58426" stroke="#9c4d12" strokeWidth="1.5" />
+        </svg>
+      </div>
+
+      {/* trashcan with trash — floor */}
+      <div className="decor decor-trash">
+        <svg viewBox="0 0 90 112" width="100%" height="100%">
+          <path d="M20 34 L26 102 L64 102 L70 34 Z" fill="#3a4450" stroke="#1c222b" strokeWidth="2" />
+          <g stroke="#2a323c" strokeWidth="2"><path d="M34 40 L37 98" /><path d="M45 40 L45 98" /><path d="M56 40 L53 98" /></g>
+          <rect x="16" y="26" width="58" height="10" rx="3" fill="#4a5560" stroke="#1c222b" strokeWidth="2" />
+          <g fill="#e9edf4" stroke="#b8bec8" strokeWidth="1.2">
+            <circle cx="80" cy="100" r="8" /><circle cx="11" cy="102" r="7" /><circle cx="45" cy="20" r="7" />
+          </g>
         </svg>
       </div>
     </div>

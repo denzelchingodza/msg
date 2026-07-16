@@ -2558,11 +2558,16 @@ a, button, summary, label,
   text-align: center;
   border-radius: 24px;
   overflow: hidden;
-  padding: 64px 24px 54px;
+  padding: 88px 24px 72px;
   margin-top: 8px;
-  background: url("/photos/the_garden_under_confetti.jpg") center 30% / cover no-repeat;
+  background: url("/photos/parade_in_watercolor.jpg") center 30% / cover no-repeat;
   border: 1px solid rgba(133, 183, 235, 0.3);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  animation: kenburns 26s ease-in-out infinite alternate;
+}
+@keyframes kenburns {
+  0% { background-size: 114%; background-position: 50% 30%; }
+  100% { background-size: 126%; background-position: 50% 38%; }
 }
 .home-hero::before {
   content: "";
@@ -2627,24 +2632,52 @@ a, button, summary, label,
 .fact-tag { display: inline-block; margin-top: 12px; font-family: var(--cond); font-weight: 700; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--blue-soft); }
 .fact-actions { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
 
-/* feature card grid */
-.home-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
-.home-grid.two { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+/* feature tiles — image-forward, premium */
+.home-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.home-grid.two { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+/* bento: a big featured tile + varied sizes */
+.home-grid.bento { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 168px; }
+.home-grid.bento .feat-card { grid-column: span 2; }
+.home-grid.bento .feat-card.big { grid-column: span 2; grid-row: span 2; }
+
 .feat-card {
-  display: flex; flex-direction: column; background: var(--panel); border: 1px solid rgba(133, 183, 235, 0.2);
-  border-radius: 18px; overflow: hidden; box-shadow: 6px 6px 0 rgba(10, 42, 92, 0.7);
-  transition: transform 0.16s var(--ease), border-color 0.16s, box-shadow 0.16s;
+  position: relative;
+  display: block;
+  min-height: 168px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(133, 183, 235, 0.18);
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s var(--ease), box-shadow 0.2s, border-color 0.2s;
 }
-.feat-card:hover { transform: translateY(-4px); border-color: var(--orange); box-shadow: 8px 10px 0 rgba(10, 42, 92, 0.9); }
-.feat-thumb { height: 130px; background-size: cover; background-position: center 30%; }
-.feat-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
-.feat-body b { font-family: var(--display); font-weight: 400; font-size: 18px; letter-spacing: 0.05em; text-transform: uppercase; color: #fff; }
-.feat-body small { color: var(--silver); font-size: 13.5px; line-height: 1.5; flex: 1; }
+.home-grid.two .feat-card { min-height: 220px; }
+.feat-card:hover { transform: translateY(-5px); border-color: rgba(245, 132, 38, 0.6); box-shadow: 0 24px 50px rgba(0, 0, 0, 0.62); }
+.feat-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 28%; z-index: 0; transition: transform 0.5s var(--ease); }
+.feat-card:hover .feat-img { transform: scale(1.07); }
+.feat-card::after {
+  content: ""; position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(180deg, rgba(4, 14, 38, 0.1) 25%, rgba(4, 14, 38, 0.92));
+  transition: background 0.2s;
+}
+.feat-card:hover::after { background: linear-gradient(180deg, rgba(245, 132, 38, 0.14) 5%, rgba(4, 14, 38, 0.93)); }
+.feat-body { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; text-align: left; }
+.feat-body b { font-family: var(--display); font-weight: 400; font-size: clamp(18px, 2.2vw, 26px); letter-spacing: 0.05em; text-transform: uppercase; color: #fff; line-height: 1; }
+.feat-body small { color: #cdd9ee; font-size: 13px; line-height: 1.45; max-width: 360px; }
+.feat-card:not(.big) .feat-body small { display: none; }
 .feat-verb {
   align-self: flex-start; margin-top: 8px; font-family: var(--cond); font-weight: 700; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--orange); border: 1px solid rgba(245, 132, 38, 0.5); border-radius: 999px; padding: 6px 16px; transition: background 0.15s, color 0.15s;
+  color: #fff; background: linear-gradient(180deg, var(--orange-hot), var(--orange)); border-radius: 999px; padding: 7px 18px;
+  box-shadow: 0 6px 16px rgba(245, 132, 38, 0.35);
 }
-.feat-card:hover .feat-verb { background: var(--orange); color: #fff; }
+@media (max-width: 760px) {
+  .home-grid.bento { grid-template-columns: 1fr 1fr; grid-auto-rows: 150px; }
+  .home-grid.bento .feat-card { grid-column: span 1; }
+  .home-grid.bento .feat-card.big { grid-column: span 2; grid-row: span 1; }
+}
+@media (max-width: 460px) {
+  .home-grid.bento { grid-template-columns: 1fr; }
+  .home-grid.bento .feat-card, .home-grid.bento .feat-card.big { grid-column: span 1; grid-row: span 1; }
+}
 
 /* gallery slideshow */
 .gallery { position: relative; border-radius: 20px; overflow: hidden; border: 1px solid rgba(133, 183, 235, 0.25); box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5); background: #030a1c; }

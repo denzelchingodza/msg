@@ -28,9 +28,9 @@ export default function Home() {
   const games = SECTIONS.filter((s) => GAMES.includes(s.href));
   const story = SECTIONS.filter((s) => !GAMES.includes(s.href));
 
-  const card = (s: Section) => (
-    <Link key={s.href} href={s.href} className="feat-card">
-      <div className="feat-thumb" style={{ backgroundImage: `url(${s.thumb})` }} />
+  const card = (s: Section, big = false) => (
+    <Link key={s.href} href={s.href} className={`feat-card ${big ? "big" : ""}`}>
+      <img className="feat-img" src={s.thumb} alt="" />
       <div className="feat-body">
         <b>{s.title}</b>
         <small>{s.does}</small>
@@ -71,10 +71,10 @@ export default function Home() {
       <FactTeaser />
 
       <p className="home-eyebrow center">Step onto the court</p>
-      <div className="home-grid">{games.map(card)}</div>
+      <div className="home-grid bento">{games.map((s, idx) => card(s, idx === 0))}</div>
 
       <p className="home-eyebrow center">The story</p>
-      <div className="home-grid two">{story.map(card)}</div>
+      <div className="home-grid two">{story.map((s) => card(s, true))}</div>
 
       <GardenGallery />
 

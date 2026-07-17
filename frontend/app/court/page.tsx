@@ -41,7 +41,7 @@ export default function Home() {
 
   return (
     <main className="page home">
-      <section className="home-hero">
+      <section className="home-hero" data-coach="hero">
         <div className="home-hero-inner">
           <p className="home-eyebrow center hero-sub">The Mecca, in app form</p>
           <h1 className="home-mark">
@@ -62,7 +62,7 @@ export default function Home() {
         </a>
       </section>
 
-      <Link href="/hoops" className="hero-play reveal" id="inside">
+      <Link href="/hoops" className="hero-play reveal" id="inside" data-coach="featured">
         <img className="hero-play-img" src="/photos/subway_to_the_title.jpg" alt="" />
         <div className="hero-play-body">
           <span className="hero-play-tag">Featured game</span>
@@ -73,12 +73,12 @@ export default function Home() {
       </Link>
 
       <p className="home-eyebrow center reveal">More to play</p>
-      <div className="feat-grid reveal">{games.map(card)}</div>
+      <div className="feat-grid reveal" data-coach="games">{games.map(card)}</div>
 
       <p className="home-eyebrow center reveal">The story</p>
-      <div className="feat-grid two reveal">{story.map(card)}</div>
+      <div className="feat-grid two reveal" data-coach="story">{story.map(card)}</div>
 
-      <div className="reveal"><GardenGallery /></div>
+      <div className="reveal" data-coach="gallery"><GardenGallery /></div>
 
       <HomeCoach />
     </main>

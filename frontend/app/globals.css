@@ -2830,6 +2830,33 @@ a, button, summary, label,
 }
 @keyframes enterShine { 0% { left: -60%; } 45%, 100% { left: 130%; } }
 
+/* ═══ intro: arriving at the Mecca (subway backdrop) ══════════ */
+.intro-mecca {
+  display: block;
+  padding: 0;
+  background:
+    linear-gradient(180deg, rgba(4, 14, 38, 0.6) 0%, rgba(4, 14, 38, 0.12) 26%, rgba(4, 14, 38, 0.1) 52%, rgba(4, 14, 38, 0.75) 82%, rgba(4, 14, 38, 0.96) 100%),
+    url("/photos/subway_to_the_title.jpg") center 28% / cover no-repeat,
+    #0a1428;
+}
+.mecca-layout {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 42px 24px 48px;
+  box-sizing: border-box;
+}
+.mecca-top { width: 100%; display: flex; justify-content: center; }
+.mecca-cta { display: flex; flex-direction: column; align-items: center; }
+.mecca-eyebrow {
+  font-family: var(--cond); font-weight: 700; font-size: 13px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 16px; text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+}
+
 /* ═══ energy: shot clock heartbeat when time is low ═══════════ */
 @keyframes heartbeat {
   0%, 100% { transform: scale(1); }

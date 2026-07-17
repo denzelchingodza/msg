@@ -26,8 +26,6 @@ export default function Welcome() {
   return (
     <div className={`intro intro-tee ${leaving ? "leaving" : ""}`}>
       <div className="intro-inner">
-        <p className="intro-kicker">MADISON SQUARE GARDEN PRESENTS</p>
-
         <div className="chant" aria-hidden="true">
           <span>DE&nbsp;·&nbsp;FENSE</span>
           <b>👏👏</b>
@@ -36,19 +34,10 @@ export default function Welcome() {
           <span>DE&nbsp;·&nbsp;FENSE</span>
         </div>
 
-        <h1 className="intro-title retro">
-          WELCOME TO
-          <br />
-          THE GARDEN
-        </h1>
-        <p className="intro-sub">
-          New York basketball since 1946 · champions again in 2026
-        </p>
-
-        <button className="btn-ticket intro-enter" onClick={() => leave()}>
-          ENTER THE GARDEN
+        <button className="enter-btn" onClick={() => leave()}>
+          <span className="enter-btn-label">Enter the Garden</span>
         </button>
-        <p className="intro-note">the crowd is waiting inside 🔊</p>
+
         <p className="intro-skip">
           <a
             href="/court"
@@ -57,7 +46,7 @@ export default function Welcome() {
               leave();
             }}
           >
-            skip straight to the court →
+            skip straight to the court
           </a>
         </p>
       </div>

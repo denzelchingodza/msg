@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect } from "react";
 import GardenGallery from "@/components/home/GardenGallery";
+import HomeCoach from "@/components/home/HomeCoach";
 import SectionIcon from "@/components/home/SectionIcon";
 import { syncProfile } from "@/lib/api";
 import { SECTIONS, Section } from "@/lib/sections";
@@ -78,6 +79,8 @@ export default function Home() {
       <div className="feat-grid two reveal">{story.map(card)}</div>
 
       <div className="reveal"><GardenGallery /></div>
+
+      <HomeCoach />
     </main>
   );
 }

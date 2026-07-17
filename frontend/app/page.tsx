@@ -18,7 +18,7 @@ export default function Welcome() {
   }
 
   return (
-    <div className={`intro intro-mecca ${leaving ? "leaving" : ""}`}>
+    <div className={`intro intro-vintage ${leaving ? "leaving" : ""}`}>
       <div className="mecca-layout">
         <div className="mecca-top">
           <div className="chant" aria-hidden="true">
@@ -31,7 +31,7 @@ export default function Welcome() {
         </div>
 
         <div className="mecca-cta">
-          <p className="mecca-eyebrow">The Mecca awaits</p>
+          <p className="mecca-eyebrow">Knicks basketball since 1946</p>
           <button className="enter-btn" onClick={() => leave()}>
             <span className="enter-btn-label">Enter the Garden</span>
           </button>

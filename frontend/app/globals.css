@@ -2830,15 +2830,27 @@ a, button, summary, label,
 }
 @keyframes enterShine { 0% { left: -60%; } 45%, 100% { left: 130%; } }
 
-/* ═══ intro: arriving at the Mecca (subway backdrop) ══════════ */
-.intro-mecca {
+/* ═══ intro: vintage 1946 tee ═════════════════════════════════ */
+.intro-vintage {
   display: block;
   padding: 0;
   background:
-    linear-gradient(180deg, rgba(4, 14, 38, 0.6) 0%, rgba(4, 14, 38, 0.12) 26%, rgba(4, 14, 38, 0.1) 52%, rgba(4, 14, 38, 0.75) 82%, rgba(4, 14, 38, 0.96) 100%),
-    url("/photos/subway_to_the_title.jpg") center 28% / cover no-repeat,
-    #0a1428;
+    radial-gradient(135% 105% at 50% 42%, transparent 38%, rgba(18, 9, 3, 0.78)),
+    linear-gradient(180deg, rgba(70, 38, 12, 0.28) 0%, rgba(20, 10, 4, 0.22) 45%, rgba(12, 7, 3, 0.5) 100%),
+    url("/photos/knicks_1946_vintage.jpg") center / cover no-repeat,
+    #10233f;
 }
+.intro-vintage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.05) 0 2px, transparent 2px 4px);
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+.intro-vintage .mecca-layout { position: relative; z-index: 1; }
 .mecca-layout {
   width: 100%;
   min-height: 100vh;

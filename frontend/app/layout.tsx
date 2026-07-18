@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Anton, Barlow_Condensed, Graduate, Inter } from "next/font/google";
-import Link from "next/link";
-import GardenAudio from "@/components/GardenAudio";
-import GardenTime from "@/components/GardenTime";
-import HeaderLocation from "@/components/HeaderLocation";
 import SiteFooter from "@/components/SiteFooter";
+import SiteNav from "@/components/SiteNav";
 import WakeGate from "@/components/WakeGate";
 import "./globals.css";
 
@@ -37,22 +34,7 @@ export default function RootLayout({
     >
       <body>
         <WakeGate />
-        <header className="nav">
-          <Link href="/court" className="nav-logo">
-            <span className="nav-mark">MSG</span>
-            <span className="nav-sub">
-              THE MECCA
-              <br />
-              EST. 1946
-            </span>
-          </Link>
-          <GardenTime />
-          <HeaderLocation />
-          <GardenAudio />
-          <Link href="/court" className="nav-home">
-            HOME COURT
-          </Link>
-        </header>
+        <SiteNav />
         {children}
         <SiteFooter />
         <div className="court-stripe" aria-hidden="true" />

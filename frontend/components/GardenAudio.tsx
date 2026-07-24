@@ -87,6 +87,40 @@ export default function GardenAudio() {
       return cleanup;
     };
 
+    // Unlock the audio element on the very first user gesture (the ENTER click).
+    // Playing it silently inside a real gesture "activates" it so the deferred
+    // start after the intro video is allowed — Safari otherwise blocks a play()
+    // that isn't synchronous with a gesture, leaving the crowd stuck off.
+    let primed = false;
+    const prime = () => {
+      if (primed) return;
+      primed = true;
+      const a = ensure(current.current);
+      const vol = a.volume;
+      a.volume = 0;
+      a.play()
+        .then(() => {
+          a.pause();
+          a.currentTime = 0;
+          a.volume = vol;
+        })
+        .catch(() => {
+          a.volume = vol;
+        });
+    };
+    const onPrimeGesture = () => {
+      prime();
+      removePrime();
+    };
+    const removePrime = () => {
+      window.removeEventListener("pointerdown", onPrimeGesture, true);
+      window.removeEventListener("keydown", onPrimeGesture, true);
+      window.removeEventListener("touchstart", onPrimeGesture, true);
+    };
+    window.addEventListener("pointerdown", onPrimeGesture, true);
+    window.addEventListener("keydown", onPrimeGesture, true);
+    window.addEventListener("touchstart", onPrimeGesture, true);
+
     let cleanupGesture: (() => void) | undefined;
 
     // Detect availability (to show the toggle). The crowd is started by
@@ -106,6 +140,7 @@ export default function GardenAudio() {
     return () => {
       disposed = true;
       cleanupGesture?.();
+      removePrime();
       window.removeEventListener("msg:sound", onToggle);
       window.removeEventListener("msg:sound-start", onForceStart);
       window.removeEventListener("msg:track", onTrack);

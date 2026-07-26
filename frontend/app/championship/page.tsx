@@ -34,22 +34,30 @@ const PILLS = [
 const GAME_META: {
   badge: string;
   cls: "w" | "l";
-  line: string;
+  venue: string;
+  date: string;
+  nyk?: number;
+  sas?: number;
+  note?: string;
   photo?: string;
   photoCaption?: string;
 }[] = [
-  { badge: "WIN", cls: "w", line: "MSG · June 3 · NYK 1, SAS 0" },
-  { badge: "WIN", cls: "w", line: "MSG · June 5 · NYK 2, SAS 0" },
-  { badge: "LOSS", cls: "l", line: "San Antonio · June 8 · NYK 2, SAS 1" },
-  { badge: "WIN", cls: "w", line: "San Antonio · June 11 · 107 to 106 · NYK 3, SAS 1" },
+  { badge: "WIN", cls: "w", venue: "MSG", date: "June 3" },
+  { badge: "WIN", cls: "w", venue: "MSG", date: "June 5" },
+  { badge: "LOSS", cls: "l", venue: "San Antonio", date: "June 8" },
+  { badge: "WIN", cls: "w", venue: "San Antonio", date: "June 11", nyk: 107, sas: 106 },
   {
     badge: "CHAMPS",
     cls: "w",
-    line: "San Antonio · June 13 · 94 to 90 · Brunson 45",
+    venue: "San Antonio",
+    date: "June 13",
+    nyk: 94,
+    sas: 90,
+    note: "Brunson 45 · ties Jordan",
     photo: "/placed/mitch_23.jpg",
     photoCaption: "Mitch: 10 boards nobody will ever forget",
   },
-  { badge: "PARADE", cls: "w", line: "Canyon of Heroes · Lower Broadway" },
+  { badge: "PARADE", cls: "w", venue: "Canyon of Heroes", date: "Lower Broadway" },
 ];
 
 const caption = (name: string) =>
@@ -115,6 +123,10 @@ export default function Championship() {
   const art = photos.filter((p) => ART.has(p));
   const wall = photos.filter((p) => !ART.has(p));
   const slide = story[idx];
+  const meta = GAME_META[Math.min(idx, GAME_META.length - 1)];
+  const finalsUpto = idx >= 5 ? 5 : idx + 1;
+  const nykWins = GAME_META.slice(0, finalsUpto).filter((g) => g.cls === "w").length;
+  const sasWins = GAME_META.slice(0, finalsUpto).filter((g) => g.cls === "l").length;
 
   return (
     <main className="page center">
@@ -204,25 +216,54 @@ export default function Championship() {
               role="button"
               tabIndex={0}
             >
-              <div className="game-head">
-                <span className={`score-pill ${GAME_META[idx]?.cls ?? "w"}`}>
-                  {GAME_META[idx]?.badge ?? ""}
-                </span>
-                <span className="game-line">{GAME_META[idx]?.line ?? ""}</span>
-              </div>
+              {meta.badge === "PARADE" ? (
+                <div className="gscore gscore-parade">
+                  <span className="gs-badge w">PARADE</span>
+                  <span className="gs-meta">
+                    {meta.venue} &middot; Champions {nykWins}&ndash;{sasWins}
+                  </span>
+                </div>
+              ) : (
+                <div className="gscore">
+                  <div className="gs-team nyk">
+                    <span className="gs-abbr">NYK</span>
+                    {meta.nyk != null && (
+                      <span className="gs-pts">{meta.nyk}</span>
+                    )}
+                  </div>
+                  <div className="gs-mid">
+                    <span className={`gs-badge ${meta.cls}`}>{meta.badge}</span>
+                    <span className="gs-meta">
+                      {meta.venue} &middot; {meta.date}
+                    </span>
+                    <span className="gs-series">
+                      Series {nykWins}&ndash;{sasWins}
+                    </span>
+                  </div>
+                  <div className="gs-team sas">
+                    <span className="gs-abbr">SAS</span>
+                    {meta.sas != null && (
+                      <span className="gs-pts">{meta.sas}</span>
+                    )}
+                  </div>
+                </div>
+              )}
               <h2 className="slide-title">{slide.title}</h2>
               <p className="big-quote" style={{ fontWeight: 400 }}>
                 {slide.text}
               </p>
-              {GAME_META[idx]?.photo && (
+              {meta.note && <p className="gs-note">{meta.note}</p>}
+              {meta.photo && (
                 <figure className="game-photo">
-                  <img
-                    src={GAME_META[idx].photo}
-                    alt={GAME_META[idx].photoCaption ?? ""}
-                  />
-                  <figcaption>{GAME_META[idx].photoCaption}</figcaption>
+                  <img src={meta.photo} alt={meta.photoCaption ?? ""} />
+                  <figcaption>{meta.photoCaption}</figcaption>
                 </figure>
               )}
+              <div className="game-dots" aria-hidden="true">
+                {story.map((_, i) => (
+                  <span key={i} className={i === idx ? "on" : ""} />
+                ))}
+              </div>
             </div>
             <button
               className="game-arrow"

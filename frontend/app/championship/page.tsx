@@ -121,19 +121,28 @@ export default function Championship() {
       <p className="kicker">Championship &rsquo;26</p>
       <h1 className="page-title">The Drought Is Dead</h1>
 
-      <div className="banners-row" aria-label="Championship banners">
-        <div className="bannerflag">
-          1970<small>CHAMPIONS</small>
-        </div>
-        <div className="bannerflag">
-          1973<small>CHAMPIONS</small>
-        </div>
-        <div className="bannerflag new">
-          2026<small>CHAMPIONS</small>
-        </div>
+      <div
+        className="rafters"
+        aria-label="Championship banners in the Garden rafters"
+      >
+        <span className="rafter-beam" aria-hidden="true" />
+        {[
+          { year: "1970", cls: "" },
+          { year: "1973", cls: "" },
+          { year: "2026", cls: "b-new" },
+        ].map((b) => (
+          <div className={`banner-hang ${b.cls}`} key={b.year}>
+            <span className="banner-cord" aria-hidden="true" />
+            <div className="banner">
+              <span className="banner-team">New York</span>
+              <span className="banner-year">{b.year}</span>
+              <span className="banner-label">NBA Champions</span>
+            </div>
+          </div>
+        ))}
       </div>
 
-      <div className="trio">
+      <div className="trio chip-trio">
         <div>
           <b>{years}</b>
           <span>years of waiting</span>

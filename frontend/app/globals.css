@@ -1253,33 +1253,111 @@ h1, h2, .display {
 }
 
 /* ═══ v4: championship cinema ═════════════════════════ */
-.banners-row { display: flex; gap: 18px; justify-content: center; margin: 26px 0 6px; }
-.bannerflag {
-  width: 96px;
-  padding: 18px 0 26px;
-  text-align: center;
-  background: linear-gradient(180deg, var(--navy-3), var(--navy-2));
-  border: 1px solid rgba(250, 199, 117, 0.45);
-  clip-path: polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%);
-  font-family: var(--graduate, var(--display));
-  color: var(--gold);
-  font-size: 20px;
+/* Championship banners hanging from the Garden rafters */
+.rafters {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: clamp(18px, 5vw, 46px);
+  max-width: 620px;
+  margin: 34px auto 14px;
+  padding-top: 4px;
 }
-.bannerflag small {
-  display: block;
+.rafter-beam {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(560px, 94%);
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #2b3652, #141c30 55%, #0a0f1c);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+.banner-hang {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: top center;
+  animation: bannerSway 6s ease-in-out infinite;
+}
+.rafters .banner-hang:nth-child(2) { animation-delay: -1s; animation-duration: 6.2s; }
+.rafters .banner-hang:nth-child(3) { animation-delay: -3s; animation-duration: 5.6s; }
+.rafters .banner-hang:nth-child(4) { animation-delay: -4.5s; animation-duration: 6.8s; }
+.banner-cord {
+  width: 2px;
+  height: 22px;
+  background: linear-gradient(180deg, rgba(250, 199, 117, 0.75), rgba(250, 199, 117, 0.2));
+}
+.banner {
+  position: relative;
+  width: clamp(86px, 12vw, 118px);
+  padding: 15px 8px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: linear-gradient(180deg, #0f57b8, #0a3f8c 72%, #0a3f8c);
+  border: 1px solid rgba(250, 199, 117, 0.5);
+  border-top: 3px solid var(--gold);
+  clip-path: polygon(0 0, 100% 0, 100% 82%, 50% 100%, 0 82%);
+  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.45), inset 0 0 26px rgba(0, 0, 0, 0.4);
+  color: #fff;
+}
+.banner-team {
   font-family: var(--cond);
   font-weight: 700;
-  font-size: 9px;
-  letter-spacing: 0.3em;
-  color: var(--silver);
-  margin-top: 4px;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
 }
-.bannerflag.new {
-  background: linear-gradient(180deg, var(--orange-hot), var(--orange));
+.banner-year {
+  font-family: var(--graduate, var(--display));
+  font-size: clamp(21px, 3.4vw, 31px);
+  line-height: 1;
+  color: var(--gold);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
+}
+.banner-label {
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 8.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+.banner-hang.b-new .banner {
+  background: linear-gradient(180deg, #f5842a, #e0680f 74%, #e0680f);
+  border-color: #ffd88a;
+  border-top-color: #fff;
+  animation: bannerDrop 0.9s cubic-bezier(0.2, 0.9, 0.25, 1.1) both,
+    bannerGlow 3s 1s ease-in-out infinite;
+}
+.banner-hang.b-new .banner-year {
   color: #fff;
-  border-color: var(--gold);
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.55);
 }
-.bannerflag.new small { color: rgba(255, 255, 255, 0.9); }
+.banner-hang.b-new .banner-team,
+.banner-hang.b-new .banner-label { color: rgba(255, 255, 255, 0.95); }
+.banner-hang.b-new .banner-cord {
+  background: linear-gradient(180deg, #fff, rgba(245, 132, 38, 0.35));
+}
+@keyframes bannerSway {
+  0%, 100% { transform: rotate(-1.4deg); }
+  50% { transform: rotate(1.4deg); }
+}
+@keyframes bannerDrop {
+  0% { opacity: 0; transform: translateY(-64px) scale(0.9); }
+  70% { opacity: 1; }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes bannerGlow {
+  0%, 100% { box-shadow: 0 16px 34px rgba(0, 0, 0, 0.5), 0 0 22px rgba(245, 132, 38, 0.45), inset 0 0 22px rgba(0, 0, 0, 0.25); }
+  50% { box-shadow: 0 16px 34px rgba(0, 0, 0, 0.5), 0 0 42px rgba(245, 132, 38, 0.8), inset 0 0 22px rgba(0, 0, 0, 0.25); }
+}
 .chip-hero {
   position: relative;
   border-radius: 22px;
@@ -1616,6 +1694,27 @@ h1, h2, .display {
   border-radius: 16px;
   padding: 18px 26px 14px;
   box-shadow: 6px 6px 0 rgba(10, 42, 92, 0.8);
+}
+/* championship stat tiles: lit jumbotron */
+.chip-trio div {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(12, 40, 88, 0.96), rgba(6, 22, 54, 0.96));
+}
+.chip-trio div::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 14%;
+  right: 14%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0.85;
+}
+.chip-trio b { animation: ledPulse 2.6s ease-in-out infinite; }
+@keyframes ledPulse {
+  0%, 100% { text-shadow: 0 0 14px rgba(255, 176, 66, 0.4); }
+  50% { text-shadow: 0 0 26px rgba(255, 176, 66, 0.85); }
 }
 .game-stage {
   display: flex;

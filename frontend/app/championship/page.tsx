@@ -158,8 +158,9 @@ export default function Championship() {
 
       <figure className="chip-hero">
         <img
-          src="/photos/brunson_and_the_larry_obrien.jpg"
-          alt="Jalen Brunson holding the Larry O'Brien trophy at the parade"
+          src="/photos/trophy_over_broadway.jpg"
+          alt="Jalen Brunson lifting the Larry O'Brien trophy over the New York skyline"
+          style={{ objectPosition: "center 20%" }}
         />
         <figcaption>The trophy came home</figcaption>
       </figure>

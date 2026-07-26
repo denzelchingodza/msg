@@ -20,8 +20,6 @@ export default function SiteNav() {
     <header className={`nav ${min ? "nav-min" : ""}`}>
       <Link href="/court" className="nav-logo" aria-label="MSG home court">
         <span className="nav-mark">MSG</span>
-        <span className="nav-dot" aria-hidden="true" />
-        <span className="nav-sub">the mecca</span>
       </Link>
       <div className="nav-tools">
         <GardenTime />

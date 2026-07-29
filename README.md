@@ -7,7 +7,7 @@ Made by a fan, for fans, and for anyone who ever asked a Knicks fan "why do you
 do this to yourself." The answer lives in **The Faith**.
 
 Celebrating the **2026 NBA Champions**. First banner since '73, Brunson Finals
-MVP, the first NBA Cup and title double in league history. Bing bong.
+MVP, the first NBA Cup and title double in league history. Bing bong!!
 
 ## What's inside
 

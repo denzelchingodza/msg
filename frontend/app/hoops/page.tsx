@@ -375,12 +375,6 @@ export default function Hoops() {
 
       <Link href="/court" className="hoops-exit">← Exit</Link>
 
-      <div className="hoops-banners" aria-hidden="true">
-        <span className="hoops-banner">1970</span>
-        <span className="hoops-banner">1973</span>
-        <span className="hoops-banner champ">2026</span>
-      </div>
-
       {phase === "playing" && (
         <HoopsHUD
           points={points} mult={multFor(streak)} mm={mm} ss={ss} low={time <= 10}

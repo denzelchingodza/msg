@@ -38,16 +38,20 @@ export default function CourtFloor() {
             <stop offset="55%" stopColor="#a4652e" />
             <stop offset="100%" stopColor="#c98443" />
           </linearGradient>
+          <linearGradient id="keyPaint" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#0e3a76" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="#0e3a76" stopOpacity="0.42" />
+          </linearGradient>
         </defs>
         <rect x="0" y="0" width="1000" height="620" fill="url(#wood)" />
 
-        {/* converging wood planks */}
+        {/* painted key — drawn UNDER the grain so it reads as paint on the floor */}
+        <path d="M452 30 L408 300 L592 300 L548 30 Z" fill="url(#keyPaint)" />
+
+        {/* converging wood planks (over the paint, so the grain carries across) */}
         <g stroke="#3a1f0c" strokeOpacity="0.16" strokeWidth="1.5">{planks}</g>
         {/* subtle sheen band */}
         <path d="M0 300 L1000 300" stroke="#ffd9a8" strokeOpacity="0.06" strokeWidth="60" />
-
-        {/* painted key fill */}
-        <path d="M452 30 L408 300 L592 300 L548 30 Z" fill="#0a2e63" fillOpacity="0.24" />
 
         {/* dark under-stroke for crispness */}
         <g fill="none" stroke="#231205" strokeOpacity="0.35" strokeWidth="8" strokeLinejoin="round" strokeLinecap="round">{lines}</g>

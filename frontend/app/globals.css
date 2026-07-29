@@ -2250,13 +2250,15 @@ a, button, summary, label,
   background-size: auto, auto, auto, 120px 60px, auto;
 }
 .hoops-full:active { cursor: grabbing; }
-/* spotlight behind the rim */
+/* court theme wall tint (over the brick, under the floor + props) */
+.hoops-walltint { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+/* spotlight behind the rim (color from the active court theme) */
 .hoops-spot {
   position: absolute;
   top: 4%; left: 50%;
   transform: translateX(-50%);
   width: 74vmin; height: 40vmin;
-  background: radial-gradient(closest-side, rgba(180, 214, 255, 0.28), transparent 72%);
+  background: radial-gradient(closest-side, var(--court-spot, rgba(180, 214, 255, 0.28)), transparent 72%);
   pointer-events: none;
   z-index: 1;
 }
@@ -2579,6 +2581,15 @@ a, button, summary, label,
   letter-spacing: 0.08em;
   margin-bottom: 6px;
 }
+.hud-title {
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 6px;
+}
 .hud-xp { height: 8px; border-radius: 999px; background: rgba(133, 183, 235, 0.22); overflow: hidden; }
 .hud-xp i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--blue-soft), var(--blue)); transition: width 0.4s var(--ease); }
 .hud-board { display: flex; border-radius: 14px; overflow: hidden; transform: translateY(-46px); }
@@ -2721,12 +2732,12 @@ a, button, summary, label,
 .hoops-card.wide { width: min(580px, 94vw); }
 .locker-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
 .locker-coins { font-family: var(--graduate, var(--display)); color: var(--gold); font-size: 18px; }
-.locker-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.locker-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
 .locker-tabs button {
-  flex: 1;
-  font-family: var(--cond); font-weight: 700; font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase;
+  flex: 1 1 auto; min-width: 76px;
+  font-family: var(--cond); font-weight: 700; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--silver); background: rgba(133, 183, 235, 0.08);
-  border: 1px solid rgba(133, 183, 235, 0.2); border-radius: 10px; padding: 9px; cursor: pointer;
+  border: 1px solid rgba(133, 183, 235, 0.2); border-radius: 10px; padding: 9px 8px; cursor: pointer;
   transition: all 0.14s;
 }
 .locker-tabs button.on { background: linear-gradient(180deg, var(--orange-hot), var(--orange)); color: #fff; border-color: var(--orange); }
@@ -2744,6 +2755,32 @@ a, button, summary, label,
 .ball-btn.buy { border-color: var(--gold); color: var(--gold); }
 .ball-btn:disabled { opacity: 0.4; cursor: default; }
 .ball-eq { font-family: var(--cond); font-weight: 700; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); }
+/* court theme swatch in the locker */
+.court-prev {
+  width: 100%; height: 58px; border-radius: 10px;
+  border: 2px solid #fff;
+  position: relative; overflow: hidden;
+  box-shadow: inset 0 -8px 16px rgba(0, 0, 0, 0.35);
+}
+.court-prev-key {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 34%; height: 74%; opacity: 0.55;
+  clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+}
+/* perks + titles list rows */
+.locker-perks { display: grid; gap: 8px; }
+.perk-card {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(133, 183, 235, 0.07); border: 1px solid rgba(133, 183, 235, 0.18);
+  border-radius: 12px; padding: 11px 14px;
+}
+.perk-card.on { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold), 0 0 18px rgba(250, 199, 117, 0.22); }
+.perk-card.locked { opacity: 0.5; }
+.perk-body { flex: 1; display: flex; flex-direction: column; text-align: left; gap: 2px; }
+.perk-body b { font-family: var(--cond); font-weight: 700; font-size: 14px; color: var(--white); }
+.perk-body small { color: var(--silver); font-size: 11.5px; }
+.perk-eq { font-family: var(--cond); font-weight: 700; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); }
+.perk-lock { font-family: var(--cond); font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--silver); }
 .locker-cheeves { display: grid; gap: 8px; }
 .cheeve {
   display: flex; align-items: center; gap: 12px;
@@ -2776,6 +2813,19 @@ a, button, summary, label,
 .hoops-toast-row span { font-size: 24px; }
 .hoops-toast-row b { display: block; font-family: var(--cond); font-weight: 700; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
 .hoops-toast-row small { color: var(--white); font-size: 13px; }
+/* level-up flourish */
+.hoops-levelup {
+  position: absolute; top: 24%; left: 50%; transform: translateX(-50%);
+  z-index: 23; text-align: center; pointer-events: none;
+  padding: 14px 30px; border-radius: 16px;
+  background: linear-gradient(180deg, rgba(245, 132, 38, 0.96), rgba(216, 96, 15, 0.96));
+  border: 1px solid var(--gold);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), 0 0 30px rgba(245, 132, 38, 0.5);
+  animation: levelPop 0.5s var(--ease);
+}
+.hoops-levelup b { display: block; font-family: var(--display); font-size: 30px; letter-spacing: 0.06em; color: #fff; line-height: 1; }
+.hoops-levelup small { font-family: var(--cond); font-weight: 700; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: #fff2c9; }
+@keyframes levelPop { 0% { opacity: 0; transform: translateX(-50%) scale(0.7); } 60% { transform: translateX(-50%) scale(1.08); } 100% { opacity: 1; transform: translateX(-50%) scale(1); } }
 
 /* ═══ redesigned home ═════════════════════════════════════════ */
 .home-hero {

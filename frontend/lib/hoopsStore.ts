@@ -19,6 +19,11 @@ export interface HoopsProgress {
   totalPoints: number; // lifetime points
   equippedBall: string; // active ball skin id
   ownedBalls: string[]; // unlocked ball skin ids
+  equippedCourt: string; // active court theme id
+  ownedCourts: string[]; // unlocked court theme ids
+  equippedTitle: string; // active player title id
+  equippedPerk: string; // active perk id ("none" = off)
+  ownedPerks: string[]; // unlocked perk ids
   achievements: string[]; // unlocked achievement ids
   dailyDate: string; // YYYY-MM-DD the daily counters belong to
   dailyMakes: number;
@@ -30,11 +35,16 @@ const KEY = "msg_hoops_progress";
 export const DAILY_GOAL = 15;
 export const DAILY_REWARD = 150;
 export const DAILY_LOGIN_REWARD = 50;
+/** Coins granted each time you level up (scales a little with the level). */
+export const levelReward = (level: number) => 40 + (level - 1) * 10;
 
 const FRESH: HoopsProgress = {
   coins: 0, xp: 0, best: 0, games: 0, makes: 0,
   perfects: 0, bestStreak: 0, totalPoints: 0,
-  equippedBall: "classic", ownedBalls: ["classic"], achievements: [],
+  equippedBall: "classic", ownedBalls: ["classic"],
+  equippedCourt: "garden", ownedCourts: ["garden"],
+  equippedTitle: "rookie", equippedPerk: "none", ownedPerks: [],
+  achievements: [],
   dailyDate: "", dailyMakes: 0, dailyClaimed: false, loginDate: "",
 };
 
@@ -53,9 +63,15 @@ function load(): HoopsProgress {
       p.dailyMakes = 0;
       p.dailyClaimed = false;
     }
-    // Safety: everyone always owns the classic ball.
+    // Safety: everyone always owns the classic ball + default court.
     if (!Array.isArray(p.ownedBalls) || p.ownedBalls.length === 0) p.ownedBalls = ["classic"];
     if (!p.ownedBalls.includes("classic")) p.ownedBalls.push("classic");
+    if (!Array.isArray(p.ownedCourts) || p.ownedCourts.length === 0) p.ownedCourts = ["garden"];
+    if (!p.ownedCourts.includes("garden")) p.ownedCourts.push("garden");
+    if (!p.equippedCourt) p.equippedCourt = "garden";
+    if (!p.equippedTitle) p.equippedTitle = "rookie";
+    if (!p.equippedPerk) p.equippedPerk = "none";
+    if (!Array.isArray(p.ownedPerks)) p.ownedPerks = [];
     if (!Array.isArray(p.achievements)) p.achievements = [];
     return p;
   } catch {

@@ -3,16 +3,26 @@
 import { useState } from "react";
 import Basketball from "./Basketball";
 import { BALLS } from "@/lib/hoopsBalls";
+import { COURTS } from "@/lib/hoopsCourts";
+import { PERKS, NO_PERK } from "@/lib/hoopsPerks";
+import { TITLES } from "@/lib/hoopsTitles";
 import { ACHIEVEMENTS } from "@/lib/hoopsAchievements";
 import { HoopsProgress, levelFromXp } from "@/lib/hoopsStore";
 
-type Tab = "balls" | "cheeves" | "stats";
+type Tab = "balls" | "courts" | "perks" | "titles" | "cheeves" | "stats";
 
-/** The Locker: buy/equip basketballs, view achievements and player stats. */
-export default function HoopsLocker({ progress, onBuy, onEquip, onClose }: {
+/** The Locker: gear up (balls, courts, perks, titles), view achievements + stats. */
+export default function HoopsLocker({
+  progress, onBuy, onEquip, onBuyCourt, onEquipCourt, onEquipTitle, onBuyPerk, onEquipPerk, onClose,
+}: {
   progress: HoopsProgress;
   onBuy: (id: string) => void;
   onEquip: (id: string) => void;
+  onBuyCourt: (id: string) => void;
+  onEquipCourt: (id: string) => void;
+  onEquipTitle: (id: string) => void;
+  onBuyPerk: (id: string) => void;
+  onEquipPerk: (id: string) => void;
   onClose: () => void;
 }) {
   const [tab, setTab] = useState<Tab>("balls");
@@ -24,6 +34,11 @@ export default function HoopsLocker({ progress, onBuy, onEquip, onClose }: {
     ["Total pts", progress.totalPoints], ["Coins", progress.coins],
   ];
 
+  const tabs: [Tab, string][] = [
+    ["balls", "Balls"], ["courts", "Courts"], ["perks", "Perks"],
+    ["titles", "Titles"], ["cheeves", "Awards"], ["stats", "Stats"],
+  ];
+
   return (
     <div className="hoops-modal" onClick={onClose}>
       <div className="hoops-card wide" onClick={(e) => e.stopPropagation()}>
@@ -33,9 +48,9 @@ export default function HoopsLocker({ progress, onBuy, onEquip, onClose }: {
         </div>
 
         <div className="locker-tabs">
-          <button className={tab === "balls" ? "on" : ""} onClick={() => setTab("balls")}>Balls</button>
-          <button className={tab === "cheeves" ? "on" : ""} onClick={() => setTab("cheeves")}>Achievements</button>
-          <button className={tab === "stats" ? "on" : ""} onClick={() => setTab("stats")}>Stats</button>
+          {tabs.map(([id, label]) => (
+            <button key={id} className={tab === id ? "on" : ""} onClick={() => setTab(id)}>{label}</button>
+          ))}
         </div>
 
         <div className="locker-body">
@@ -54,6 +69,78 @@ export default function HoopsLocker({ progress, onBuy, onEquip, onClose }: {
                       <button className="ball-btn" onClick={() => onEquip(b.id)}>Equip</button>
                     ) : (
                       <button className="ball-btn buy" disabled={progress.coins < b.price} onClick={() => onBuy(b.id)}>Buy {b.price}</button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {tab === "courts" && (
+            <div className="locker-balls">
+              {COURTS.map((c) => {
+                const owned = progress.ownedCourts.includes(c.id);
+                const equipped = progress.equippedCourt === c.id;
+                return (
+                  <div key={c.id} className={`ball-card ${equipped ? "equipped" : ""}`}>
+                    <div
+                      className="court-prev"
+                      style={{
+                        background: `linear-gradient(180deg, ${c.wood[0]}, ${c.wood[1]} 55%, ${c.wood[2]})`,
+                        borderColor: c.line,
+                      }}
+                    >
+                      <span className="court-prev-key" style={{ background: c.key }} />
+                    </div>
+                    <b>{c.name}</b>
+                    {equipped ? (
+                      <span className="ball-eq">Equipped</span>
+                    ) : owned ? (
+                      <button className="ball-btn" onClick={() => onEquipCourt(c.id)}>Equip</button>
+                    ) : (
+                      <button className="ball-btn buy" disabled={progress.coins < c.price} onClick={() => onBuyCourt(c.id)}>Buy {c.price}</button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {tab === "perks" && (
+            <div className="locker-perks">
+              {[NO_PERK, ...PERKS].map((pk) => {
+                const owned = pk.id === "none" || progress.ownedPerks.includes(pk.id);
+                const equipped = progress.equippedPerk === pk.id;
+                return (
+                  <div key={pk.id} className={`perk-card ${equipped ? "on" : ""}`}>
+                    <span className="perk-body"><b>{pk.name}</b><small>{pk.desc}</small></span>
+                    {equipped ? (
+                      <span className="perk-eq">Active</span>
+                    ) : owned ? (
+                      <button className="ball-btn" onClick={() => onEquipPerk(pk.id)}>Equip</button>
+                    ) : (
+                      <button className="ball-btn buy" disabled={progress.coins < pk.price} onClick={() => onBuyPerk(pk.id)}>Buy {pk.price}</button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {tab === "titles" && (
+            <div className="locker-perks">
+              {TITLES.map((t) => {
+                const unlocked = lv.level >= t.level;
+                const equipped = progress.equippedTitle === t.id;
+                return (
+                  <div key={t.id} className={`perk-card ${equipped ? "on" : ""} ${unlocked ? "" : "locked"}`}>
+                    <span className="perk-body"><b>{t.name}</b><small>Reach level {t.level}</small></span>
+                    {equipped ? (
+                      <span className="perk-eq">Worn</span>
+                    ) : unlocked ? (
+                      <button className="ball-btn" onClick={() => onEquipTitle(t.id)}>Wear</button>
+                    ) : (
+                      <span className="perk-lock">Lvl {t.level}</span>
                     )}
                   </div>
                 );

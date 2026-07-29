@@ -10,8 +10,11 @@ import Basketball from "@/components/hoops/Basketball";
 import CourtFloor from "@/components/hoops/CourtFloor";
 import WallDecor from "@/components/hoops/WallDecor";
 import { ballById } from "@/lib/hoopsBalls";
+import { courtById } from "@/lib/hoopsCourts";
+import { perkById } from "@/lib/hoopsPerks";
+import { titleById } from "@/lib/hoopsTitles";
 import { Achievement, newlyUnlocked } from "@/lib/hoopsAchievements";
-import { DAILY_GOAL, DAILY_LOGIN_REWARD, DAILY_REWARD, HoopsProgress, levelFromXp, todayStr, useHoopsProgress } from "@/lib/hoopsStore";
+import { DAILY_GOAL, DAILY_LOGIN_REWARD, DAILY_REWARD, HoopsProgress, levelFromXp, levelReward, todayStr, useHoopsProgress } from "@/lib/hoopsStore";
 import { celebrate } from "@/lib/celebrate";
 
 /* ── tunable feel ─────────────────────────────────────────────── */
@@ -55,6 +58,7 @@ export default function Hoops() {
   const [bonus, setBonus] = useState(false);
   const [burst, setBurst] = useState<{ n: number; x: number; y: number; gold: boolean } | null>(null);
   const [toast, setToast] = useState<Achievement[]>([]);
+  const [levelUp, setLevelUp] = useState<{ level: number; reward: number } | null>(null);
   const [flashTone, setFlashTone] = useState<"correct" | "wrong" | null>(null);
   const [flashPulse, setFlashPulse] = useState(0);
 
@@ -81,6 +85,9 @@ export default function Hoops() {
   const bonusRef = useRef(false);
   const slowMoRef = useRef(false);
   const awaitBuzzerRef = useRef(false);
+  const coinMultRef = useRef(1); // from equipped perk, set at game start
+  const xpMultRef = useRef(1);
+  const lastLevelRef = useRef(0); // for level-up detection (0 = not yet synced)
 
   // Play the hoops soundtrack on the game, restore the crowd on exit.
   useEffect(() => {
@@ -146,8 +153,8 @@ export default function Hoops() {
       setStreak(ns);
       update((prev) => ({
         ...prev,
-        coins: prev.coins + 2 * m * (bonusRef.current ? 2 : 1),
-        xp: prev.xp + 10 * m,
+        coins: prev.coins + 2 * m * (bonusRef.current ? 2 : 1) * coinMultRef.current,
+        xp: prev.xp + 10 * m * xpMultRef.current,
         makes: prev.makes + 1,
         dailyMakes: prev.dailyMakes + 1,
       }));
@@ -306,7 +313,36 @@ export default function Hoops() {
     return { ...prev, coins: prev.coins - skin.price, ownedBalls: [...prev.ownedBalls, id], equippedBall: id };
   });
   const equipBall = (id: string) => update((prev) => (prev.ownedBalls.includes(id) ? { ...prev, equippedBall: id } : prev));
+  const buyCourt = (id: string) => update((prev) => {
+    const c = courtById(id);
+    if (prev.ownedCourts.includes(id) || prev.coins < c.price) return prev;
+    return { ...prev, coins: prev.coins - c.price, ownedCourts: [...prev.ownedCourts, id], equippedCourt: id };
+  });
+  const equipCourt = (id: string) => update((prev) => (prev.ownedCourts.includes(id) ? { ...prev, equippedCourt: id } : prev));
+  const equipTitle = (id: string) => update((prev) => (levelFromXp(prev.xp).level >= titleById(id).level ? { ...prev, equippedTitle: id } : prev));
+  const buyPerk = (id: string) => update((prev) => {
+    const pk = perkById(id);
+    if (prev.ownedPerks.includes(id) || prev.coins < pk.price) return prev;
+    return { ...prev, coins: prev.coins - pk.price, ownedPerks: [...prev.ownedPerks, id], equippedPerk: id };
+  });
+  const equipPerk = (id: string) => update((prev) => (id === "none" || prev.ownedPerks.includes(id) ? { ...prev, equippedPerk: id } : prev));
   const claimLogin = () => update((prev) => (prev.loginDate === todayStr() ? prev : { ...prev, coins: prev.coins + DAILY_LOGIN_REWARD, loginDate: todayStr() }));
+
+  // Reward every level-up with coins + a toast (skips the initial load jump).
+  useEffect(() => {
+    const lv = levelFromXp(progress.xp).level;
+    if (lv > lastLevelRef.current) {
+      if (lastLevelRef.current !== 0 && phase !== "intro") {
+        let reward = 0;
+        for (let L = lastLevelRef.current + 1; L <= lv; L++) reward += levelReward(L);
+        update((prev) => ({ ...prev, coins: prev.coins + reward }));
+        setLevelUp({ level: lv, reward });
+        setTimeout(() => setLevelUp(null), 4200);
+      }
+      lastLevelRef.current = lv;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [progress.xp, phase]);
 
   function rel(e: React.PointerEvent) {
     const r = wrapRef.current!.getBoundingClientRect();
@@ -349,9 +385,14 @@ export default function Hoops() {
   }
 
   function begin() {
-    pointsRef.current = 0; setPoints(0); setStreak(0); streakRef.current = 0;
-    makesRef.current = 0; perfectsRef.current = 0; maxStreakRef.current = 0;
-    setOpp(0); setTime(ROUND);
+    const perk = perkById(progress.equippedPerk);
+    coinMultRef.current = perk.coinMult;
+    xpMultRef.current = perk.xpMult;
+    pointsRef.current = 0; setPoints(0);
+    streakRef.current = perk.startStreak; setStreak(perk.startStreak);
+    maxStreakRef.current = perk.startStreak;
+    makesRef.current = 0; perfectsRef.current = 0;
+    setOpp(0); setTime(ROUND + perk.extraTime);
     slowMoRef.current = false; awaitBuzzerRef.current = false;
     rest(); setPhase("playing");
   }
@@ -362,10 +403,18 @@ export default function Hoops() {
   const idle = phase === "playing" && !ball.current.flying;
   const lv = levelFromXp(progress.xp);
   const equipped = ballById(progress.equippedBall);
+  const court = courtById(progress.equippedCourt);
+  const title = titleById(progress.equippedTitle);
 
   return (
-    <div ref={wrapRef} className={`hoops-full ${settings.reducedMotion ? "rm" : ""}`} onPointerDown={down} onPointerMove={move} onPointerUp={upFn} onPointerCancel={upFn} onPointerLeave={upFn}>
-      <CourtFloor />
+    <div
+      ref={wrapRef}
+      className={`hoops-full ${settings.reducedMotion ? "rm" : ""}`}
+      style={{ ["--court-spot" as string]: court.spot } as React.CSSProperties}
+      onPointerDown={down} onPointerMove={move} onPointerUp={upFn} onPointerCancel={upFn} onPointerLeave={upFn}
+    >
+      <div className="hoops-walltint" aria-hidden="true" style={{ background: court.wall }} />
+      <CourtFloor theme={court} />
       <div className="hoops-spot" aria-hidden="true" />
       <figure className="hoops-frame" aria-hidden="true">
         <img src="/placed/patrick_ewing.jpg" alt="" />
@@ -378,7 +427,7 @@ export default function Hoops() {
       {phase === "playing" && (
         <HoopsHUD
           points={points} mult={multFor(streak)} mm={mm} ss={ss} low={time <= 10}
-          rival={opp} coins={progress.coins} level={lv.level} xpPct={lv.pct}
+          rival={opp} coins={progress.coins} level={lv.level} xpPct={lv.pct} title={title.name}
           dailyMakes={progress.dailyMakes} dailyGoal={DAILY_GOAL}
           onPause={() => setOverlay("pause")} onDaily={() => setOverlay("daily")}
         />
@@ -450,10 +499,11 @@ export default function Hoops() {
             <ul className="hoops-rules">
               <li>60 seconds. Every make is 3 points times your combo.</li>
               <li>Dead-center PERFECT and gold BONUS windows both score double.</li>
+              <li>Earn coins and XP to unlock balls, courts, and perks. Level up for new titles.</li>
               <li>Computer: click, drag, release. Phone: swipe up.</li>
             </ul>
             <button className="btn" onClick={begin}>Start shooting</button>
-            <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => setOverlay("locker")}>Locker</button>
+            <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => setOverlay("locker")}>Locker &amp; rewards</button>
           </div>
         </div>
       )}
@@ -474,7 +524,14 @@ export default function Hoops() {
         <PauseMenu onResume={() => setOverlay("none")} onRestart={() => { begin(); setOverlay("none"); }} onSettings={() => setOverlay("settings")} onLocker={() => setOverlay("locker")} />
       )}
       {overlay === "locker" && (
-        <HoopsLocker progress={progress} onBuy={buyBall} onEquip={equipBall} onClose={() => setOverlay("none")} />
+        <HoopsLocker
+          progress={progress}
+          onBuy={buyBall} onEquip={equipBall}
+          onBuyCourt={buyCourt} onEquipCourt={equipCourt}
+          onEquipTitle={equipTitle}
+          onBuyPerk={buyPerk} onEquipPerk={equipPerk}
+          onClose={() => setOverlay("none")}
+        />
       )}
       {overlay === "settings" && (
         <SettingsMenu assist={settings.assist} reducedMotion={settings.reducedMotion}
@@ -488,6 +545,13 @@ export default function Hoops() {
           onClaim={claimDaily} onClose={() => setOverlay("none")}
           canLogin={progress.loginDate !== todayStr()} loginReward={DAILY_LOGIN_REWARD} onLogin={claimLogin}
         />
+      )}
+
+      {levelUp && (
+        <div className="hoops-levelup" key={levelUp.level}>
+          <b>Level {levelUp.level}</b>
+          <small>+{levelUp.reward} coins</small>
+        </div>
       )}
 
       {toast.length > 0 && (

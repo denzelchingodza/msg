@@ -15,6 +15,7 @@ export interface HudProps {
   coins: number;
   level: number;
   xpPct: number;
+  title: string;
   dailyMakes: number;
   dailyGoal: number;
   onPause: () => void;
@@ -24,9 +25,10 @@ export interface HudProps {
 export default function HoopsHUD(p: HudProps) {
   return (
     <div className="hud">
-      {/* left: level + xp */}
+      {/* left: level + title + xp */}
       <div className="hud-left glass">
         <div className="hud-level">LVL {p.level}</div>
+        <div className="hud-title">{p.title}</div>
         <div className="hud-xp"><i style={{ width: `${p.xpPct * 100}%` }} /></div>
       </div>
 

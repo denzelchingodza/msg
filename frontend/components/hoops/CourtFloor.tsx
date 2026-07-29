@@ -1,12 +1,16 @@
 "use client";
 
+import { CourtTheme, courtById } from "@/lib/hoopsCourts";
+
 /**
  * Perspective half-court floor (SVG): real hardwood look with converging wood
  * planks, plus clean NBA markings — baseline, sidelines, painted key,
  * free-throw line + circle, restricted-area arc, a three-point line (corner
- * segments + arc), and the half-court line + center circle.
+ * segments + arc), and the half-court line + center circle. Colors come from
+ * the active court theme.
  */
-export default function CourtFloor() {
+export default function CourtFloor({ theme }: { theme?: CourtTheme }) {
+  const t = theme ?? courtById("garden");
   const planks = Array.from({ length: 13 }, (_, i) => {
     const xb = (i / 12) * 1000;
     const xt = 500 + (xb - 500) * 0.42;
@@ -34,13 +38,13 @@ export default function CourtFloor() {
       <svg viewBox="0 0 1000 620" width="100%" height="100%" preserveAspectRatio="none">
         <defs>
           <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#6b3f1d" />
-            <stop offset="55%" stopColor="#a4652e" />
-            <stop offset="100%" stopColor="#c98443" />
+            <stop offset="0%" stopColor={t.wood[0]} />
+            <stop offset="55%" stopColor={t.wood[1]} />
+            <stop offset="100%" stopColor={t.wood[2]} />
           </linearGradient>
           <linearGradient id="keyPaint" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#0e3a76" stopOpacity="0.22" />
-            <stop offset="100%" stopColor="#0e3a76" stopOpacity="0.42" />
+            <stop offset="0%" stopColor={t.key} stopOpacity="0.22" />
+            <stop offset="100%" stopColor={t.key} stopOpacity="0.42" />
           </linearGradient>
         </defs>
         <rect x="0" y="0" width="1000" height="620" fill="url(#wood)" />
@@ -55,8 +59,8 @@ export default function CourtFloor() {
 
         {/* dark under-stroke for crispness */}
         <g fill="none" stroke="#231205" strokeOpacity="0.35" strokeWidth="8" strokeLinejoin="round" strokeLinecap="round">{lines}</g>
-        {/* white court lines */}
-        <g fill="none" stroke="#f7fafe" strokeOpacity="0.88" strokeWidth="4.5" strokeLinejoin="round" strokeLinecap="round">{lines}</g>
+        {/* court lines (themed) */}
+        <g fill="none" stroke={t.line} strokeOpacity="0.88" strokeWidth="4.5" strokeLinejoin="round" strokeLinecap="round">{lines}</g>
       </svg>
     </div>
   );

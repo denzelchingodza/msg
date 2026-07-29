@@ -8,6 +8,7 @@
 export interface HudProps {
   points: number;
   mult: number;
+  streak: number;
   mm: string;
   ss: string;
   low: boolean; // clock running low
@@ -48,12 +49,23 @@ export default function HoopsHUD(p: HudProps) {
         <button className="hud-btn glass" onClick={p.onPause} aria-label="Pause">Pause</button>
       </div>
 
-      {/* combo indicator */}
-      {p.mult > 1 && (
+      {/* combo indicator + flame meter to the next multiplier tier */}
+      {p.streak > 0 && (
         <div key={p.mult} className={`hud-combo m${p.mult}`}>
-          ×{p.mult} <span>COMBO</span>
+          <div className="hud-combo-top">×{p.mult} <span>COMBO</span></div>
+          <div className="hud-combo-meter"><i style={{ width: `${tierPct(p.streak) * 100}%` }} /></div>
+          <div className="hud-combo-streak">{p.streak} in a row</div>
         </div>
       )}
     </div>
   );
+}
+
+/** Progress toward the next combo multiplier tier (3, 6, 9). */
+function tierPct(streak: number): number {
+  const tiers = [3, 6, 9];
+  const next = tiers.find((t) => streak < t);
+  if (next === undefined) return 1;
+  const prev = next === 3 ? 0 : next === 6 ? 3 : 6;
+  return (streak - prev) / (next - prev);
 }

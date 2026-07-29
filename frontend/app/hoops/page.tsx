@@ -13,6 +13,7 @@ import { ballById } from "@/lib/hoopsBalls";
 import { courtById } from "@/lib/hoopsCourts";
 import { perkById } from "@/lib/hoopsPerks";
 import { titleById } from "@/lib/hoopsTitles";
+import { nextGoal } from "@/lib/hoopsUnlocks";
 import { Achievement, newlyUnlocked } from "@/lib/hoopsAchievements";
 import { DAILY_GOAL, DAILY_LOGIN_REWARD, DAILY_REWARD, HoopsProgress, levelFromXp, levelReward, todayStr, useHoopsProgress } from "@/lib/hoopsStore";
 import { celebrate } from "@/lib/celebrate";
@@ -57,8 +58,9 @@ export default function Hoops() {
   const [call, setCall] = useState<{ text: string; tone: string; n: number } | null>(null);
   const [bonus, setBonus] = useState(false);
   const [burst, setBurst] = useState<{ n: number; x: number; y: number; gold: boolean } | null>(null);
-  const [toast, setToast] = useState<Achievement[]>([]);
   const [levelUp, setLevelUp] = useState<{ level: number; reward: number } | null>(null);
+  const [coinPop, setCoinPop] = useState<{ n: number; amt: number } | null>(null);
+  const [summary, setSummary] = useState<{ coins: number; xp: number; makes: number; perfects: number; streak: number; unlocks: Achievement[] } | null>(null);
   const [flashTone, setFlashTone] = useState<"correct" | "wrong" | null>(null);
   const [flashPulse, setFlashPulse] = useState(0);
 
@@ -88,6 +90,8 @@ export default function Hoops() {
   const coinMultRef = useRef(1); // from equipped perk, set at game start
   const xpMultRef = useRef(1);
   const lastLevelRef = useRef(0); // for level-up detection (0 = not yet synced)
+  const gameCoinsRef = useRef(0); // coins earned this game (for the summary)
+  const gameXpRef = useRef(0); // xp earned this game
 
   // Play the hoops soundtrack on the game, restore the crowd on exit.
   useEffect(() => {
@@ -151,10 +155,17 @@ export default function Hoops() {
       const gained = 3 * m * (bonusRef.current ? 2 : 1) * (perfect ? 2 : 1);
       pointsRef.current += gained; setPoints(pointsRef.current);
       setStreak(ns);
+      // Coins are deliberately scarce: only your combo multiplier (1-4), with a
+      // small bump for perfect/bonus makes. Unlocks are meant to be a grind.
+      const coinGain = (m + (perfect ? 1 : 0) + (bonusRef.current ? 1 : 0)) * coinMultRef.current;
+      const xpGain = 10 * m * xpMultRef.current;
+      gameCoinsRef.current += coinGain;
+      gameXpRef.current += xpGain;
+      setCoinPop({ n: Date.now(), amt: coinGain });
       update((prev) => ({
         ...prev,
-        coins: prev.coins + 2 * m * (bonusRef.current ? 2 : 1) * coinMultRef.current,
-        xp: prev.xp + 10 * m * xpMultRef.current,
+        coins: prev.coins + coinGain,
+        xp: prev.xp + xpGain,
         makes: prev.makes + 1,
         dailyMakes: prev.dailyMakes + 1,
       }));
@@ -300,9 +311,15 @@ export default function Hoops() {
     if (unlocked.length) {
       np.achievements = [...np.achievements, ...unlocked.map((a) => a.id)];
       np.coins += unlocked.reduce((s, a) => s + a.reward, 0);
-      setToast(unlocked);
-      setTimeout(() => setToast([]), 4200);
     }
+    setSummary({
+      coins: gameCoinsRef.current + unlocked.reduce((s, a) => s + a.reward, 0),
+      xp: gameXpRef.current,
+      makes: makesRef.current,
+      perfects: perfectsRef.current,
+      streak: maxStreakRef.current,
+      unlocks: unlocked,
+    });
     update(() => np);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase]);
@@ -388,6 +405,8 @@ export default function Hoops() {
     const perk = perkById(progress.equippedPerk);
     coinMultRef.current = perk.coinMult;
     xpMultRef.current = perk.xpMult;
+    gameCoinsRef.current = 0; gameXpRef.current = 0;
+    setSummary(null);
     pointsRef.current = 0; setPoints(0);
     streakRef.current = perk.startStreak; setStreak(perk.startStreak);
     maxStreakRef.current = perk.startStreak;
@@ -405,6 +424,7 @@ export default function Hoops() {
   const equipped = ballById(progress.equippedBall);
   const court = courtById(progress.equippedCourt);
   const title = titleById(progress.equippedTitle);
+  const goal = nextGoal(progress);
 
   return (
     <div
@@ -426,7 +446,7 @@ export default function Hoops() {
 
       {phase === "playing" && (
         <HoopsHUD
-          points={points} mult={multFor(streak)} mm={mm} ss={ss} low={time <= 10}
+          points={points} mult={multFor(streak)} streak={streak} mm={mm} ss={ss} low={time <= 10}
           rival={opp} coins={progress.coins} level={lv.level} xpPct={lv.pct} title={title.name}
           dailyMakes={progress.dailyMakes} dailyGoal={DAILY_GOAL}
           onPause={() => setOverlay("pause")} onDaily={() => setOverlay("daily")}
@@ -490,6 +510,10 @@ export default function Hoops() {
       {idle && <div className="hoops-grab">Drag up to shoot</div>}
       {call && <div key={call.n} className={`hoops-call ${call.tone}`}>{call.text}</div>}
 
+      {coinPop && phase === "playing" && (
+        <div key={coinPop.n} className="hoops-coinpop">+{coinPop.amt}</div>
+      )}
+
       {phase === "intro" && (
         <div className="hoops-modal">
           <div className="hoops-card">
@@ -499,23 +523,65 @@ export default function Hoops() {
             <ul className="hoops-rules">
               <li>60 seconds. Every make is 3 points times your combo.</li>
               <li>Dead-center PERFECT and gold BONUS windows both score double.</li>
-              <li>Earn coins and XP to unlock balls, courts, and perks. Level up for new titles.</li>
+              <li>Coins are hard-earned. Grind them to unlock balls, courts, and perks. Level up for titles.</li>
               <li>Computer: click, drag, release. Phone: swipe up.</li>
             </ul>
+            {goal && (
+              <div className="hoops-goal">
+                <div className="hoops-goal-top">
+                  <span>Next unlock: {goal.name}</span>
+                  <span>{goal.have}/{goal.need}</span>
+                </div>
+                <div className="hoops-goal-bar"><i style={{ width: `${(goal.have / goal.need) * 100}%` }} /></div>
+              </div>
+            )}
             <button className="btn" onClick={begin}>Start shooting</button>
             <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => setOverlay("locker")}>Locker &amp; rewards</button>
           </div>
         </div>
       )}
 
-      {phase === "done" && (
+      {phase === "done" && summary && (
         <div className="hoops-modal">
           <div className="hoops-card">
             <p className="kicker">Final buzzer</p>
             <p className="hoops-final">{points}<small> PTS</small></p>
             <h2 className="hoops-modal-title">{points > opp * 3 ? "You beat the Rival" : points === opp * 3 ? "Deadlock" : "Rival took it"}</h2>
-            <p className="hoops-modal-body">Level {lv.level} &nbsp; Best {Math.max(progress.best, points)} &nbsp; {progress.coins} coins</p>
+
+            <div className="hoops-recap">
+              <div className="recap-cell"><b>+{summary.coins}</b><span>Coins</span></div>
+              <div className="recap-cell"><b>+{summary.xp}</b><span>XP</span></div>
+              <div className="recap-cell"><b>{summary.makes}</b><span>Makes</span></div>
+              <div className="recap-cell"><b>{summary.perfects}</b><span>Perfects</span></div>
+              <div className="recap-cell"><b>×{summary.streak}</b><span>Best streak</span></div>
+              <div className="recap-cell"><b>{Math.max(progress.best, points)}</b><span>Best ever</span></div>
+            </div>
+
+            <div className="hoops-xpwrap">
+              <div className="hoops-xprow"><span>Level {lv.level}</span><span>{lv.into}/{lv.need} XP</span></div>
+              <div className="hoops-xpbar"><i style={{ width: `${lv.pct * 100}%` }} /></div>
+            </div>
+
+            {summary.unlocks.length > 0 && (
+              <div className="hoops-newunlocks">
+                {summary.unlocks.map((a) => (
+                  <div key={a.id} className="hoops-newrow"><b>Unlocked</b><small>{a.name} &nbsp; +{a.reward}</small></div>
+                ))}
+              </div>
+            )}
+
+            {goal && (
+              <div className="hoops-goal">
+                <div className="hoops-goal-top">
+                  <span>Next unlock: {goal.name}</span>
+                  <span>{goal.have}/{goal.need}</span>
+                </div>
+                <div className="hoops-goal-bar"><i style={{ width: `${(goal.have / goal.need) * 100}%` }} /></div>
+              </div>
+            )}
+
             <button className="btn" onClick={begin}>Run it back</button>
+            <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => setOverlay("locker")}>Locker &amp; rewards</button>
           </div>
         </div>
       )}
@@ -554,15 +620,6 @@ export default function Hoops() {
         </div>
       )}
 
-      {toast.length > 0 && (
-        <div className="hoops-toast">
-          {toast.map((a) => (
-            <div key={a.id} className="hoops-toast-row">
-              <div><b>Achievement unlocked</b><small>{a.name} &nbsp; +{a.reward} coins</small></div>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

@@ -59,8 +59,9 @@ export default function HoopsLocker({
               {BALLS.map((b) => {
                 const owned = progress.ownedBalls.includes(b.id);
                 const equipped = progress.equippedBall === b.id;
+                const afford = !owned && progress.coins >= b.price;
                 return (
-                  <div key={b.id} className={`ball-card ${equipped ? "equipped" : ""}`}>
+                  <div key={b.id} className={`ball-card ${equipped ? "equipped" : ""} ${afford ? "afford" : ""}`}>
                     <div className="ball-prev"><Basketball skin={b} gid={`shop-${b.id}`} /></div>
                     <b>{b.name}</b>
                     {equipped ? (
@@ -81,8 +82,9 @@ export default function HoopsLocker({
               {COURTS.map((c) => {
                 const owned = progress.ownedCourts.includes(c.id);
                 const equipped = progress.equippedCourt === c.id;
+                const afford = !owned && progress.coins >= c.price;
                 return (
-                  <div key={c.id} className={`ball-card ${equipped ? "equipped" : ""}`}>
+                  <div key={c.id} className={`ball-card ${equipped ? "equipped" : ""} ${afford ? "afford" : ""}`}>
                     <div
                       className="court-prev"
                       style={{
@@ -111,8 +113,9 @@ export default function HoopsLocker({
               {[NO_PERK, ...PERKS].map((pk) => {
                 const owned = pk.id === "none" || progress.ownedPerks.includes(pk.id);
                 const equipped = progress.equippedPerk === pk.id;
+                const afford = !owned && progress.coins >= pk.price;
                 return (
-                  <div key={pk.id} className={`perk-card ${equipped ? "on" : ""}`}>
+                  <div key={pk.id} className={`perk-card ${equipped ? "on" : ""} ${afford ? "afford" : ""}`}>
                     <span className="perk-body"><b>{pk.name}</b><small>{pk.desc}</small></span>
                     {equipped ? (
                       <span className="perk-eq">Active</span>

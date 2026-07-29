@@ -82,6 +82,14 @@ export default function Hoops() {
   const slowMoRef = useRef(false);
   const awaitBuzzerRef = useRef(false);
 
+  // Play the hoops soundtrack on the game, restore the crowd on exit.
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("msg:track", { detail: "hoops" }));
+    return () => {
+      window.dispatchEvent(new CustomEvent("msg:track", { detail: "garden" }));
+    };
+  }, []);
+
   useEffect(() => { pausedRef.current = overlay !== "none"; }, [overlay]);
   useEffect(() => { settingsRef.current = settings; }, [settings]);
   useEffect(() => { try { const r = localStorage.getItem("msg_hoops_settings"); if (r) setSettings(JSON.parse(r)); } catch {} }, []);

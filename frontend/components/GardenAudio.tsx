@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 const TRACKS = {
   garden: "/audio/garden.mp3",
   knicks: "/audio/knicks.mp3",
+  hoops: "/audio/hoops.mp3",
 } as const;
 type Track = keyof typeof TRACKS;
 

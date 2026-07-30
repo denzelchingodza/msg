@@ -46,6 +46,10 @@ const PHOTO_AFTER: Record<string, { src: string; caption: string }> = {
     src: "/photos/nineties_knicks_poster.jpg",
     caption: "Oakley, Ewing, Starks. The most feared team alive.",
   },
+  "1996": {
+    src: "/photos/starks_and_ewing.jpg",
+    caption: "Starks and Ewing. Every night, they made you earn it.",
+  },
   "1999": {
     src: "/photos/ewing_over_the_pacers.jpg",
     caption: "Ewing over the Pacers. The endless war for the East.",

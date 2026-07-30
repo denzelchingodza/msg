@@ -134,6 +134,21 @@ export default function FaithPage() {
         position="center 30%"
       />
 
+      <p
+        style={{
+          maxWidth: 720,
+          margin: "18px auto 0",
+          textAlign: "center",
+          color: "var(--silver)",
+          lineHeight: 1.7,
+          fontSize: 15,
+        }}
+      >
+        Eighty years in one scroll. Two early banners, then fifty three years of
+        heartbreak and faith, then everything all at once. This is the whole
+        story, era by era, the way it actually felt to live it.
+      </p>
+
       {offline && (
         <div style={{ marginTop: 26 }}>
           <span className="offline">

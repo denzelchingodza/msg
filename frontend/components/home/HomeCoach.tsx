@@ -13,6 +13,7 @@ interface Tip {
 const TIPS: Record<string, Tip> = {
   hero: { title: "Welcome", text: "Welcome to the Mecca. Scroll on down to see everything inside." },
   featured: { title: "The main event", text: "MSG Hoops is the flagship game. Flick the ball and race a rival.", cta: { label: "Play now", href: "/hoops" } },
+  faith: { title: "The Faith", text: "The whole Knicks story, era by era, from 1946 to the parade.", cta: { label: "Read it", href: "/faith" } },
   games: { title: "More to play", text: "Trivia, roasts, hot takes, and facts. Tap any card to jump in." },
   story: { title: "The story", text: "The Faith is the whole journey, from 1946 all the way to the parade.", cta: { label: "Read it", href: "/faith" } },
   gallery: { title: "The gallery", text: "Every championship photo, on a loop. Soak it in." },

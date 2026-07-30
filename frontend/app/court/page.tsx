@@ -72,6 +72,16 @@ export default function Home() {
         </div>
       </Link>
 
+      <Link href="/faith" className="hero-play faith reveal" data-coach="faith">
+        <img className="hero-play-img" src="/photos/reed_19_brunson_11.jpg" alt="" />
+        <div className="hero-play-body">
+          <span className="hero-play-tag">The story</span>
+          <b>The Faith</b>
+          <small>Why we&rsquo;re like this. Eighty years of heartbreak and glory, from 1946 to the parade, told era by era.</small>
+          <span className="hero-play-cta">Read the story</span>
+        </div>
+      </Link>
+
       <p className="home-eyebrow center reveal">More to play</p>
       <div className="feat-grid reveal" data-coach="games">{games.map(card)}</div>
 

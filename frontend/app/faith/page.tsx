@@ -22,6 +22,14 @@ const PHOTO_AFTER: Record<string, { src: string; caption: string }> = {
     src: "/photos/knicks_1946_vintage.jpg",
     caption: "New York basketball. Since 1946.",
   },
+  "1951": {
+    src: "/photos/vintage_knicks_tickets.jpg",
+    caption: "Vintage Garden ducats. The heartbreak started early.",
+  },
+  "1968": {
+    src: "/photos/willis_reed.jpg",
+    caption: "Willis Reed. The Captain who set the standard.",
+  },
   "1970": {
     src: "/photos/reed_19_brunson_11.jpg",
     caption: "Number 19 walked so number 11 could dance",
@@ -33,6 +41,10 @@ const PHOTO_AFTER: Record<string, { src: string; caption: string }> = {
   "1973": {
     src: "/photos/three_titles_1970_1973_2026.jpg",
     caption: "Two banners in the rafters. The third was 53 years away.",
+  },
+  "1984": {
+    src: "/photos/bernard_king.jpg",
+    caption: "Bernard King. The most electric scorer alive.",
   },
   "1985": {
     src: "/photos/ewing_vs_bird_1986.jpg",
@@ -61,6 +73,18 @@ const PHOTO_AFTER: Record<string, { src: string; caption: string }> = {
   "2011": {
     src: "/photos/melo_garden_erupts.jpg",
     caption: "Melo time. The Garden on its feet.",
+  },
+  "2012": {
+    src: "/photos/spike_lee_courtside.jpg",
+    caption: "Spike Lee courtside. The faith never once left the building.",
+  },
+  "2013": {
+    src: "/photos/knicks_2012_13_roster.jpg",
+    caption: "The 2012 to 13 crew. Melo's division banner team.",
+  },
+  "2017": {
+    src: "/photos/retro_phil_jackson.jpg",
+    caption: "Phil Jackson's Garden. The long dark had arrived.",
   },
   "2021": {
     src: "/photos/thank_you_fans_new_york_forever.jpg",

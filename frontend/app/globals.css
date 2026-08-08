@@ -170,6 +170,12 @@ h1, h2, .display {
   align-items: center;
   gap: 20px;
 }
+.nav-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
 .nav-champ {
   margin-left: auto;
   font-family: var(--cond);

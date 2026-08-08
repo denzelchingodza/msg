@@ -19,12 +19,12 @@ export default function SiteNav() {
       <Link href="/court" className="nav-logo" aria-label="MSG home court">
         <span className="nav-mark">MSG</span>
       </Link>
-      <div className="nav-tools">
+      <div className="nav-right">
         <GardenAudio />
+        <Link href="/court" className="nav-home">
+          Home Court
+        </Link>
       </div>
-      <Link href="/court" className="nav-home">
-        Home Court
-      </Link>
     </header>
   );
 }

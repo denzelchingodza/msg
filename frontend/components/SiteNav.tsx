@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import GardenAudio from "@/components/GardenAudio";
-import GardenTime from "@/components/GardenTime";
 import HeaderLocation from "@/components/HeaderLocation";
 
 export default function SiteNav() {
@@ -22,7 +21,6 @@ export default function SiteNav() {
         <span className="nav-mark">MSG</span>
       </Link>
       <div className="nav-tools">
-        <GardenTime />
         <HeaderLocation />
         <GardenAudio />
       </div>

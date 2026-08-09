@@ -35,6 +35,7 @@ export default function SiteNav() {
         </span>
         <span className="nav-mark">MSG</span>
       </Link>
+      <span className="nav-champs">&rsquo;26 Champs</span>
 
       <nav className="nav-links">
         {LINKS.map((l) => (

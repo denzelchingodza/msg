@@ -226,18 +226,29 @@ h1, h2, .display {
   font-size: 13px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--blue-soft);
-  background: rgba(133, 183, 235, 0.06);
-  border: 1px solid rgba(133, 183, 235, 0.28);
+  color: #fff;
+  background: linear-gradient(180deg, var(--orange-hot), var(--orange));
+  border: 1px solid var(--orange);
   border-radius: 999px;
   padding: 8px 18px;
   white-space: nowrap;
-  transition: color 0.18s, border-color 0.18s, background 0.18s;
+  box-shadow: 0 6px 16px rgba(245, 132, 38, 0.35);
+  transition: filter 0.18s, box-shadow 0.18s, transform 0.18s;
 }
-.nav-home:hover {
-  color: #fff;
-  border-color: var(--orange);
-  background: rgba(245, 132, 38, 0.16);
+.nav-home:hover { filter: brightness(1.08); box-shadow: 0 8px 22px rgba(245, 132, 38, 0.5); transform: translateY(-1px); }
+/* gold championship chip by the logo */
+.nav-champs {
+  font-family: var(--cond);
+  font-weight: 800;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #2a1c02;
+  background: linear-gradient(180deg, #ffe9a8, #f4c651 55%, #d9a021);
+  border-radius: 999px;
+  padding: 5px 11px;
+  white-space: nowrap;
+  box-shadow: 0 2px 12px rgba(245, 200, 90, 0.4);
 }
 
 /* ═══ page ════════════════════════════════════════════ */
@@ -787,6 +798,7 @@ h1, h2, .display {
   .nav { padding: 12px 16px; gap: 12px; }
   .nav-min { padding: 9px 16px; }
   .nav-champ { display: none; }
+  .nav-links, .nav-champs { display: none; }
   .court-wrap { display: none; }
   .court-list { display: grid; gap: 12px; margin-top: 30px; }
   .court-list a {

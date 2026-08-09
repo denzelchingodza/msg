@@ -159,7 +159,8 @@ export default function GardenAudio() {
       aria-label={playing ? "Mute the Garden" : "Hear the Garden"}
       title={playing ? "Mute the Garden" : "Hear the Garden"}
     >
-      {playing ? "♪ CROWD ON" : "CROWD OFF"}
+      <span className="eq" aria-hidden="true"><i /><i /><i /><i /></span>
+      <span className="audio-label">{playing ? "Crowd on" : "Crowd off"}</span>
     </button>
   );
 }

@@ -177,6 +177,31 @@ h1, h2, .display {
   display: flex;
   gap: 4px;
 }
+.nav-link {
+  position: relative;
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--silver);
+  padding: 6px 12px;
+  transition: color 0.18s var(--ease);
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 12px; right: 12px; bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--orange-hot), var(--orange));
+  transform: scaleX(0);
+  transition: transform 0.22s var(--ease);
+}
+.nav-link:hover { color: #fff; }
+.nav-link:hover::after { transform: scaleX(1); }
+.nav-link.on { color: #fff; }
+.nav-link.on::after { transform: scaleX(1); }
 .nav-champ {
   margin-left: auto;
   font-family: var(--cond);

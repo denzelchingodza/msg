@@ -144,6 +144,7 @@ export default function FaithPage() {
 
   return (
     <main className="page">
+      <span className="spot-chip"><i aria-hidden="true" />The Tunnel &middot; The Garden</span>
       <p className="kicker">The Faith</p>
       <h1 className="page-title">Why We&rsquo;re Like This</h1>
       <p className="page-sub">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Anton, Barlow_Condensed, Graduate, Inter } from "next/font/google";
 import SiteFooter from "@/components/SiteFooter";
 import SiteNav from "@/components/SiteNav";
+import Tactile from "@/components/Tactile";
 import WakeGate from "@/components/WakeGate";
 import "./globals.css";
 
@@ -34,6 +35,7 @@ export default function RootLayout({
     >
       <body>
         <WakeGate />
+        <Tactile />
         <SiteNav />
         {children}
         <SiteFooter />

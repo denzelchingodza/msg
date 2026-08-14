@@ -40,6 +40,7 @@ export default function RageBait() {
 
   return (
     <main className="page compact center">
+      <span className="spot-chip"><i aria-hidden="true" />Right Paint &middot; The Garden</span>
       <p className="kicker">Rage Bait Machine</p>
       <h1 className="page-title">Objectively True Statements</h1>
       <p className="page-sub">

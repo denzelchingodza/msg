@@ -94,6 +94,7 @@ export default function Buzzer() {
   return (
     <main className="page compact">
       <EdgeFlash tone={flashTone} pulse={flashPulse} />
+      <div className="center"><span className="spot-chip"><i aria-hidden="true" />Baseline &middot; The Garden</span></div>
       <p className="kicker center">Center court · the shot clock is running</p>
       <h1 className="page-title center retro">Beat the Buzzer</h1>
       <p className="page-sub center">

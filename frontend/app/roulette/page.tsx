@@ -75,6 +75,7 @@ export default function Roulette() {
   return (
     <main className="page compact center">
       {flashKey > 0 && <div key={flashKey} className="flash-overlay" />}
+      <span className="spot-chip"><i aria-hidden="true" />Center Court &middot; The Garden</span>
       <p className="kicker">Fact Roulette</p>
       <h1 className="page-title">Bing Bong Machine</h1>
       <p className="page-sub">{streakLine}</p>

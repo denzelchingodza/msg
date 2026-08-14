@@ -1641,6 +1641,17 @@ h1, h2, .display {
   box-shadow: 0 20px 46px rgba(0, 0, 0, 0.5), 0 0 34px rgba(245, 132, 38, 0.3);
 }
 [role="button"], .stage-card, button { cursor: pointer; }
+/* keyboard-visible focus ring (accessibility) */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
 .stage-title {
   font-family: var(--display);
   font-size: clamp(24px, 4vw, 36px);

@@ -580,6 +580,38 @@ h1, h2, .display {
 
 .big-quote { font-size: clamp(21px, 3vw, 30px); line-height: 1.45; font-weight: 600; }
 
+/* Facts / Cap reactions with a live tally */
+.react { margin-top: 20px; }
+.react-btns { display: flex; gap: 10px; }
+.react-btn {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--cond); font-weight: 700; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--silver);
+  background: rgba(133, 183, 235, 0.06);
+  border: 1px solid rgba(133, 183, 235, 0.24);
+  border-radius: 999px; padding: 11px 16px; cursor: pointer;
+}
+.react-btn b { font-family: var(--graduate, var(--display)); font-size: 15px; animation: reactPop 0.3s var(--ease); }
+.react-btn.facts.on { color: #fff; border-color: var(--orange); background: rgba(245, 132, 38, 0.16); }
+.react-btn.cap.on { color: #fff; border-color: var(--blue-soft); background: rgba(133, 183, 235, 0.18); }
+.react-bar {
+  height: 10px; margin-top: 12px;
+  border-radius: 999px; overflow: hidden;
+  background: rgba(133, 183, 235, 0.28);
+}
+.react-bar i {
+  display: block; height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--orange-hot), var(--orange));
+  transition: width 0.55s cubic-bezier(0.22, 0.8, 0.3, 1);
+}
+.react-tally {
+  margin-top: 8px;
+  font-family: var(--cond); font-weight: 600; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--silver);
+}
+@keyframes reactPop { 0% { transform: scale(1.4); } 100% { transform: scale(1); } }
+
 /* ═══ quiz ════════════════════════════════════════════ */
 .qhead {
   display: flex;

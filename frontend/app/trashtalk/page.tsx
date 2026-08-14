@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Concourse from "@/components/Concourse";
 import EdgeFlash from "@/components/EdgeFlash";
+import Reactions from "@/components/Reactions";
 import { api } from "@/lib/api";
 import { celebrate } from "@/lib/celebrate";
 
@@ -131,6 +132,7 @@ export default function TrashTalk() {
           <p className="gold cond" style={{ fontSize: 16 }}>
             {line.closer}
           </p>
+          <Reactions id={line.line} />
           <button
             className="btn btn-ghost"
             style={{ marginTop: 16, padding: "12px 30px", fontSize: 14 }}

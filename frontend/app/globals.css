@@ -281,32 +281,6 @@ h1, h2, .display {
 .gold { color: var(--gold); }
 .center { text-align: center; }
 
-/* broadcast "location" chip — the gameday tag that heads each page */
-.spot-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--cond);
-  font-weight: 700;
-  font-size: 11px;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--blue-soft);
-  background: rgba(133, 183, 235, 0.08);
-  border: 1px solid rgba(133, 183, 235, 0.22);
-  border-radius: 999px;
-  padding: 6px 14px;
-  margin-bottom: 14px;
-}
-.spot-chip i {
-  width: 7px; height: 7px; border-radius: 999px;
-  background: var(--orange);
-  box-shadow: 0 0 8px var(--orange);
-  animation: spotPulse 1.4s ease-in-out infinite;
-}
-.center .spot-chip { margin-left: auto; margin-right: auto; }
-@keyframes spotPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.45; transform: scale(0.65); } }
-
 /* ═══ hero ════════════════════════════════════════════ */
 .hero { text-align: center; padding: 30px 0 8px; }
 .hero h1 {

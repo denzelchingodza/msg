@@ -130,7 +130,6 @@ export default function Championship() {
 
   return (
     <main className="page center">
-      <span className="spot-chip"><i aria-hidden="true" />Right Corner &middot; The Garden</span>
       <p className="kicker">Championship &rsquo;26</p>
       <h1 className="page-title">The Drought Is Dead</h1>
 

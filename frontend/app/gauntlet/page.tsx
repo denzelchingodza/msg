@@ -128,6 +128,7 @@ export default function Gauntlet() {
   if (!run) {
     return (
       <main className="page center">
+        <span className="spot-chip"><i aria-hidden="true" />Left Paint &middot; The Garden</span>
         <p className="kicker">The Gauntlet</p>
         <h1 className="page-title">10 Questions. 24 Seconds Each.</h1>
         <p className="page-sub">

@@ -81,6 +81,7 @@ export default function TrashTalk() {
   return (
     <main className="page compact center">
       <EdgeFlash tone={flashPulse > 0 ? "roast" : null} pulse={flashPulse} strong={flashStrong} />
+      <span className="spot-chip"><i aria-hidden="true" />Left Corner &middot; The Garden</span>
       <p className="kicker">Trash Talk Generator</p>
       <h1 className="page-title">The League Report Card</h1>
       <p className="page-sub">

@@ -1664,6 +1664,19 @@ textarea:focus-visible {
   outline-offset: 3px;
   border-radius: 6px;
 }
+/* tactile press feedback — snappy 60-90ms, engine micro-interaction spec */
+button, [role="button"], .team-tile, .option, .feat, .score-pill, .ball-btn {
+  transition: transform 0.09s var(--ease), filter 0.12s var(--ease), background 0.15s var(--ease), border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+button:not(:disabled):active,
+[role="button"]:active,
+.team-tile:active,
+.option:not(:disabled):active,
+.feat:active,
+.score-pill:active,
+.ball-btn:not(:disabled):active {
+  transform: scale(0.96);
+}
 .stage-title {
   font-family: var(--display);
   font-size: clamp(24px, 4vw, 36px);

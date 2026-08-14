@@ -142,6 +142,29 @@ export default function FaithPage() {
     return () => io.disconnect();
   }, [faith]);
 
+  // Scroll-spy: which era is currently in view (drives the rail highlight).
+  const [activeIdx, setActiveIdx] = useState(0);
+  useEffect(() => {
+    if (!faith) return;
+    const els = faith.beats
+      .map((_, i) => document.getElementById(`era-${i}`))
+      .filter((el): el is HTMLElement => !!el);
+    if (!els.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActiveIdx(Number((e.target as HTMLElement).dataset.idx));
+        });
+      },
+      { rootMargin: "-40% 0px -40% 0px", threshold: 0 }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [faith]);
+
+  const jump = (i: number) =>
+    document.getElementById(`era-${i}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+
   return (
     <main className="page">
       <p className="kicker">The Faith</p>
@@ -181,9 +204,23 @@ export default function FaithPage() {
         </div>
       )}
 
+      {faith && (
+        <nav className="faith-rail" aria-label="Jump through the eras">
+          {faith.beats.map((b, i) => (
+            <button
+              key={b.era + b.title}
+              className={`faith-rail-dot ${i === activeIdx ? "on" : ""}`}
+              onClick={() => jump(i)}
+            >
+              <span className="faith-rail-label">{b.era}</span>
+            </button>
+          ))}
+        </nav>
+      )}
+
       <div className="timeline" ref={listRef}>
-        {faith?.beats.map((b) => (
-          <div key={b.era + b.title}>
+        {faith?.beats.map((b, i) => (
+          <div key={b.era + b.title} id={`era-${i}`} data-idx={i} className="beat-block">
             <div className="beat">
               <div className="era">{b.era}</div>
               <div className="body">

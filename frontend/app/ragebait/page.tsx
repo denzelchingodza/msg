@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Concourse from "@/components/Concourse";
+import Reactions from "@/components/Reactions";
 import { api, syncProfile } from "@/lib/api";
 import { celebrate } from "@/lib/celebrate";
 
@@ -47,6 +48,7 @@ export default function RageBait() {
       </p>
 
       {take ? (
+        <>
         <div
           key={take.take}
           className="card card-hot ticket swap card-fixed"
@@ -66,6 +68,10 @@ export default function RageBait() {
             </p>
           </div>
         </div>
+        <div style={{ maxWidth: 840, margin: "0 auto" }}>
+          <Reactions id={take.take} />
+        </div>
+        </>
       ) : (
         <div
           className="stage-card taped"

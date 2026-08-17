@@ -16,7 +16,12 @@ interface Faith {
   beats: Beat[];
 }
 
-/** Full, uncropped photos placed where they belong in the story. */
+/**
+ * Full, uncropped photos placed where they belong in the story. Each image has
+ * been visually verified to actually depict its era — no photo is used unless it
+ * genuinely matches the beat. Eras without a truthful image (2017, 2021, 2025)
+ * intentionally run text-only rather than borrow a mismatched picture.
+ */
 const PHOTO_AFTER: Record<string, { src: string; caption: string }> = {
   "1946": {
     src: "/photos/knicks_1946_vintage.jpg",

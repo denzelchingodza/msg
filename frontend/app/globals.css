@@ -174,44 +174,6 @@ h1, h2, .display {
   text-transform: lowercase;
   color: var(--silver);
 }
-.nav-right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.nav-links {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 4px;
-}
-.nav-link {
-  position: relative;
-  font-family: var(--cond);
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--silver);
-  padding: 6px 12px;
-  transition: color 0.18s var(--ease);
-}
-.nav-link::after {
-  content: "";
-  position: absolute;
-  left: 12px; right: 12px; bottom: 0;
-  height: 2px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--orange-hot), var(--orange));
-  transform: scaleX(0);
-  transition: transform 0.22s var(--ease);
-}
-.nav-link:hover { color: #fff; }
-.nav-link:hover::after { transform: scaleX(1); }
-.nav-link.on { color: #fff; }
-.nav-link.on::after { transform: scaleX(1); }
 .nav-champ {
   margin-left: auto;
   font-family: var(--cond);
@@ -220,37 +182,6 @@ h1, h2, .display {
   letter-spacing: 0.2em;
   color: var(--gold);
 }
-.nav-home {
-  font-family: var(--cond);
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #fff;
-  background: linear-gradient(180deg, var(--orange-hot), var(--orange));
-  border: 1px solid var(--orange);
-  border-radius: 999px;
-  padding: 8px 18px;
-  white-space: nowrap;
-  box-shadow: 0 6px 16px rgba(245, 132, 38, 0.35);
-  transition: filter 0.18s, box-shadow 0.18s, transform 0.18s;
-}
-.nav-home:hover { filter: brightness(1.08); box-shadow: 0 8px 22px rgba(245, 132, 38, 0.5); transform: translateY(-1px); }
-/* gold championship chip by the logo */
-.nav-champs {
-  font-family: var(--cond);
-  font-weight: 800;
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #2a1c02;
-  background: linear-gradient(180deg, #ffe9a8, #f4c651 55%, #d9a021);
-  border-radius: 999px;
-  padding: 5px 11px;
-  white-space: nowrap;
-  box-shadow: 0 2px 12px rgba(245, 200, 90, 0.4);
-}
-
 /* ═══ page ════════════════════════════════════════════ */
 .page {
   width: min(1080px, calc(100% - 44px));
@@ -893,7 +824,6 @@ h1, h2, .display {
   .nav { padding: 12px 16px; gap: 12px; }
   .nav-min { padding: 9px 16px; }
   .nav-champ { display: none; }
-  .nav-links, .nav-champs { display: none; }
   .court-wrap { display: none; }
   .court-list { display: grid; gap: 12px; margin-top: 30px; }
   .court-list a {
@@ -2204,7 +2134,7 @@ a, button, summary, label,
 .zone, .tab, .option, .team-tile,
 .score-pill, .game-card, .game-arrow,
 .audio-btn, .sound-pill, .dots i,
-.nav-home, .intro-skip a, .sf-repo, .made-by {
+.intro-skip a, .sf-repo, .made-by {
   cursor: var(--cursor-click);
 }
 .btn:disabled, button:disabled { cursor: wait; }

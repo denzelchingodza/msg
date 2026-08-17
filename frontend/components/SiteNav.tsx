@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import SectionPager from "@/components/SectionPager";
 
 export default function SiteNav() {
   const [min, setMin] = useState(false);
@@ -26,6 +27,7 @@ export default function SiteNav() {
         </span>
         <span className="nav-mark">MSG</span>
       </Link>
+      <SectionPager />
     </header>
   );
 }

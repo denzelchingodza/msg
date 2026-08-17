@@ -88,7 +88,7 @@ const PHOTO_AFTER: Record<string, { src: string; caption: string }> = {
   },
   "Jan 2026": {
     src: "/photos/new_york_or_nowhere.jpg",
-    caption: "New York or Nowhere. The city showed up anyway.",
+    caption: "New York or Nowhere. The oldest promise in the building.",
   },
   "June 2026": {
     src: "/photos/down_29_comeback.jpg",

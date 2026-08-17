@@ -4,10 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SECTIONS } from "@/lib/sections";
 
-/** The walk through the building, in order. Home first, then every section. */
+/** The walk through the building, in order. Home first, then every section
+ * except MSG Hoops — that is a full-screen game with no pager inside it, so we
+ * never route people into it from here. Hoops stays reachable from Home Court. */
 const TOUR = [
   { href: "/court", title: "Home Court" },
-  ...SECTIONS.map((s) => ({ href: s.href, title: s.title })),
+  ...SECTIONS.filter((s) => s.href !== "/hoops").map((s) => ({ href: s.href, title: s.title })),
 ];
 
 function Chevron({ dir }: { dir: "left" | "right" }) {

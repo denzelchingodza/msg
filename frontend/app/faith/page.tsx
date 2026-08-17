@@ -86,10 +86,6 @@ const PHOTO_AFTER: Record<string, { src: string; caption: string }> = {
     src: "/photos/brunson_at_the_garden.jpg",
     caption: "Jalen Brunson. The quiet signing that changed everything.",
   },
-  "2025": {
-    src: "/photos/mcbride_and_towns.jpg",
-    caption: "Towns and McBride. The roster reshaped for one more push.",
-  },
   "Jan 2026": {
     src: "/photos/new_york_or_nowhere.jpg",
     caption: "New York or Nowhere. The city showed up anyway.",

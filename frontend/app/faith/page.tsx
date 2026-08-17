@@ -79,8 +79,8 @@ const PHOTO_AFTER: Record<string, { src: string; caption: string }> = {
     caption: "Spike Lee courtside. The faith never once left the building.",
   },
   "2013": {
-    src: "/photos/knicks_2012_13_roster.jpg",
-    caption: "The 2012 to 13 crew. Melo's division banner team.",
+    src: "/photos/melo_anthony.jpg",
+    caption: "Carmelo and J.R. Smith. The team that took the division.",
   },
   "2017": {
     src: "/photos/retro_phil_jackson.jpg",

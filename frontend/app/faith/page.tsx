@@ -91,8 +91,8 @@ const PHOTO_AFTER: Record<string, { src: string; caption: string }> = {
     caption: "Thank you fans. New York forever.",
   },
   "2022": {
-    src: "/photos/the_brunsons_locker_room.jpg",
-    caption: "The quiet signing that changed everything.",
+    src: "/photos/brunson_at_the_garden.jpg",
+    caption: "Jalen Brunson. The quiet signing that changed everything.",
   },
   "2025": {
     src: "/photos/mcbride_and_towns.jpg",

@@ -91,8 +91,8 @@ const PHOTO_AFTER: Record<string, { src: string; caption: string }> = {
     caption: "New York or Nowhere. The oldest promise in the building.",
   },
   "June 2026": {
-    src: "/photos/down_29_comeback.jpg",
-    caption: "How do you ever quit after a comeback from down 29 in the Finals?",
+    src: "/photos/ewing_and_towns_trophy.jpg",
+    caption: "Patrick Ewing and Karl-Anthony Towns with the Larry O'Brien. Full circle.",
   },
   Forever: {
     src: "/photos/new_yorker_cover_2026.jpg",

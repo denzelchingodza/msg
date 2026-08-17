@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Anton, Barlow_Condensed, Graduate, Inter } from "next/font/google";
+import GardenAudio from "@/components/GardenAudio";
 import SiteFooter from "@/components/SiteFooter";
 import SiteNav from "@/components/SiteNav";
 import Tactile from "@/components/Tactile";
@@ -38,6 +39,9 @@ export default function RootLayout({
         <Tactile />
         <SiteNav />
         {children}
+        <div className="crowd-float">
+          <GardenAudio />
+        </div>
         <SiteFooter />
         <div className="court-stripe" aria-hidden="true" />
       </body>

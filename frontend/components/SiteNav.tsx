@@ -1,19 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import GardenAudio from "@/components/GardenAudio";
-
-const LINKS = [
-  { href: "/hoops", label: "Hoops" },
-  { href: "/faith", label: "The Faith" },
-  { href: "/championship", label: "Chip '26" },
-];
 
 export default function SiteNav() {
   const [min, setMin] = useState(false);
-  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setMin(window.scrollY > 8);
@@ -35,22 +26,6 @@ export default function SiteNav() {
         </span>
         <span className="nav-mark">MSG</span>
       </Link>
-      <span className="nav-champs">&rsquo;26 Champs</span>
-
-      <nav className="nav-links">
-        {LINKS.map((l) => (
-          <Link key={l.href} href={l.href} className={`nav-link ${pathname === l.href ? "on" : ""}`}>
-            {l.label}
-          </Link>
-        ))}
-      </nav>
-
-      <div className="nav-right">
-        <GardenAudio />
-        <Link href="/court" className="nav-home">
-          Home Court
-        </Link>
-      </div>
     </header>
   );
 }

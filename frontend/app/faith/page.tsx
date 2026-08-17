@@ -82,10 +82,6 @@ const PHOTO_AFTER: Record<string, { src: string; caption: string }> = {
     src: "/photos/melo_anthony.jpg",
     caption: "Carmelo and J.R. Smith. The team that took the division.",
   },
-  "2017": {
-    src: "/photos/retro_phil_jackson.jpg",
-    caption: "Phil Jackson's Garden. The long dark had arrived.",
-  },
   "2021": {
     src: "/photos/thank_you_fans_new_york_forever.jpg",
     caption: "Thank you fans. New York forever.",

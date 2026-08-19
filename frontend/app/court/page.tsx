@@ -6,12 +6,25 @@ import GardenGallery from "@/components/home/GardenGallery";
 import HomeCoach from "@/components/home/HomeCoach";
 import SectionIcon from "@/components/home/SectionIcon";
 import { syncProfile } from "@/lib/api";
+import { celebrate } from "@/lib/celebrate";
 import { SECTIONS, Section } from "@/lib/sections";
 
 const GAMES = ["/roulette", "/gauntlet", "/buzzer", "/ragebait", "/trashtalk"];
 
 export default function Home() {
   useEffect(() => { syncProfile().catch(() => {}); }, []);
+
+  // Welcome confetti the first time you land at the Garden this session.
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem("msg_welcomed") === "1") return;
+      sessionStorage.setItem("msg_welcomed", "1");
+    } catch {
+      return;
+    }
+    const t = setTimeout(() => celebrate(true), 450);
+    return () => clearTimeout(t);
+  }, []);
 
   // Reveal sections as they scroll into view.
   useEffect(() => {

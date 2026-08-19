@@ -121,6 +121,16 @@ export default function Championship() {
     return () => window.removeEventListener("keydown", onKey);
   }, [story.length]);
 
+  // Freeze the page behind the lightbox so it can't scroll away underneath.
+  useEffect(() => {
+    if (!zoom) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [zoom]);
+
   const art = photos.filter((p) => ART.has(p));
   const wall = photos.filter((p) => !ART.has(p));
   const slide = story[idx];

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Concourse from "@/components/Concourse";
 import { api } from "@/lib/api";
 import { celebrate } from "@/lib/celebrate";
@@ -315,12 +316,14 @@ export default function Championship() {
         </>
       )}
 
-      {zoom && (
-        <figure className="lightbox" onClick={() => setZoom(null)}>
-          <img src={`/photos/${zoom}`} alt={caption(zoom)} />
-          <figcaption>{caption(zoom)} · tap anywhere to close</figcaption>
-        </figure>
-      )}
+      {zoom && typeof document !== "undefined" &&
+        createPortal(
+          <figure className="lightbox" onClick={() => setZoom(null)}>
+            <img src={`/photos/${zoom}`} alt={caption(zoom)} />
+            <figcaption>{caption(zoom)} · tap anywhere to close</figcaption>
+          </figure>,
+          document.body
+        )}
 
       <Concourse />
     </main>

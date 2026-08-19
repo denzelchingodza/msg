@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Concourse from "@/components/Concourse";
 import PhotoHero from "@/components/PhotoHero";
 import { api } from "@/lib/api";
+import { celebrate } from "@/lib/celebrate";
 
 interface Beat {
   era: string;
@@ -158,6 +159,23 @@ export default function FaithPage() {
   const jump = (i: number) =>
     document.getElementById(`era-${i}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
 
+  // Confetti when you finally reach the end of the story.
+  const finaleRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!faith || !finaleRef.current) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          celebrate(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.6 }
+    );
+    io.observe(finaleRef.current);
+    return () => io.disconnect();
+  }, [faith]);
+
   return (
     <main className="page">
       <p className="kicker">The Faith</p>
@@ -235,7 +253,7 @@ export default function FaithPage() {
       </div>
 
       {faith && (
-        <div className="center" style={{ marginTop: 30 }}>
+        <div className="center" ref={finaleRef} style={{ marginTop: 30 }}>
           <p
             className="display"
             style={{ fontSize: "clamp(28px, 5vw, 48px)", color: "var(--gold)" }}

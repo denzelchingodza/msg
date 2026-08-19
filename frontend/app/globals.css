@@ -1176,6 +1176,30 @@ h1, h2, .display {
   border-radius: 14px;
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.8);
 }
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 52px; height: 52px;
+  display: grid; place-items: center;
+  border-radius: 999px;
+  background: rgba(4, 13, 34, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.18s var(--ease), transform 0.18s var(--ease);
+}
+.lightbox-nav.prev { left: 18px; }
+.lightbox-nav.next { right: 18px; }
+.lightbox-nav:hover { background: var(--orange); border-color: var(--orange); }
+.lightbox-nav.prev:hover { transform: translateY(-50%) translateX(-2px); }
+.lightbox-nav.next:hover { transform: translateY(-50%) translateX(2px); }
+@media (max-width: 560px) {
+  .lightbox-nav { width: 44px; height: 44px; }
+  .lightbox-nav.prev { left: 8px; }
+  .lightbox-nav.next { right: 8px; }
+}
 .lightbox figcaption {
   position: absolute;
   bottom: 26px;

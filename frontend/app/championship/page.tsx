@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Concourse from "@/components/Concourse";
 import { api } from "@/lib/api";
@@ -91,6 +91,19 @@ export default function Championship() {
   const games = useCountUp(5);
   const parades = useCountUp(1);
 
+  // Ordered gallery for lightbox browsing (kept in a ref so key handlers stay fresh).
+  const galleryRef = useRef<string[]>([]);
+  const zoomRef = useRef<string | null>(null);
+  zoomRef.current = zoom;
+  const stepZoom = (dir: number) => {
+    const g = galleryRef.current;
+    setZoom((z) => {
+      if (!z) return z;
+      const i = g.indexOf(z);
+      return i === -1 ? z : g[(i + dir + g.length) % g.length];
+    });
+  };
+
   useEffect(() => {
     window.dispatchEvent(new CustomEvent("msg:track", { detail: "knicks" }));
     return () => {
@@ -111,7 +124,13 @@ export default function Championship() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.code === "Escape") setZoom(null);
+      if (e.code === "Escape") { setZoom(null); return; }
+      // While a photo is open, arrows browse the gallery, not the game slides.
+      if (zoomRef.current) {
+        if (e.code === "ArrowRight") stepZoom(1);
+        if (e.code === "ArrowLeft") stepZoom(-1);
+        return;
+      }
       if (!story.length) return;
       if (e.code === "ArrowRight") setIdx((i) => (i + 1) % story.length);
       if (e.code === "ArrowLeft")
@@ -133,6 +152,7 @@ export default function Championship() {
 
   const art = photos.filter((p) => ART.has(p));
   const wall = photos.filter((p) => !ART.has(p));
+  galleryRef.current = [...art, ...wall];
   const slide = story[idx];
   const meta = GAME_META[Math.min(idx, GAME_META.length - 1)];
   const finalsUpto = idx >= 5 ? 5 : idx + 1;
@@ -329,8 +349,22 @@ export default function Championship() {
       {zoom && typeof document !== "undefined" &&
         createPortal(
           <figure className="lightbox" onClick={() => setZoom(null)}>
-            <img src={`/photos/${zoom}`} alt={caption(zoom)} />
-            <figcaption>{caption(zoom)} · tap anywhere to close</figcaption>
+            <button
+              className="lightbox-nav prev"
+              aria-label="Previous photo"
+              onClick={(e) => { e.stopPropagation(); stepZoom(-1); }}
+            >
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+            </button>
+            <img src={`/photos/${zoom}`} alt={caption(zoom)} onClick={(e) => e.stopPropagation()} />
+            <button
+              className="lightbox-nav next"
+              aria-label="Next photo"
+              onClick={(e) => { e.stopPropagation(); stepZoom(1); }}
+            >
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+            </button>
+            <figcaption>{caption(zoom)} · tap outside to close</figcaption>
           </figure>,
           document.body
         )}

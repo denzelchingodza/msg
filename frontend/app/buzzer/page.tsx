@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Concourse from "@/components/Concourse";
 import EdgeFlash from "@/components/EdgeFlash";
 import { api } from "@/lib/api";
+import { celebrate } from "@/lib/celebrate";
 
 interface Q {
   q: string;
@@ -62,6 +63,12 @@ export default function Buzzer() {
     }, 1000);
     return () => clearInterval(id);
   }, [started, done]);
+
+  // Confetti for a strong buzzer run (bigger for a legendary score).
+  useEffect(() => {
+    if (done && score >= 10) celebrate(score >= 15);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [done]);
 
   function start() {
     setScore(0);

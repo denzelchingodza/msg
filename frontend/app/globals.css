@@ -3359,15 +3359,20 @@ a, button, summary, label,
 }
 
 /* ═══ intro: top-tier DE-FENSE chant + cool enter button ══════ */
-.intro .chant { gap: 18px; margin: 0 0 30px; }
+.intro .chant {
+  gap: 16px;
+  margin: 0 0 30px;
+  /* let the watercolor show through the letters so the chant reads as painted on */
+  opacity: 0.82;
+}
 .intro .chant span {
   font-family: var(--display);
   font-size: clamp(26px, 5.2vw, 54px);
-  letter-spacing: 0.14em;
-  color: var(--orange);
-  text-shadow: 0 0 32px rgba(245, 132, 38, 0.75), 3px 3px 0 rgba(0, 107, 182, 0.7);
+  letter-spacing: 0.16em;
+  color: #ffcf9a;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
 }
-.intro .chant b { font-size: clamp(22px, 4vw, 42px); }
+.intro .chant b { font-size: clamp(20px, 3.6vw, 38px); opacity: 0.68; }
 .enter-btn {
   position: relative;
   overflow: hidden;

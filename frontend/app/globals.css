@@ -3400,9 +3400,9 @@ a, button, summary, label,
   display: block;
   padding: 0;
   background:
-    radial-gradient(135% 105% at 50% 42%, transparent 38%, rgba(18, 9, 3, 0.78)),
-    linear-gradient(180deg, rgba(70, 38, 12, 0.28) 0%, rgba(20, 10, 4, 0.22) 45%, rgba(12, 7, 3, 0.5) 100%),
-    url("/photos/knicks_1946_vintage.jpg") center / cover no-repeat,
+    radial-gradient(135% 105% at 50% 42%, transparent 40%, rgba(4, 12, 30, 0.78)),
+    linear-gradient(180deg, rgba(4, 14, 38, 0.25) 0%, rgba(4, 14, 38, 0.2) 45%, rgba(3, 9, 24, 0.58) 100%),
+    url("/photos/garden_watercolor.jpg") center / cover no-repeat,
     #10233f;
 }
 .intro-vintage::before {

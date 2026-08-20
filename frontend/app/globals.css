@@ -3443,7 +3443,14 @@ a, button, summary, label,
   box-sizing: border-box;
 }
 .mecca-top { width: 100%; display: flex; justify-content: center; }
-.mecca-cta { display: flex; flex-direction: column; align-items: center; }
+.mecca-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 34px 46px 30px;
+  border-radius: 30px;
+  background: radial-gradient(120% 130% at 50% 62%, rgba(3, 9, 24, 0.6) 0%, rgba(3, 9, 24, 0.28) 48%, transparent 74%);
+}
 .mecca-eyebrow {
   font-family: var(--cond); font-weight: 700; font-size: 13px; letter-spacing: 0.3em; text-transform: uppercase;
   color: var(--gold); margin-bottom: 16px; text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);

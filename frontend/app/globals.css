@@ -1645,18 +1645,24 @@ h1, h2, .display {
   font-size: 13px;
   color: var(--silver);
 }
-.intro-skip { margin-top: 26px; }
+.intro-skip { margin-top: 22px; }
 .intro-skip a {
+  display: inline-block;
   font-family: var(--cond);
-  font-weight: 600;
-  font-size: 13px;
-  letter-spacing: 0.2em;
-  color: rgba(133, 183, 235, 0.6);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  border-bottom: 1px solid transparent;
-  transition: color 0.15s;
+  color: #dbe6f5;
+  padding: 9px 20px;
+  border-radius: 999px;
+  background: rgba(4, 13, 34, 0.42);
+  border: 1px solid rgba(219, 230, 245, 0.28);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  transition: color 0.18s var(--ease), background 0.18s var(--ease), border-color 0.18s var(--ease);
 }
-.intro-skip a:hover { color: var(--orange); }
+.intro-skip a:hover { color: #fff; background: rgba(245, 132, 38, 0.18); border-color: var(--orange); }
 
 /* ═══ v6: knixx poster welcome + DE FENSE ═════════════ */
 .intro-poster {

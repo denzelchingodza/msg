@@ -34,6 +34,9 @@ export default function Welcome() {
           <p className="mecca-eyebrow">Knicks basketball since 1946</p>
           <button className="enter-btn" onClick={() => leave()}>
             <span className="enter-btn-label">Enter the Garden</span>
+            <svg className="enter-btn-arrow" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
           </button>
           <p className="intro-skip">
             <a

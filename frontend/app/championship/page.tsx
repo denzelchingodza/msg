@@ -247,6 +247,9 @@ export default function Championship() {
               role="button"
               tabIndex={0}
             >
+              <span className="game-bignum" aria-hidden="true">
+                {String(idx + 1).padStart(2, "0")}
+              </span>
               {meta.badge === "PARADE" ? (
                 <div className="gscore gscore-parade">
                   <span className="gs-badge w">PARADE</span>

@@ -1969,6 +1969,18 @@ button:not(:disabled):active,
   user-select: none;
 }
 .game-card > *:not(.game-bignum) { position: relative; z-index: 1; }
+.game-card .slide-title {
+  font-size: clamp(28px, 4.4vw, 46px);
+  letter-spacing: 0.02em;
+  margin: 8px 0 18px;
+  text-shadow: 0 2px 22px rgba(245, 132, 38, 0.35);
+}
+.game-card .big-quote {
+  font-size: clamp(20px, 2.8vw, 30px);
+  line-height: 1.42;
+  color: #eef4fc;
+  max-width: 760px;
+}
 .game-head {
   display: flex;
   align-items: center;

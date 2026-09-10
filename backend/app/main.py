@@ -6,7 +6,7 @@ Docs: http://localhost:8000/docs
 import os
 import random
 
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -156,3 +156,48 @@ def profile_sync(body: SyncBody):
 
     return {"profile": profile, "blob": security.encode(profile),
             "tampered": tampered}
+
+
+# ── MSG Hoops second-screen relay ─────────────────────────────────────────
+# A dumb message relay so a phone (role=pad) can drive the game shown on a
+# desktop (role=host). Both connect to the same room code; anything one sends
+# is forwarded to the other. All game logic stays client-side on the host.
+_rooms: dict[str, dict[str, set]] = {}
+
+
+async def _relay(group: set, msg: dict):
+    dead = []
+    for client in list(group):
+        try:
+            await client.send_json(msg)
+        except Exception:
+            dead.append(client)
+    for client in dead:
+        group.discard(client)
+
+
+@app.websocket("/ws/hoops/{room}")
+async def hoops_ws(ws: WebSocket, room: str, role: str = "pad"):
+    await ws.accept()
+    room = room.upper()[:6]
+    role = "host" if role == "host" else "pad"
+    other = "pad" if role == "host" else "host"
+    r = _rooms.setdefault(room, {"host": set(), "pad": set()})
+    r[role].add(ws)
+
+    # Announce this peer to the other side, and tell this peer if the other is here.
+    await _relay(r[other], {"t": "peer", "role": role, "joined": True})
+    try:
+        await ws.send_json({"t": "ready", "peers": len(r[other])})
+        while True:
+            data = await ws.receive_json()
+            await _relay(r[other], data)
+    except WebSocketDisconnect:
+        pass
+    except Exception:
+        pass
+    finally:
+        r[role].discard(ws)
+        await _relay(r[other], {"t": "peer", "role": role, "joined": False})
+        if not r["host"] and not r["pad"]:
+            _rooms.pop(room, None)

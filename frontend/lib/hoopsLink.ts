@@ -39,15 +39,24 @@ export function useHoopsLink(
     if (!room) return;
     let closed = false;
     let retry: ReturnType<typeof setTimeout>;
+    let ping: ReturnType<typeof setInterval>;
 
     const connect = () => {
       const ws = new WebSocket(`${wsBase()}/ws/hoops/${room}?role=${role}`);
       wsRef.current = ws;
-      ws.onopen = () => setConnected(true);
+      ws.onopen = () => {
+        setConnected(true);
+        // Keepalive so proxies / idle timeouts don't drop the link mid-game.
+        clearInterval(ping);
+        ping = setInterval(() => {
+          try { ws.send(JSON.stringify({ t: "ping" })); } catch { /* not open */ }
+        }, 25000);
+      };
       ws.onclose = () => {
+        clearInterval(ping);
         setConnected(false);
         setPeer(false);
-        if (!closed) retry = setTimeout(connect, 1500);
+        if (!closed) retry = setTimeout(connect, 1200);
       };
       ws.onmessage = (e) => {
         let m: LinkMsg;
@@ -66,6 +75,7 @@ export function useHoopsLink(
     return () => {
       closed = true;
       clearTimeout(retry);
+      clearInterval(ping);
       wsRef.current?.close();
     };
   }, [room, role]);

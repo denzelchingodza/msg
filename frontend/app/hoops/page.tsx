@@ -603,16 +603,41 @@ export default function Hoops() {
 
       {phase === "intro" && (
         <div className="hoops-modal">
-          <div className="hoops-card">
+          <div className="hoops-card wide">
             <p className="kicker">MSG Hoops</p>
-            <h2 className="hoops-modal-title">Drag up to shoot</h2>
-            <p className="hoops-modal-body">Pull the ball back and up. The dotted arc shows where it&rsquo;s going. Swish it dead center for a green <b>PERFECT</b>.</p>
-            <ul className="hoops-rules">
-              <li>60 seconds. Every make is 3 points times your combo.</li>
-              <li>Dead-center PERFECT and gold BONUS windows both score double.</li>
-              <li>Coins are hard-earned. Grind them to unlock balls, courts, and perks. Level up for titles.</li>
-              <li>Computer: click, drag, release. Phone: swipe up.</li>
-            </ul>
+            <h2 className="hoops-modal-title">How to ball</h2>
+            <p className="hoops-modal-body">
+              Flick the ball into the hoop and outscore the rival in <b>60 seconds</b>. Every make is
+              worth more as your combo climbs — hit <b>5 in a row</b> and you catch <b>fire</b> for bonus points.
+            </p>
+
+            <div className="hoops-ways">
+              <div className="hoops-way primary">
+                <span className="hoops-way-tag">Best way to play</span>
+                <b className="hoops-way-title">Use your phone</b>
+                <small>Scan the code, then <b>swipe up</b> to shoot — aim left or right, flick harder for more power.</small>
+                {origin && (
+                  <div className="hoops-qr">
+                    <div className="hoops-qr-img">
+                      <QRCodeSVG value={`${origin}/play/${room}`} size={124} bgColor="#ffffff" fgColor="#0a1633" level="M" />
+                    </div>
+                    <div className="hoops-qr-body">
+                      <span className="hoops-qr-code">Room {room}</span>
+                      <span className={`hoops-qr-status ${padConnected ? "on" : ""}`}>
+                        {padConnected ? "Phone connected — starting…" : "Waiting for a phone…"}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="hoops-way">
+                <b className="hoops-way-title">Play on this screen</b>
+                <small>No phone? Use your trackpad or mouse: <b>drag the ball back and release</b> to shoot.</small>
+                <button className="btn" onClick={begin}>Start on this screen</button>
+              </div>
+            </div>
+
             {goal && (
               <div className="hoops-goal">
                 <div className="hoops-goal-top">
@@ -622,23 +647,8 @@ export default function Hoops() {
                 <div className="hoops-goal-bar"><i style={{ width: `${(goal.have / goal.need) * 100}%` }} /></div>
               </div>
             )}
-            {origin && (
-              <div className="hoops-qr">
-                <div className="hoops-qr-img">
-                  <QRCodeSVG value={`${origin}/play/${room}`} size={132} bgColor="#ffffff" fgColor="#0a1633" level="M" />
-                </div>
-                <div className="hoops-qr-body">
-                  <b>Play from your phone</b>
-                  <small>Scan to turn your phone into the controller.</small>
-                  <span className="hoops-qr-code">Room {room}</span>
-                  <span className={`hoops-qr-status ${padConnected ? "on" : ""}`}>
-                    {padConnected ? "Phone connected — shoot on your phone" : "Waiting for a phone…"}
-                  </span>
-                </div>
-              </div>
-            )}
-            <button className="btn" onClick={begin}>Start shooting</button>
-            <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => setOverlay("locker")}>Locker &amp; rewards</button>
+
+            <button className="btn btn-ghost" style={{ marginTop: 12 }} onClick={() => setOverlay("locker")}>Locker &amp; rewards</button>
           </div>
         </div>
       )}

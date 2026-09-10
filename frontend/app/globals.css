@@ -3601,3 +3601,91 @@ a, button, summary, label,
   0% { transform: translateX(-120%); }
   100% { transform: translateX(320%); }
 }
+
+/* ═══ Hoops: pair-your-phone QR panel ═════════════════════════ */
+.hoops-qr {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 18px auto 4px;
+  padding: 14px;
+  max-width: 380px;
+  text-align: left;
+  background: rgba(133, 183, 235, 0.06);
+  border: 1px solid rgba(133, 183, 235, 0.2);
+  border-radius: 16px;
+}
+.hoops-qr-img {
+  flex-shrink: 0;
+  background: #fff;
+  padding: 8px;
+  border-radius: 10px;
+  line-height: 0;
+}
+.hoops-qr-body { display: flex; flex-direction: column; gap: 3px; }
+.hoops-qr-body b { font-family: var(--cond); font-weight: 700; font-size: 15px; letter-spacing: 0.04em; color: #fff; }
+.hoops-qr-body small { color: var(--silver); font-size: 12px; line-height: 1.35; }
+.hoops-qr-code { font-family: var(--graduate, var(--display)); font-size: 16px; letter-spacing: 0.18em; color: var(--gold); margin-top: 4px; }
+.hoops-qr-status { font-family: var(--cond); font-weight: 700; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--silver); }
+.hoops-qr-status.on { color: #9fe1cb; }
+
+/* ═══ Phone controller (/play) ════════════════════════════════ */
+.play {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 16px calc(20px + env(safe-area-inset-bottom));
+  text-align: center;
+  color: #fff;
+  user-select: none;
+  -webkit-user-select: none;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(245, 132, 38, 0.12), transparent 60%),
+    linear-gradient(180deg, #0a1428, #050f24);
+  transition: background 0.16s var(--ease);
+}
+.play-make { background: radial-gradient(120% 80% at 50% 45%, rgba(29, 158, 117, 0.4), transparent 62%), linear-gradient(180deg, #0a1428, #050f24); }
+.play-miss { background: radial-gradient(120% 80% at 50% 45%, rgba(226, 75, 74, 0.35), transparent 62%), linear-gradient(180deg, #0a1428, #050f24); }
+.play-top { display: flex; align-items: center; justify-content: space-between; }
+.play-mark { font-family: var(--display); font-size: 20px; letter-spacing: 0.05em; color: var(--orange); }
+.play-dot { font-family: var(--cond); font-weight: 700; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--silver); }
+.play-dot.on { color: #9fe1cb; }
+.play-score { display: flex; justify-content: center; gap: 26px; margin: 16px 0 8px; }
+.ps-col b { display: block; font-family: var(--graduate, var(--display)); font-size: 32px; line-height: 1; color: #fff; }
+.ps-col.ps-clock b { color: var(--led); text-shadow: 0 0 14px rgba(255, 176, 66, 0.5); }
+.ps-col span { font-family: var(--cond); font-weight: 700; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--silver); }
+.play-pad {
+  position: relative;
+  flex: 1;
+  margin: 12px 0 16px;
+  padding: 30px 20px 40px;
+  border-radius: 26px;
+  border: 2px dashed rgba(245, 132, 38, 0.4);
+  background: radial-gradient(90% 70% at 50% 85%, rgba(245, 132, 38, 0.1), transparent 60%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: hidden;
+  touch-action: none;
+}
+.play-ball {
+  width: 100px; height: 100px;
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.55));
+  transition: transform 0.06s linear;
+}
+.play-hint {
+  margin-top: 20px;
+  font-family: var(--cond); font-weight: 700; font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--silver);
+}
+.play-meter {
+  position: absolute; right: 14px; top: 16px; bottom: 16px;
+  width: 8px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  display: flex; align-items: flex-end;
+}
+.play-meter i { width: 100%; border-radius: 999px; background: linear-gradient(180deg, #ff3b1e, var(--orange)); transition: height 0.05s linear; }
+.play-start { margin: 0 auto; }
+.play-room { margin-top: 12px; font-family: var(--cond); font-weight: 700; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(133, 183, 235, 0.5); }

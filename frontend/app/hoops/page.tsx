@@ -112,14 +112,40 @@ export default function Hoops() {
     b.scored = false; b.flying = true;
     trailPos.current = [];
   }
-  function remoteShoot(power: number, aimX: number) {
+  function padToDrag(power: number, aimX: number) {
     const p = Math.max(0, Math.min(1, power));
     const a = Math.max(-1, Math.min(1, aimX));
-    launch(a * 180, -(120 + p * 380));
+    return { dx: a * 180, dy: -(120 + p * 380) };
+  }
+  function previewArc(dx: number, dy: number) {
+    if (phase !== "playing" || ball.current.flying || dy > -25) { hideDots(); return; }
+    const { h } = dims.current;
+    let x = restXRef.current, y = h * BALL_Y_FRAC;
+    let vx = cap(dx * K), vy = cap(dy * K);
+    for (let i = 0; i < DOTS; i++) {
+      for (let s = 0; s < 4; s++) { x += vx; y += vy; vy += GRAVITY; }
+      const el = dotEls.current[i];
+      if (el) {
+        el.style.opacity = String(Math.max(0.15, 0.85 - i * 0.045));
+        el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+      }
+    }
+  }
+  function remoteShoot(power: number, aimX: number) {
+    const { dx, dy } = padToDrag(power, aimX);
+    launch(dx, dy);
   }
   function onPadMsg(m: LinkMsg) {
-    if (m.t === "shoot") remoteShoot(Number(m.power) || 0, Number(m.aimX) || 0);
-    else if (m.t === "start" && phase !== "playing") begin();
+    if (m.t === "aim") {
+      const { dx, dy } = padToDrag(Number(m.power) || 0, Number(m.aimX) || 0);
+      previewArc(dx, dy);
+    } else if (m.t === "aimoff") {
+      hideDots();
+    } else if (m.t === "shoot") {
+      remoteShoot(Number(m.power) || 0, Number(m.aimX) || 0);
+    } else if (m.t === "start" && phase !== "playing") {
+      begin();
+    }
   }
 
   const { peer: padConnected, send: linkSend } = useHoopsLink(room, "host", onPadMsg);

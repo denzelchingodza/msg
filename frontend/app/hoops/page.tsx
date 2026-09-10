@@ -301,7 +301,8 @@ export default function Hoops() {
       const sf = (slowMoRef.current ? 0.35 : 1) * f; // buzzer-beater slow motion
 
       if (!pausedRef.current) {
-        hoopX.current = 0.5; // static rim — a streak rewards points + heat, not a harder target
+        // Rim drifts once you get rolling — gentle, and only after a small streak.
+        hoopX.current = streakRef.current >= 3 ? 0.5 + 0.22 * Math.sin(now / 700) : 0.5;
         if (b.flying) {
           const prevY = b.y;
           b.x += b.vx * sf; b.y += b.vy * sf; b.vy += GRAVITY * sf; b.rot += b.spin * sf;

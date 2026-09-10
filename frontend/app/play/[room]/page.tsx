@@ -54,7 +54,7 @@ export default function Play({ params }: { params: Promise<{ room: string }> }) 
   };
 
   const down = (e: React.PointerEvent) => {
-    if (!live || shooting) return;
+    if (shooting) return;
     const r = padRef.current!.getBoundingClientRect();
     start.current = { x: e.clientX - r.left, y: e.clientY - r.top };
     setAiming(true);
@@ -71,10 +71,10 @@ export default function Play({ params }: { params: Promise<{ room: string }> }) 
     start.current = null;
     setAiming(false);
     setPower(0);
-    if (!s || !live) return;
+    if (!s) return;
     const { dy, powr, aimX } = calc(e);
     if (dy > -16) return; // needs a real upward flick
-    send({ t: "shoot", power: powr, aimX });
+    send({ t: "shoot", power: powr, aimX }); // no-ops if not connected yet
     buzz(14);
     setShooting(true);
     setTimeout(() => setShooting(false), 440);
@@ -127,14 +127,12 @@ export default function Play({ params }: { params: Promise<{ room: string }> }) 
           </svg>
         </div>
 
-        <p className="play-hint">
-          {live ? "Swipe UP to shoot — aim left/right, flick harder for more power" : ""}
-        </p>
+        <p className="play-hint">Swipe UP to shoot — aim left/right, flick harder for more power</p>
 
         {!live && (
           <div className="play-wait">
             <b>{connected ? "Almost there…" : "Connecting…"}</b>
-            <small>Open <b>MSG Hoops</b> on the big screen and scan the code to link this phone.</small>
+            <small>Open <b>MSG Hoops</b> on the big screen and scan the code. You can still practice your flick here.</small>
           </div>
         )}
       </div>

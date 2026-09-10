@@ -31,6 +31,7 @@ const RIM_HALF_FRAC = 0.125;
 const ASSIST_FRAC = 0.2;
 const PERFECT_FRAC = 0.36; // within this share of the rim = PERFECT (green)
 const HOT_STREAK = 3;
+const HEAT_ON = 5; // makes in a row to catch fire
 const DOTS = 16;
 const TRAIL = 7;
 const SPIN = 5; // ball spin factor
@@ -59,6 +60,7 @@ export default function Hoops() {
   const [settings, setSettings] = useState({ assist: true, reducedMotion: false });
   const [call, setCall] = useState<{ text: string; tone: string; n: number } | null>(null);
   const [bonus, setBonus] = useState(false);
+  const [fire, setFire] = useState(false);
   const [burst, setBurst] = useState<{ n: number; x: number; y: number; gold: boolean } | null>(null);
   const [levelUp, setLevelUp] = useState<{ level: number; reward: number } | null>(null);
   const [coinPop, setCoinPop] = useState<{ n: number; amt: number } | null>(null);
@@ -87,6 +89,7 @@ export default function Hoops() {
   const pausedRef = useRef(false);
   const settingsRef = useRef(settings);
   const bonusRef = useRef(false);
+  const fireRef = useRef(false);
   const slowMoRef = useRef(false);
   const awaitBuzzerRef = useRef(false);
   const coinMultRef = useRef(1); // from equipped perk, set at game start
@@ -219,18 +222,24 @@ export default function Hoops() {
     setFlashTone(made ? "correct" : "wrong");
     setFlashPulse((p) => p + 1);
     sendRef.current?.({ t: "result", made, perfect });
+    const buzzer = awaitBuzzerRef.current;
     if (made) {
       const ns = streakRef.current + 1; streakRef.current = ns;
       makesRef.current += 1;
       if (ns > maxStreakRef.current) maxStreakRef.current = ns;
       if (perfect) perfectsRef.current += 1;
       const m = multFor(ns);
-      const gained = 3 * m * (bonusRef.current ? 2 : 1) * (perfect ? 2 : 1);
+      const wasFire = fireRef.current;
+      const nowFire = ns >= HEAT_ON;
+      fireRef.current = nowFire; setFire(nowFire);
+
+      let gained = 3 * m * (bonusRef.current ? 2 : 1) * (perfect ? 2 : 1);
+      if (nowFire) gained = Math.round(gained * 1.5); // heat bonus
+      if (buzzer) gained *= 2; // buzzer beater
       pointsRef.current += gained; setPoints(pointsRef.current);
       setStreak(ns);
-      // Coins are deliberately scarce: only your combo multiplier (1-4), with a
-      // small bump for perfect/bonus makes. Unlocks are meant to be a grind.
-      const coinGain = (m + (perfect ? 1 : 0) + (bonusRef.current ? 1 : 0)) * coinMultRef.current;
+      // Coins are deliberately scarce: combo multiplier (1-4) + small bumps.
+      const coinGain = (m + (perfect ? 1 : 0) + (bonusRef.current ? 1 : 0) + (nowFire ? 1 : 0)) * coinMultRef.current;
       const xpGain = 10 * m * xpMultRef.current;
       gameCoinsRef.current += coinGain;
       gameXpRef.current += xpGain;
@@ -242,16 +251,30 @@ export default function Hoops() {
         makes: prev.makes + 1,
         dailyMakes: prev.dailyMakes + 1,
       }));
-      const text = perfect ? "PERFECT!" : bonusRef.current ? "BONUS!" : ["SWISH!", "COUNT IT!", "WET!", "BANG!"][Math.floor(Math.random() * 4)];
-      setCall({ text, tone: perfect ? "perfect" : "make", n: Date.now() });
+
+      // Escalating call-outs — buzzer > catching fire > on fire > perfect > make.
+      let text: string, tone: string;
+      if (buzzer) { text = "BUZZER BEATER!"; tone = "fire"; }
+      else if (nowFire && !wasFire) { text = "HE'S ON FIRE!"; tone = "fire"; }
+      else if (nowFire) { text = ["HEAT CHECK!", "UNCONSCIOUS!", "CAN'T MISS!", "CALL 911!"][Math.floor(Math.random() * 4)]; tone = "fire"; }
+      else if (perfect) { text = "PERFECT!"; tone = "perfect"; }
+      else if (bonusRef.current) { text = "BONUS!"; tone = "make"; }
+      else { text = ["SWISH!", "COUNT IT!", "WET!", "BANG!"][Math.floor(Math.random() * 4)]; tone = "make"; }
+      setCall({ text, tone, n: Date.now() });
+
       flick(netRef, "netSway", 500);
       flick(rimRef, "rimVibe", 320);
-      particleBurst(perfect || bonusRef.current);
-      if (perfect) { camShake(); celebrate(true); }
-      else if (ns >= 3) celebrate(false);
+      particleBurst(perfect || bonusRef.current || nowFire);
+      if (buzzer || (nowFire && !wasFire) || perfect) { camShake(); celebrate(true); }
+      else if (nowFire || ns >= 3) celebrate(false);
     } else {
+      const wasFire = fireRef.current;
       streakRef.current = 0; setStreak(0);
-      setCall({ text: ["BRICK.", "OFF THE IRON.", "SHORT.", "AIRBALL."][Math.floor(Math.random() * 4)], tone: "miss", n: Date.now() });
+      fireRef.current = false; setFire(false);
+      const missText = wasFire
+        ? ["ICE COLD.", "HE'S COOLED OFF.", "THE STREAK IS DEAD."][Math.floor(Math.random() * 3)]
+        : ["BRICK.", "OFF THE IRON.", "SHORT.", "AIRBALL."][Math.floor(Math.random() * 4)];
+      setCall({ text: missText, tone: "miss", n: Date.now() });
     }
     setTimeout(() => setCall(null), 800);
     if (awaitBuzzerRef.current) {
@@ -476,6 +499,7 @@ export default function Hoops() {
     pointsRef.current = 0; setPoints(0);
     streakRef.current = perk.startStreak; setStreak(perk.startStreak);
     maxStreakRef.current = perk.startStreak;
+    fireRef.current = false; setFire(false);
     makesRef.current = 0; perfectsRef.current = 0;
     setOpp(0); setTime(ROUND + perk.extraTime);
     slowMoRef.current = false; awaitBuzzerRef.current = false;
@@ -495,7 +519,7 @@ export default function Hoops() {
   return (
     <div
       ref={wrapRef}
-      className={`hoops-full ${settings.reducedMotion ? "rm" : ""}`}
+      className={`hoops-full ${settings.reducedMotion ? "rm" : ""} ${fire ? "fire" : ""}`}
       style={{ ["--court-spot" as string]: court.spot } as React.CSSProperties}
       onPointerDown={down} onPointerMove={move} onPointerUp={upFn} onPointerCancel={upFn} onPointerLeave={upFn}
     >
@@ -520,6 +544,7 @@ export default function Hoops() {
       )}
 
       {bonus && phase === "playing" && <div className="hoops-bonus-tag">2× BONUS</div>}
+      {fire && phase === "playing" && <div className="hoops-fire-tag">ON FIRE</div>}
 
       <div ref={hoopRef} className={`hoops-hoop ${bonus ? "bonus" : ""}`} aria-hidden="true">
         <svg viewBox="0 0 240 200" width="100%" height="100%">
@@ -561,7 +586,7 @@ export default function Hoops() {
         <div key={i} ref={(el) => { dotEls.current[i] = el; }} className="hoops-dot" style={{ width: `${Math.max(5, 12 - i * 0.4)}px`, height: `${Math.max(5, 12 - i * 0.4)}px` }} />
       ))}
 
-      <div ref={ballRef} className={`hoops-ball ${idle ? "idle" : ""}`} aria-hidden="true">
+      <div ref={ballRef} className={`hoops-ball ${idle ? "idle" : ""} ${fire ? "on-fire" : ""}`} aria-hidden="true">
         <Basketball skin={equipped} gid="game" />
       </div>
 

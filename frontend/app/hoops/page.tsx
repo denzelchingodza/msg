@@ -30,7 +30,6 @@ const HOOP_Y_FRAC = 0.28;
 const RIM_HALF_FRAC = 0.125;
 const ASSIST_FRAC = 0.2;
 const PERFECT_FRAC = 0.36; // within this share of the rim = PERFECT (green)
-const HOT_STREAK = 3;
 const HEAT_ON = 5; // makes in a row to catch fire
 const DOTS = 16;
 const TRAIL = 7;
@@ -289,7 +288,6 @@ export default function Hoops() {
   // Game loop.
   useEffect(() => {
     let raf = 0;
-    let elapsed = 0;
     let last = performance.now();
     const loop = (now: number) => {
       const dt = now - last; last = now;
@@ -303,9 +301,7 @@ export default function Hoops() {
       const sf = (slowMoRef.current ? 0.35 : 1) * f; // buzzer-beater slow motion
 
       if (!pausedRef.current) {
-        elapsed += dt;
-        const moveSpeed = 660 / (1 + makesRef.current * 0.05); // difficulty ramp
-        hoopX.current = streakRef.current >= HOT_STREAK ? 0.5 + 0.3 * Math.sin(elapsed / moveSpeed) : 0.5;
+        hoopX.current = 0.5; // static rim — a streak rewards points + heat, not a harder target
         if (b.flying) {
           const prevY = b.y;
           b.x += b.vx * sf; b.y += b.vy * sf; b.vy += GRAVITY * sf; b.rot += b.spin * sf;

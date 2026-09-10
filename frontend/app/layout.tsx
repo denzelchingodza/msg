@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Anton, Barlow_Condensed, Graduate, Inter } from "next/font/google";
-import GardenAudio from "@/components/GardenAudio";
-import SiteFooter from "@/components/SiteFooter";
-import SiteNav from "@/components/SiteNav";
-import Tactile from "@/components/Tactile";
-import WakeGate from "@/components/WakeGate";
+import ChromeBottom from "@/components/ChromeBottom";
+import ChromeTop from "@/components/ChromeTop";
 import "./globals.css";
 
 const anton = Anton({ weight: "400", subsets: ["latin"], variable: "--anton" });
@@ -35,15 +32,9 @@ export default function RootLayout({
       className={`${anton.variable} ${inter.variable} ${barlow.variable} ${graduate.variable}`}
     >
       <body>
-        <WakeGate />
-        <Tactile />
-        <SiteNav />
+        <ChromeTop />
         {children}
-        <div className="crowd-float">
-          <GardenAudio />
-        </div>
-        <SiteFooter />
-        <div className="court-stripe" aria-hidden="true" />
+        <ChromeBottom />
       </body>
     </html>
   );

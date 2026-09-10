@@ -17,6 +17,8 @@ import { nextGoal } from "@/lib/hoopsUnlocks";
 import { Achievement, newlyUnlocked } from "@/lib/hoopsAchievements";
 import { DAILY_GOAL, DAILY_LOGIN_REWARD, DAILY_REWARD, HoopsProgress, levelFromXp, levelReward, todayStr, useHoopsProgress } from "@/lib/hoopsStore";
 import { celebrate } from "@/lib/celebrate";
+import { useHoopsLink, makeRoom, type LinkMsg } from "@/lib/hoopsLink";
+import { QRCodeSVG } from "qrcode.react";
 
 /* ── tunable feel ─────────────────────────────────────────────── */
 const ROUND = 60;
@@ -93,6 +95,50 @@ export default function Hoops() {
   const gameCoinsRef = useRef(0); // coins earned this game (for the summary)
   const gameXpRef = useRef(0); // xp earned this game
 
+  // ── phone controller (second screen) ────────────────────────────────
+  const [room] = useState(makeRoom);
+  const [origin, setOrigin] = useState("");
+  const padConnectedRef = useRef(false);
+  const sendRef = useRef<((m: LinkMsg) => void) | null>(null);
+
+  function launch(dx: number, dy: number) {
+    if (pausedRef.current || ball.current.flying || phase !== "playing") return;
+    if (dy > -25) return;
+    const b = ball.current;
+    const { h } = dims.current;
+    b.x = restXRef.current; b.y = h * BALL_Y_FRAC;
+    b.vx = cap(dx * K); b.vy = cap(dy * K);
+    b.rot = 0; b.spin = b.vx * SPIN;
+    b.scored = false; b.flying = true;
+    trailPos.current = [];
+  }
+  function remoteShoot(power: number, aimX: number) {
+    const p = Math.max(0, Math.min(1, power));
+    const a = Math.max(-1, Math.min(1, aimX));
+    launch(a * 180, -(120 + p * 380));
+  }
+  function onPadMsg(m: LinkMsg) {
+    if (m.t === "shoot") remoteShoot(Number(m.power) || 0, Number(m.aimX) || 0);
+    else if (m.t === "start" && phase !== "playing") begin();
+  }
+
+  const { peer: padConnected, send: linkSend } = useHoopsLink(room, "host", onPadMsg);
+  padConnectedRef.current = padConnected;
+  sendRef.current = linkSend;
+
+  useEffect(() => { setOrigin(window.location.origin); }, []);
+
+  // When the phone joins, tip off automatically and hand control to it.
+  useEffect(() => {
+    if (padConnected && phase === "intro") begin();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [padConnected]);
+
+  // Mirror the scoreboard to the phone.
+  useEffect(() => {
+    sendRef.current?.({ t: "state", you: points, rival: opp, secs: time, phase });
+  }, [points, opp, time, phase, padConnected]);
+
   // Play the hoops soundtrack on the game, restore the crowd on exit.
   useEffect(() => {
     window.dispatchEvent(new CustomEvent("msg:track", { detail: "hoops" }));
@@ -146,6 +192,7 @@ export default function Hoops() {
   const resolve = useCallback((made: boolean, perfect: boolean) => {
     setFlashTone(made ? "correct" : "wrong");
     setFlashPulse((p) => p + 1);
+    sendRef.current?.({ t: "result", made, perfect });
     if (made) {
       const ns = streakRef.current + 1; streakRef.current = ns;
       makesRef.current += 1;
@@ -366,12 +413,13 @@ export default function Hoops() {
     return { x: e.clientX - r.left, y: e.clientY - r.top };
   }
   function down(e: React.PointerEvent) {
+    if (padConnectedRef.current) return; // phone is driving
     if (pausedRef.current || ball.current.flying || phase !== "playing") return;
     drag.current = rel(e);
   }
   function move(e: React.PointerEvent) {
     const d = drag.current;
-    if (!d || pausedRef.current) return;
+    if (!d || pausedRef.current || padConnectedRef.current) return;
     const p = rel(e);
     const dx = p.x - d.x, dy = p.y - d.y;
     if (dy > -25) { hideDots(); return; }
@@ -388,17 +436,9 @@ export default function Hoops() {
     const d = drag.current;
     drag.current = null;
     hideDots();
-    if (!d || pausedRef.current || ball.current.flying || phase !== "playing") return;
+    if (!d || padConnectedRef.current) return;
     const p = rel(e);
-    const dx = p.x - d.x, dy = p.y - d.y;
-    if (dy > -25) return;
-    const b = ball.current;
-    const { h } = dims.current;
-    b.x = restXRef.current; b.y = h * BALL_Y_FRAC;
-    b.vx = cap(dx * K); b.vy = cap(dy * K);
-    b.rot = 0; b.spin = b.vx * SPIN;
-    b.scored = false; b.flying = true;
-    trailPos.current = [];
+    launch(p.x - d.x, p.y - d.y);
   }
 
   function begin() {
@@ -507,7 +547,7 @@ export default function Hoops() {
         </div>
       )}
 
-      {idle && <div className="hoops-grab">Drag up to shoot</div>}
+      {idle && <div className="hoops-grab">{padConnected ? "Shoot on your phone" : "Drag up to shoot"}</div>}
       {call && <div key={call.n} className={`hoops-call ${call.tone}`}>{call.text}</div>}
 
       {coinPop && phase === "playing" && (
@@ -533,6 +573,21 @@ export default function Hoops() {
                   <span>{goal.have}/{goal.need}</span>
                 </div>
                 <div className="hoops-goal-bar"><i style={{ width: `${(goal.have / goal.need) * 100}%` }} /></div>
+              </div>
+            )}
+            {origin && (
+              <div className="hoops-qr">
+                <div className="hoops-qr-img">
+                  <QRCodeSVG value={`${origin}/play/${room}`} size={132} bgColor="#ffffff" fgColor="#0a1633" level="M" />
+                </div>
+                <div className="hoops-qr-body">
+                  <b>Play from your phone</b>
+                  <small>Scan to turn your phone into the controller.</small>
+                  <span className="hoops-qr-code">Room {room}</span>
+                  <span className={`hoops-qr-status ${padConnected ? "on" : ""}`}>
+                    {padConnected ? "Phone connected — shoot on your phone" : "Waiting for a phone…"}
+                  </span>
+                </div>
               </div>
             )}
             <button className="btn" onClick={begin}>Start shooting</button>

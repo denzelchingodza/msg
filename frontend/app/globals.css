@@ -3718,6 +3718,14 @@ a, button, summary, label,
   filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.55));
   transition: transform 0.06s linear;
 }
+.play-ball.shoot { animation: playShoot 0.46s ease-out; }
+@keyframes playShoot {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  70% { transform: translateY(-120px) scale(0.45); opacity: 0.7; }
+  71% { opacity: 0; }
+  72% { transform: translateY(30px) scale(0.9); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
 .play-hint {
   margin-top: 20px;
   font-family: var(--cond); font-weight: 700; font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase;

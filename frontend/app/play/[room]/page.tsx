@@ -33,8 +33,8 @@ export default function Play({ params }: { params: Promise<{ room: string }> }) 
   const [arc, setArc] = useState("");
 
   const padRef = useRef<HTMLDivElement>(null);
+  const [shooting, setShooting] = useState(false);
   const start = useRef<{ x: number; y: number } | null>(null);
-  const lastAim = useRef(0);
 
   const buzz = (ms: number | number[]) => {
     try { navigator.vibrate?.(ms); } catch { /* unsupported */ }
@@ -62,25 +62,23 @@ export default function Play({ params }: { params: Promise<{ room: string }> }) 
     const s = start.current!;
     const dx = e.clientX - r.left - s.x;
     const dy = e.clientY - r.top - s.y;
-    const powr = dy < 0 ? Math.min(1, -dy / (r.height * 0.55)) : 0;
-    const aimX = Math.max(-1, Math.min(1, dx / (r.width * 0.5)));
+    const powr = dy < 0 ? Math.min(1, -dy / (r.height * 0.42)) : 0; // easier to reach full power
+    const aimX = Math.max(-1, Math.min(1, dx / (r.width * 0.6))); // gentler aim
     return { dx, dy, powr, aimX };
   };
 
   const down = (e: React.PointerEvent) => {
+    if (shooting) return;
     const r = padRef.current!.getBoundingClientRect();
     start.current = { x: e.clientX - r.left, y: e.clientY - r.top };
+    // Capture the pointer so the flick is never lost if the finger leaves the pad.
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* older browsers */ }
   };
   const move = (e: React.PointerEvent) => {
     if (!start.current) return;
     const { powr, aimX } = calc(e);
     setPower(powr);
     setArc(powr > 0 ? simArc(powr, aimX) : "");
-    const now = performance.now();
-    if (now - lastAim.current > 40) {
-      lastAim.current = now;
-      send({ t: "aim", power: powr, aimX });
-    }
   };
   const up = (e: React.PointerEvent) => {
     const s = start.current;
@@ -89,15 +87,18 @@ export default function Play({ params }: { params: Promise<{ room: string }> }) 
     setArc("");
     if (!s) return;
     const { dy, powr, aimX } = calc(e);
-    if (dy > -24) { send({ t: "aimoff" }); return; }
+    if (dy > -18) return; // needs a real upward flick
+    // Only the shot crosses the network — no aim streaming — so it stays snappy
+    // on slow connections. The phone launches locally right away for instant feel.
     send({ t: "shoot", power: powr, aimX });
-    buzz(12);
+    buzz(14);
+    setShooting(true);
+    setTimeout(() => setShooting(false), 460);
   };
   const cancel = () => {
     start.current = null;
     setPower(0);
     setArc("");
-    send({ t: "aimoff" });
   };
 
   return (
@@ -135,7 +136,10 @@ export default function Play({ params }: { params: Promise<{ room: string }> }) 
           {arc && <path d={arc} fill="none" stroke="#ffd9a8" strokeWidth="1.4" strokeLinecap="round" strokeDasharray="1 3" opacity="0.9" />}
         </svg>
 
-        <div className="play-ball" style={{ transform: `translateY(${-power * 42}px) scale(${1 + power * 0.12})` }}>
+        <div
+          className={`play-ball ${shooting ? "shoot" : ""}`}
+          style={shooting ? undefined : { transform: `translateY(${-power * 42}px) scale(${1 + power * 0.12})` }}
+        >
           <svg viewBox="0 0 24 24" width="100%" height="100%">
             <circle cx="12" cy="12" r="11" fill="#f4951f" stroke="#7a1405" strokeWidth="0.5" />
             <g stroke="#5a2408" strokeWidth="1.1" fill="none" strokeLinecap="round">

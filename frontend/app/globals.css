@@ -3669,14 +3669,18 @@ a, button, summary, label,
 
 /* ═══ Phone controller (/play) ════════════════════════════════ */
 .play {
-  min-height: 100dvh;
+  position: fixed;
+  inset: 0;
   display: flex;
   flex-direction: column;
   padding: 18px 16px calc(20px + env(safe-area-inset-bottom));
   text-align: center;
   color: #fff;
+  overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
+  touch-action: none;             /* stop the browser eating the swipe */
+  overscroll-behavior: none;      /* no pull-to-refresh / bounce */
   background:
     radial-gradient(120% 80% at 50% 0%, rgba(245, 132, 38, 0.12), transparent 60%),
     linear-gradient(180deg, #0a1428, #050f24);
@@ -3707,11 +3711,30 @@ a, button, summary, label,
   overflow: hidden;
   touch-action: none;
 }
-.play-hoop {
-  position: absolute; top: 7%; left: 50%; transform: translateX(-50%);
-  width: 128px; height: 52px; opacity: 0.92; pointer-events: none;
+.play-aim {
+  position: absolute;
+  left: 50%; bottom: 92px;
+  width: 26px; height: 130px;
+  transform-origin: bottom center;
+  background: linear-gradient(180deg, #ff3b1e, var(--orange) 55%, rgba(245, 132, 38, 0));
+  clip-path: polygon(50% 0, 100% 26%, 66% 26%, 66% 100%, 34% 100%, 34% 26%, 0 26%);
+  opacity: 0;
+  transition: opacity 0.12s var(--ease);
+  pointer-events: none;
+  z-index: 1;
 }
-.play-arc { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+.play-aim.on { opacity: 0.95; }
+.play-wait {
+  position: absolute; inset: 0; z-index: 3;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  padding: 24px; text-align: center;
+  background: rgba(4, 13, 34, 0.72);
+  backdrop-filter: blur(3px);
+  border-radius: 24px;
+}
+.play-wait > b { font-family: var(--display); font-size: 22px; color: #fff; letter-spacing: 0.04em; }
+.play-wait small { color: var(--silver); font-size: 13px; line-height: 1.5; max-width: 260px; }
+.play-wait small b { color: var(--orange); }
 .play-ball {
   width: 100px; height: 100px;
   position: relative; z-index: 2;

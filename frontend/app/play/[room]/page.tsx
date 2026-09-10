@@ -5,21 +5,6 @@ import { useHoopsLink, type LinkMsg } from "@/lib/hoopsLink";
 
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 
-/** Predicted arc in a normalized 0..100 pad space (SVG stretches to fit). */
-function simArc(power: number, aimX: number): string {
-  let x = 50, y = 82;
-  let vx = aimX * 5;
-  let vy = -(5 + power * 13);
-  const g = 2;
-  const pts = [`${x},${y}`];
-  for (let i = 0; i < 26; i++) {
-    x += vx; y += vy; vy += g;
-    if (y > 102) break;
-    pts.push(`${x.toFixed(1)},${y.toFixed(1)}`);
-  }
-  return "M" + pts.join(" L");
-}
-
 export default function Play({ params }: { params: Promise<{ room: string }> }) {
   const { room } = use(params);
   const code = room.toUpperCase().slice(0, 6);
@@ -30,10 +15,11 @@ export default function Play({ params }: { params: Promise<{ room: string }> }) 
   const [phase, setPhase] = useState<string>("intro");
   const [flash, setFlash] = useState<"make" | "miss" | null>(null);
   const [power, setPower] = useState(0);
-  const [arc, setArc] = useState("");
+  const [aim, setAim] = useState(0); // -1..1 while aiming
+  const [aiming, setAiming] = useState(false);
+  const [shooting, setShooting] = useState(false);
 
   const padRef = useRef<HTMLDivElement>(null);
-  const [shooting, setShooting] = useState(false);
   const start = useRef<{ x: number; y: number } | null>(null);
 
   const buzz = (ms: number | number[]) => {
@@ -62,43 +48,41 @@ export default function Play({ params }: { params: Promise<{ room: string }> }) 
     const s = start.current!;
     const dx = e.clientX - r.left - s.x;
     const dy = e.clientY - r.top - s.y;
-    const powr = dy < 0 ? Math.min(1, -dy / (r.height * 0.42)) : 0; // easier to reach full power
-    const aimX = Math.max(-1, Math.min(1, dx / (r.width * 0.6))); // gentler aim
+    const powr = dy < 0 ? Math.min(1, -dy / (r.height * 0.42)) : 0;
+    const aimX = Math.max(-1, Math.min(1, dx / (r.width * 0.6)));
     return { dx, dy, powr, aimX };
   };
 
   const down = (e: React.PointerEvent) => {
-    if (shooting) return;
+    if (!live || shooting) return;
     const r = padRef.current!.getBoundingClientRect();
     start.current = { x: e.clientX - r.left, y: e.clientY - r.top };
-    // Capture the pointer so the flick is never lost if the finger leaves the pad.
+    setAiming(true);
     try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* older browsers */ }
   };
   const move = (e: React.PointerEvent) => {
     if (!start.current) return;
     const { powr, aimX } = calc(e);
     setPower(powr);
-    setArc(powr > 0 ? simArc(powr, aimX) : "");
+    setAim(aimX);
   };
   const up = (e: React.PointerEvent) => {
     const s = start.current;
     start.current = null;
+    setAiming(false);
     setPower(0);
-    setArc("");
-    if (!s) return;
+    if (!s || !live) return;
     const { dy, powr, aimX } = calc(e);
-    if (dy > -18) return; // needs a real upward flick
-    // Only the shot crosses the network — no aim streaming — so it stays snappy
-    // on slow connections. The phone launches locally right away for instant feel.
+    if (dy > -16) return; // needs a real upward flick
     send({ t: "shoot", power: powr, aimX });
     buzz(14);
     setShooting(true);
-    setTimeout(() => setShooting(false), 460);
+    setTimeout(() => setShooting(false), 440);
   };
   const cancel = () => {
     start.current = null;
+    setAiming(false);
     setPower(0);
-    setArc("");
   };
 
   return (
@@ -124,21 +108,16 @@ export default function Play({ params }: { params: Promise<{ room: string }> }) 
         onPointerUp={up}
         onPointerCancel={cancel}
       >
-        <div className="play-hoop" aria-hidden="true">
-          <svg viewBox="0 0 80 34" width="100%" height="100%">
-            <rect x="18" y="2" width="44" height="20" rx="3" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
-            <rect x="32" y="9" width="16" height="8" rx="1" fill="none" stroke="#f58426" strokeWidth="2" />
-            <ellipse cx="40" cy="25" rx="17" ry="4" fill="none" stroke="#f58426" strokeWidth="2.4" />
-          </svg>
-        </div>
-
-        <svg className="play-arc" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          {arc && <path d={arc} fill="none" stroke="#ffd9a8" strokeWidth="1.4" strokeLinecap="round" strokeDasharray="1 3" opacity="0.9" />}
-        </svg>
+        {/* aim arrow: points up, tilts with your aim, grows with power */}
+        <div
+          className={`play-aim ${aiming && power > 0 ? "on" : ""}`}
+          style={{ transform: `translateX(-50%) rotate(${aim * 26}deg) scaleY(${0.35 + power})` }}
+          aria-hidden="true"
+        />
 
         <div
           className={`play-ball ${shooting ? "shoot" : ""}`}
-          style={shooting ? undefined : { transform: `translateY(${-power * 42}px) scale(${1 + power * 0.12})` }}
+          style={shooting ? undefined : { transform: `translateY(${-power * 30}px) scale(${1 + power * 0.1})` }}
         >
           <svg viewBox="0 0 24 24" width="100%" height="100%">
             <circle cx="12" cy="12" r="11" fill="#f4951f" stroke="#7a1405" strokeWidth="0.5" />
@@ -149,9 +128,15 @@ export default function Play({ params }: { params: Promise<{ room: string }> }) 
         </div>
 
         <p className="play-hint">
-          {live ? "Pull back to aim · release to shoot" : "Scan the QR on the big screen to connect"}
+          {live ? "Swipe UP to shoot — aim left/right, flick harder for more power" : ""}
         </p>
-        <div className="play-meter"><i style={{ height: `${power * 100}%` }} /></div>
+
+        {!live && (
+          <div className="play-wait">
+            <b>{connected ? "Almost there…" : "Connecting…"}</b>
+            <small>Open <b>MSG Hoops</b> on the big screen and scan the code to link this phone.</small>
+          </div>
+        )}
       </div>
 
       {phase !== "playing" && live && (

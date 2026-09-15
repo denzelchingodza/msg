@@ -89,6 +89,7 @@ export default function Hoops() {
   const settingsRef = useRef(settings);
   const bonusRef = useRef(false);
   const fireRef = useRef(false);
+  const timeRef = useRef(ROUND);
   const slowMoRef = useRef(false);
   const awaitBuzzerRef = useRef(false);
   const coinMultRef = useRef(1); // from equipped perk, set at game start
@@ -153,6 +154,7 @@ export default function Hoops() {
   const { peer: padConnected, send: linkSend } = useHoopsLink(room, "host", onPadMsg);
   padConnectedRef.current = padConnected;
   sendRef.current = linkSend;
+  timeRef.current = time;
 
   useEffect(() => { setOrigin(window.location.origin); }, []);
 
@@ -376,11 +378,19 @@ export default function Hoops() {
     return () => clearInterval(id);
   }, [phase]);
 
-  // Rival.
+  // Rival — an actual scorer: hits most possessions, sinks the odd three, and
+  // presses a little harder late. Beatable with a good run, real if you go cold.
   useEffect(() => {
     if (phase !== "playing") return;
-    const id = setInterval(() => { if (!pausedRef.current && Math.random() < 0.66) setOpp((o) => o + 1); }, 3400);
+    const id = setInterval(() => {
+      if (pausedRef.current) return;
+      const late = timeRef.current <= 15; // turns it up in the final stretch
+      if (Math.random() < (late ? 0.9 : 0.78)) {
+        setOpp((o) => o + (Math.random() < 0.28 ? 3 : 2));
+      }
+    }, 2200);
     return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase]);
 
   // Bonus windows (golden rim, double points).
@@ -668,7 +678,7 @@ export default function Hoops() {
           <div className="hoops-card">
             <p className="kicker">Final buzzer</p>
             <p className="hoops-final">{points}<small> PTS</small></p>
-            <h2 className="hoops-modal-title">{points > opp * 3 ? "You beat the Rival" : points === opp * 3 ? "Deadlock" : "Rival took it"}</h2>
+            <h2 className="hoops-modal-title">{points > opp ? "You beat the Rival" : points === opp ? "Deadlock" : "Rival took it"}</h2>
 
             <div className="hoops-recap">
               <div className="recap-cell"><b>+{summary.coins}</b><span>Coins</span></div>

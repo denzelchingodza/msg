@@ -301,8 +301,17 @@ export default function Hoops() {
       const sf = (slowMoRef.current ? 0.35 : 1) * f; // buzzer-beater slow motion
 
       if (!pausedRef.current) {
-        // Rim drifts once you get rolling — gentle, and only after a small streak.
-        hoopX.current = streakRef.current >= 3 ? 0.5 + 0.22 * Math.sin(now / 700) : 0.5;
+        // Rim drifts once you get rolling — faster and wider the hotter you are.
+        {
+          const st = streakRef.current;
+          if (st >= 3) {
+            const amp = Math.min(0.3, 0.19 + st * 0.013);   // sweep widens with the streak
+            const spd = Math.max(300, 520 - st * 20);        // smaller divisor = faster drift
+            hoopX.current = 0.5 + amp * Math.sin(now / spd);
+          } else {
+            hoopX.current = 0.5;
+          }
+        }
         if (b.flying) {
           const prevY = b.y;
           b.x += b.vx * sf; b.y += b.vy * sf; b.vy += GRAVITY * sf; b.rot += b.spin * sf;

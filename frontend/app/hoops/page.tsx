@@ -65,6 +65,7 @@ export default function Hoops() {
   const [coinPop, setCoinPop] = useState<{ n: number; amt: number } | null>(null);
   const [summary, setSummary] = useState<{ coins: number; xp: number; makes: number; perfects: number; streak: number; unlocks: Achievement[] } | null>(null);
   const [flashTone, setFlashTone] = useState<"correct" | "wrong" | null>(null);
+  const [shareMsg, setShareMsg] = useState<string | null>(null);
   const [flashPulse, setFlashPulse] = useState(0);
 
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -523,6 +524,24 @@ export default function Hoops() {
   }
   function claimDaily() { update((prev) => ({ ...prev, coins: prev.coins + DAILY_REWARD, dailyClaimed: true })); setOverlay("none"); }
 
+  async function shareScore() {
+    const verb = points > opp ? "beat the Rival" : points === opp ? "tied the Rival" : "battled the Rival";
+    const text = `I dropped ${points} in MSG Hoops and ${verb}. Think you can top it? Bing bong.`;
+    const url =
+      typeof window !== "undefined" ? window.location.origin + "/hoops" : "";
+    try {
+      if (typeof navigator !== "undefined" && navigator.share) {
+        await navigator.share({ title: "MSG Hoops", text, url });
+        return;
+      }
+      await navigator.clipboard.writeText(`${text} ${url}`);
+      setShareMsg("Copied. Go talk your talk.");
+      setTimeout(() => setShareMsg(null), 2200);
+    } catch {
+      // user cancelled the share sheet, or clipboard blocked — no-op
+    }
+  }
+
   const mm = String(Math.floor(time / 60)).padStart(2, "0");
   const ss = String(time % 60).padStart(2, "0");
   const idle = phase === "playing" && !ball.current.flying;
@@ -713,7 +732,11 @@ export default function Hoops() {
             )}
 
             <button className="btn" onClick={begin}>Run it back</button>
-            <button className="btn btn-ghost" style={{ marginTop: 10 }} onClick={() => setOverlay("locker")}>Locker &amp; rewards</button>
+            <div className="hoops-done-row">
+              <button className="btn btn-ghost" onClick={shareScore}>Share your score</button>
+              <button className="btn btn-ghost" onClick={() => setOverlay("locker")}>Locker &amp; rewards</button>
+            </div>
+            {shareMsg && <p className="hoops-share-msg cond">{shareMsg}</p>}
           </div>
         </div>
       )}

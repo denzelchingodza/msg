@@ -1,13 +1,16 @@
 "use client";
 
-import { use, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useHoopsLink, type LinkMsg } from "@/lib/hoopsLink";
 
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+const CODE_RE = /^[A-HJ-NP-Z2-9]{4,6}$/; // matches makeRoom()'s alphabet
 
 export default function Play({ params }: { params: Promise<{ room: string }> }) {
   const { room } = use(params);
   const code = room.toUpperCase().slice(0, 6);
+  const validCode = CODE_RE.test(code);
 
   const [you, setYou] = useState(0);
   const [rival, setRival] = useState(0);
@@ -40,8 +43,25 @@ export default function Play({ params }: { params: Promise<{ room: string }> }) 
     }
   };
 
-  const { connected, peer, send } = useHoopsLink(code, "pad", onHost);
+  const { connected, peer, send } = useHoopsLink(
+    validCode ? code : null,
+    "pad",
+    onHost
+  );
   const live = connected && peer;
+
+  // If we're connected to the relay but no screen shows up after a while, the
+  // code is probably wrong or the game on the big screen was closed. Say so
+  // instead of spinning on "Waiting…" forever.
+  const [stale, setStale] = useState(false);
+  useEffect(() => {
+    if (!connected || peer) {
+      setStale(false);
+      return;
+    }
+    const t = setTimeout(() => setStale(true), 9000);
+    return () => clearTimeout(t);
+  }, [connected, peer]);
 
   const calc = (e: React.PointerEvent) => {
     const r = padRef.current!.getBoundingClientRect();
@@ -85,12 +105,36 @@ export default function Play({ params }: { params: Promise<{ room: string }> }) 
     setPower(0);
   };
 
+  if (!validCode) {
+    return (
+      <main className="play play-bad">
+        <div className="play-bad-panel">
+          <span className="play-mark">MSG HOOPS</span>
+          <b>That code isn&apos;t right</b>
+          <small>
+            Game codes are 4 letters and numbers. Open MSG Hoops on the big
+            screen and scan the QR code, or type the code shown there exactly.
+          </small>
+          <Link className="btn" href="/hoops">
+            Open MSG Hoops
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className={`play ${flash ? `play-${flash}` : ""}`}>
       <header className="play-top">
         <span className="play-mark">MSG HOOPS</span>
         <span className={`play-dot ${live ? "on" : ""}`}>
-          {live ? "Connected" : connected ? "Waiting for the screen…" : "Connecting…"}
+          {live
+            ? "Connected"
+            : stale
+            ? "No screen on this code"
+            : connected
+            ? "Waiting for the screen…"
+            : "Connecting…"}
         </span>
       </header>
 
@@ -131,8 +175,27 @@ export default function Play({ params }: { params: Promise<{ room: string }> }) 
 
         {!live && (
           <div className="play-wait">
-            <b>{connected ? "Almost there…" : "Connecting…"}</b>
-            <small>Open <b>MSG Hoops</b> on the big screen and scan the code. You can still practice your flick here.</small>
+            <b>
+              {stale
+                ? "That game code isn't live"
+                : connected
+                ? "Almost there…"
+                : "Connecting…"}
+            </b>
+            <small>
+              {stale ? (
+                <>
+                  No big screen is on code <b>{code}</b>. Open <b>MSG Hoops</b>{" "}
+                  on the big screen and scan its QR code. Keep practicing your
+                  flick here in the meantime.
+                </>
+              ) : (
+                <>
+                  Open <b>MSG Hoops</b> on the big screen and scan the code. You
+                  can still practice your flick here.
+                </>
+              )}
+            </small>
           </div>
         )}
       </div>

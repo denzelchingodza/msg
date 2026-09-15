@@ -110,7 +110,7 @@ export default function Buzzer() {
 
       {offline && (
         <p className="offline" style={{ margin: "18px auto", display: "flex" }}>
-          Garden offline. Start the backend with <code>./dev.sh</code>
+          The Garden lost connection. Check your internet and try again in a moment.
         </p>
       )}
 

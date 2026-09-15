@@ -210,7 +210,7 @@ export default function FaithPage() {
       {offline && (
         <div style={{ marginTop: 26 }}>
           <span className="offline">
-            Garden offline. Start the backend: <code>./dev.sh</code>
+            The Garden lost connection. Check your internet and try again in a moment.
           </span>
         </div>
       )}

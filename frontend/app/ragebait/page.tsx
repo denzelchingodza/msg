@@ -85,7 +85,7 @@ export default function RageBait() {
           </div>
           {offline ? (
             <span className="offline">
-              Garden offline. Start the backend: <code>./dev.sh</code>
+              The Garden lost connection. Check your internet and try again in a moment.
             </span>
           ) : (
             <div>

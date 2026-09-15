@@ -92,7 +92,7 @@ export default function TrashTalk() {
       {offline && (
         <div style={{ margin: "20px 0" }}>
           <span className="offline">
-            Garden offline. Start the backend: <code>./dev.sh</code>
+            The Garden lost connection. Check your internet and try again in a moment.
           </span>
         </div>
       )}

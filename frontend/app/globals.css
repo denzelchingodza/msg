@@ -2699,7 +2699,7 @@ a, button, summary, label,
 .hoops-hoop {
   position: absolute;
   top: 28%; left: 50%;
-  width: clamp(210px, 38vmin, 350px);
+  width: clamp(188px, 33vmin, 312px);
   aspect-ratio: 6 / 5;
   transform: translate(-50%, -67%);
   z-index: 3;

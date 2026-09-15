@@ -566,7 +566,7 @@ export default function Hoops() {
         <svg viewBox="0 0 240 200" width="100%" height="100%">
           <defs>
             <linearGradient id="pad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#1560b4" /><stop offset="100%" stopColor="#083a7a" /></linearGradient>
-            <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#ffffff" stopOpacity="0.96" /><stop offset="100%" stopColor="#d7e3f4" stopOpacity="0.9" /></linearGradient>
+            <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#dfe9f7" stopOpacity="0.72" /><stop offset="100%" stopColor="#b7c8e0" stopOpacity="0.66" /></linearGradient>
             <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#ff9a3d" /><stop offset="100%" stopColor="#d9600f" /></linearGradient>
           </defs>
           {/* blue padded backboard frame */}

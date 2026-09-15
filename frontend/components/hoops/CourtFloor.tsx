@@ -43,8 +43,8 @@ export default function CourtFloor({ theme }: { theme?: CourtTheme }) {
             <stop offset="100%" stopColor={t.wood[2]} />
           </linearGradient>
           <linearGradient id="keyPaint" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={t.key} stopOpacity="0.22" />
-            <stop offset="100%" stopColor={t.key} stopOpacity="0.42" />
+            <stop offset="0%" stopColor={t.key} stopOpacity="0.1" />
+            <stop offset="100%" stopColor={t.key} stopOpacity="0.24" />
           </linearGradient>
         </defs>
         <rect x="0" y="0" width="1000" height="620" fill="url(#wood)" />

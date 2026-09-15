@@ -5,9 +5,12 @@ Docs: http://localhost:8000/docs
 """
 import os
 import random
+import time
+from collections import defaultdict, deque
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from . import security
@@ -15,6 +18,60 @@ from .content import CONTENT
 
 app = FastAPI(title="MSG API", version="1.0.0",
               description="The Mecca, in API form. Go NY Go.")
+
+# ── Lightweight in-memory rate limiting ───────────────────────────────────
+# No external dependency (keeps the single-worker Render deploy simple). A
+# sliding window per client IP: at most RATE_MAX requests per RATE_WINDOW
+# seconds against /api/*. Good enough to blunt accidental hammering and casual
+# abuse; a real multi-instance deploy would move this to Redis.
+RATE_WINDOW = 60.0
+RATE_MAX = 120
+_hits: dict[str, deque] = defaultdict(deque)
+
+
+def _client_ip(request: Request) -> str:
+    fwd = request.headers.get("x-forwarded-for")
+    if fwd:
+        return fwd.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
+
+
+@app.middleware("http")
+async def rate_limit(request: Request, call_next):
+    if request.url.path.startswith("/api/"):
+        ip = _client_ip(request)
+        now = time.monotonic()
+        q = _hits[ip]
+        while q and now - q[0] > RATE_WINDOW:
+            q.popleft()
+        if len(q) >= RATE_MAX:
+            retry = int(RATE_WINDOW - (now - q[0])) + 1
+            return JSONResponse(
+                status_code=429,
+                content={"error": "Easy, killer",
+                         "detail": "Too many shots too fast. Take a breather and try again.",
+                         "retry_after": retry},
+                headers={"Retry-After": str(retry)},
+            )
+        q.append(now)
+        # Keep the table from growing without bound.
+        if len(_hits) > 5000:
+            for k in [k for k, v in list(_hits.items()) if not v]:
+                _hits.pop(k, None)
+    return await call_next(request)
+
+
+@app.exception_handler(404)
+async def not_found(request: Request, exc):
+    """Friendly, on-brand 404 for unknown API routes."""
+    if request.url.path.startswith("/api/"):
+        return JSONResponse(
+            status_code=404,
+            content={"error": "Airball",
+                     "detail": f"No play called '{request.url.path}'. Check the endpoint.",
+                     "docs": "/docs"},
+        )
+    return JSONResponse(status_code=404, content={"error": "Not found"})
 
 # Local dev origins, plus any set via ALLOWED_ORIGINS (comma-separated) for
 # production — e.g. "https://your-app.vercel.app". The regex also lets every
@@ -176,13 +233,30 @@ async def _relay(group: set, msg: dict):
         group.discard(client)
 
 
+MAX_ROOMS = 500          # total concurrent rooms
+MAX_PER_ROLE = 4         # host/pad sockets per room (allows a reconnect blip)
+
+
 @app.websocket("/ws/hoops/{room}")
 async def hoops_ws(ws: WebSocket, room: str, role: str = "pad"):
     await ws.accept()
     room = room.upper()[:6]
     role = "host" if role == "host" else "pad"
     other = "pad" if role == "host" else "host"
+
+    # Refuse to spin up unbounded rooms/sockets.
+    existing = _rooms.get(room)
+    if existing is None and len(_rooms) >= MAX_ROOMS:
+        await ws.send_json({"t": "full", "reason": "server_busy"})
+        await ws.close()
+        return
     r = _rooms.setdefault(room, {"host": set(), "pad": set()})
+    if len(r[role]) >= MAX_PER_ROLE:
+        await ws.send_json({"t": "full", "reason": "room_full"})
+        await ws.close()
+        if not r["host"] and not r["pad"]:
+            _rooms.pop(room, None)
+        return
     r[role].add(ws)
 
     # Announce this peer to the other side, and tell this peer if the other is here.

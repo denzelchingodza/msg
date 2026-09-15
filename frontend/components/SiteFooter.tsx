@@ -14,9 +14,15 @@ export default function SiteFooter() {
             no purpose except joy.
           </p>
           <p className="sf-text sf-fine">
-            Fan project. Not affiliated with the NBA or the New York Knicks.
-            Photos and audio are personal memorabilia and stay out of the
-            public repo.
+            Fan-made. Not affiliated with, authorized by, or endorsed by the
+            NBA or the New York Knicks. All team names, logos, and marks belong
+            to their owners. Photos and audio are personal memorabilia and stay
+            out of the public repo.
+          </p>
+          <p className="sf-text sf-fine">
+            <Link href="/privacy" className="sf-privacy">
+              Privacy
+            </Link>
           </p>
         </div>
         <div className="sf-col">

@@ -49,12 +49,12 @@ export default function HoopsHUD(p: HudProps) {
         <button className="hud-btn glass" onClick={p.onPause} aria-label="Pause">Pause</button>
       </div>
 
-      {/* combo indicator + flame meter to the next multiplier tier */}
-      {p.streak > 0 && (
-        <div key={p.mult} className={`hud-combo m${p.mult}`}>
-          <div className="hud-combo-top">×{p.mult} <span>COMBO</span></div>
+      {/* combo indicator: streak count + progress to the next multiplier */}
+      {p.streak >= 2 && (
+        <div key={p.streak} className={`hud-combo m${p.mult}`}>
+          <div className="hud-combo-top">{p.streak}<span> IN A ROW</span></div>
           <div className="hud-combo-meter"><i style={{ width: `${tierPct(p.streak) * 100}%` }} /></div>
-          <div className="hud-combo-streak">{p.streak} in a row</div>
+          {p.mult > 1 && <div className="hud-combo-streak">×{p.mult} points</div>}
         </div>
       )}
     </div>

@@ -2756,7 +2756,7 @@ a, button, summary, label,
 }
 .hoops-call {
   position: absolute;
-  top: 40%; left: 50%;
+  top: 55%; left: 50%;
   z-index: 9;
   font-family: var(--display);
   font-size: clamp(34px, 8vw, 62px);
@@ -2908,7 +2908,7 @@ a, button, summary, label,
 }
 .hud-combo {
   position: absolute;
-  top: 46%; left: 50%;
+  top: 63%; left: 50%;
   transform: translateX(-50%);
   z-index: 8;
   display: flex; flex-direction: column; align-items: center; gap: 5px;
@@ -3028,7 +3028,7 @@ a, button, summary, label,
 .hoops-full.cam-shake { animation: screenShake 0.42s ease; }
 .hoops-hoop.bonus { filter: drop-shadow(0 0 18px rgba(250, 199, 117, 0.9)) drop-shadow(0 14px 20px rgba(0, 0, 0, 0.6)); }
 .hoops-bonus-tag {
-  position: absolute; top: 40%; left: 50%; transform: translateX(-50%);
+  position: absolute; top: 47%; left: 50%; transform: translateX(-50%);
   z-index: 8;
   font-family: var(--cond); font-weight: 700; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase;
   color: #fff; background: linear-gradient(180deg, var(--orange-hot), var(--orange));
@@ -3047,7 +3047,7 @@ a, button, summary, label,
 }
 /* ON FIRE status tag */
 .hoops-fire-tag {
-  position: absolute; top: 33%; left: 50%; transform: translateX(-50%);
+  position: absolute; top: 52%; left: 50%; transform: translateX(-50%);
   z-index: 8;
   font-family: var(--display); font-size: 15px; letter-spacing: 0.24em; text-transform: uppercase;
   color: #fff;

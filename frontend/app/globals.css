@@ -2746,7 +2746,8 @@ a, button, summary, label,
   font-size: 13px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(250, 199, 117, 0.85);
+  color: #ffe3ab;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75);
   animation: grabBob 1.5s ease-in-out infinite;
   pointer-events: none;
 }
